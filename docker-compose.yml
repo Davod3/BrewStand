@@ -1,14 +1,24 @@
 version: '3.8'
 
 services:
+
   api_gateway:
+    depends_on:
+      - user_service
     build:
-      context: ./api_gateway
+      context: ./
+      dockerfile: ./api_gateway/Dockerfile
     container_name: api_gateway
     expose:
       - 8080
     ports:
       - '8080:8080'
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.10
+    environment:
+      - USER_SERVICE_HOST=172.100.10.11
+
   user_service:
     build:
       context: ./
@@ -18,4 +28,14 @@ services:
       - 50051
     ports:
       - '50051:50051'
-  
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.11
+
+networks:
+  brewstand-net:
+      driver: bridge
+      ipam:
+        driver: default
+        config:
+          - subnet: 172.100.10.0/24
