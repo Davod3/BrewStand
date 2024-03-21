@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+message CreateUserRequest {
+
+    string username = 1;
+    string password = 2;
+    string address = 3;
+
+}
+
+message CreateUserResponse {
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Invalid user parameters
+    2 - Username already exists
+
+    */
+}
+
+service User {
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+}

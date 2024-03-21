@@ -9,3 +9,13 @@ services:
       - 8080
     ports:
       - '8080:8080'
+  user_service:
+    build:
+      context: ./
+      dockerfile: ./user_service/Dockerfile
+    container_name: user_service
+    expose:
+      - 50051
+    ports:
+      - '50051:50051'
+  
