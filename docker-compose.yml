@@ -32,6 +32,20 @@ services:
       brewstand-net:
         ipv4_address: 172.100.10.11
 
+  inventory_db:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    volumes:
+      - ./volumes/inventory_db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=VerySecureYesYes123
+      - POSTGRES_USER=db_access_inventory
+      - POSTGRES_DB=inventory_db
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.14
+
 networks:
   brewstand-net:
       driver: bridge
