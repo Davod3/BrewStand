@@ -17,7 +17,20 @@ services:
       brewstand-net:
         ipv4_address: 172.100.10.5
     environment:
-      - USER_SERVICE_HOST=172.100.10.11
+      - USER_SERVICE_HOST=172.100.10.10
+  
+  user_controller:
+    build:
+      context: ./
+      dockerfile: ./user_controller/Dockerfile
+    container_name: user_controller
+    expose:
+      - 3000
+    ports:
+      - '3000:3000'
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.10
 
   user_service:
     build:
@@ -30,7 +43,7 @@ services:
       - '50051:50051'
     networks:
       brewstand-net:
-        ipv4_address: 172.100.10.11
+        ipv4_address: 172.100.10.20
   
   user_repository:
     build:
@@ -43,7 +56,7 @@ services:
       - '50061:50061'
     networks:
       brewstand-net:
-        ipv4_address: 172.100.10.21
+        ipv4_address: 172.100.10.30
 
   user_db:
       image: mongodb/mongodb-community-server:latest
@@ -54,7 +67,7 @@ services:
         - ./volumes/user_db:/data/db
       networks:
           brewstand-net:
-              ipv4_address: 172.100.10.33
+              ipv4_address: 172.100.10.40
 
   inventory_db:
     image: postgres:latest
