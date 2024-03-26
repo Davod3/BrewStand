@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package payment;
+
+// The PaymentService provides functionalities to process payments, generate, and retrieve invoices.
+service PaymentService {
+  // Processes a payment and returns a response.
+  rpc ProcessPayment (PaymentRequest) returns (PaymentResponse) {}
+
+  // Retrieves an invoice for a particular transaction.
+  rpc GetInvoice (InvoiceRequest) returns (InvoiceResponse) {}
+}
+
+// PaymentRequest is used to send a payment processing request, including order details.
+message PaymentRequest {
+  string order_id = 1;   // The ID of the order for which payment is being processed.
+  string user_id = 2;    // The ID of the user making the payment.
+  float amount = 3;      // The amount to be paid.
+  string currency = 4;   // The currency of the payment.
+}
+
+// PaymentResponse is received after processing a payment.
+message PaymentResponse {
+  bool success = 1;             // Indicates if the payment was successful.
+  string transaction_id = 2;    // The transaction ID of the payment, if successful.
+}
+
+// InvoiceRequest is used to request an invoice for a transaction.
+message InvoiceRequest {
+  string transaction_id = 1; // The transaction ID for which the invoice is requested.
+}
+
+// InvoiceResponse contains the details of an invoice.
+message InvoiceResponse {
+  bool success = 1;            // Indicates if the invoice retrieval was successful.
+  string invoice_details = 2;  // Detailed information about the invoice.
+}
