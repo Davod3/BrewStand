@@ -1,0 +1,45 @@
+syntax = "proto3";
+package payment_service;
+import "payment_repository.proto";
+
+// The PaymentService handles processing payments and communicating with the Payment Repository Service.
+service PaymentService {
+  // Processes a payment and returns a response.
+  rpc ProcessPayment (PaymentRequest) returns (PaymentResponse) {}
+
+  // Retrieves an invoice for a particular order.
+  rpc GetInvoice (InvoiceRequest) returns (InvoiceResponse) {}
+}
+
+// Request structure for processing a payment.
+message PaymentRequest {
+  int32 user_id = 1;
+  float amount = 2;
+  string currency = 3;
+  repeated int32 items_id = 4; // IDs of items involved in the payment.
+  CardDetails card_details = 5; // Card details for payment simulation.
+}
+
+// Mock card details for payment simulation.
+message CardDetails {
+  string card_number = 1;    // Dummy card number, e.g., '4242424242424242'.
+  string card_expiry = 2;    // Expiry date, e.g., '12/23'.
+  string card_cvc = 3;       // CVC code, e.g., '123'.
+}
+
+// Response structure after processing a payment.
+message PaymentResponse {
+  bool success = 1;              // Indicates if the payment was successful.
+  payment_repository.StorePaymentResponse payment_details = 2; // Details of the stored payment.
+}
+
+// Request structure for retrieving an invoice.
+message InvoiceRequest {
+  int32 invoice_id = 1; // The order ID for which the invoice is requested.
+}
+
+// Response structure for invoice retrieval.
+message InvoiceResponse {
+  bool success = 1;                           // Indicates if the invoice retrieval was successful.
+  payment_repository.InvoiceData invoice = 2; // The retrieved invoice data.
+}
