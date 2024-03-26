@@ -43,7 +43,10 @@ class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
         return UserCartAddResponse(response_code = result)
     
     def UserCartDelete(self, request, context):
-        return UserCartDeleteResponse(response_code = 0)
+
+        result = CartHandler.removeFromCart(request.user_id, request.batch_id)
+
+        return UserCartDeleteResponse(response_code = result)
     
     def UserCartGet(self, request, context):
         return UserCartGetResponse(response_code = 0, total_cost = 0, content = None)

@@ -1,7 +1,7 @@
 from mongoengine import *
 
 class CartItem(EmbeddedDocument):
-    batch_id = StringField(required=True)
+    batch_id = IntField(required=True)
     volume = FloatField(required=True)
 
 
