@@ -35,12 +35,25 @@ def removeFromCart(user_id, batch_id):
     if(user is None):
         return 1 #Invalid user
     
-    if(batch_id is None):
+    if(batch_id==0):
         #Delete whole cart
         user.cart = []
+        user.save()
         return 0
     else:
-        return 0
+
+        current_cart_item = filter(lambda o : o.batch_id == batch_id, user.cart)
+        current_cart_item = list(current_cart_item)
+
+        if(len(current_cart_item) == 0):
+            #Item not in cart
+            return 2
+        else:
+            #Item is in cart, delete it
+            item = current_cart_item[0]
+            user.cart.remove(item)
+            user.save()
+            return 0
 
 
 
