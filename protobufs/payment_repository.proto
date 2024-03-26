@@ -23,6 +23,8 @@ message PaymentData {
   float amount = 2;
   string currency = 3;
   int32 items_id = 4;
+  string card_token = 5;        // Token representing the card details.
+  string card_last_four = 6;    // Last four digits of the card number.
 }
 
 // Response for storing payment data.
@@ -40,6 +42,7 @@ message InvoiceData {
   string invoice_details = 1;
   string user_id = 2;
   string order_id = 3;
+  string card_last_four = 4;  // Last four digits of the card number for reference on the invoice.
 }
 
 // Response for storing invoice data.

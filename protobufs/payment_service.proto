@@ -2,36 +2,46 @@ syntax = "proto3";
 
 package payment;
 
-// The PaymentService provides functionalities to process payments, generate, and retrieve invoices.
+import "paymentrepository.proto";
+
+// The PaymentService handles processing payments and communicating with the Payment Repository Service.
 service PaymentService {
   // Processes a payment and returns a response.
   rpc ProcessPayment (PaymentRequest) returns (PaymentResponse) {}
 
-  // Retrieves an invoice for a particular transaction.
+  // Retrieves an invoice for a particular order.
   rpc GetInvoice (InvoiceRequest) returns (InvoiceResponse) {}
 }
 
-// PaymentRequest is used to send a payment processing request, including order details.
+// Request structure for processing a payment.
 message PaymentRequest {
-  int32 order_id = 1;   // The ID of the order for which payment is being processed.
-  int32 user_id = 2;    // The ID of the user making the payment.
-  float amount = 3;      // The amount to be paid.
-  string currency = 4;   // The currency of the payment.
+  int32 user_id = 1;
+  float amount = 2;
+  string currency = 3;
+  repeated int32 items_id = 4; // IDs of items involved in the payment.
+  CardDetails card_details = 5; // Card details for payment simulation.
 }
 
-// PaymentResponse is received after processing a payment.
+// Mock card details for payment simulation.
+message CardDetails {
+  string card_number = 1;    // Dummy card number, e.g., '4242424242424242'.
+  string card_expiry = 2;    // Expiry date, e.g., '12/23'.
+  string card_cvc = 3;       // CVC code, e.g., '123'.
+}
+
+// Response structure after processing a payment.
 message PaymentResponse {
-  bool success = 1;             // Indicates if the payment was successful.
-  int32 transaction_id = 2;    // The transaction ID of the payment, if successful.
+  bool success = 1;              // Indicates if the payment was successful.
+  paymentrepository.StorePaymentResponse payment_details = 2; // Details of the stored payment.
 }
 
-// InvoiceRequest is used to request an invoice for a transaction.
+// Request structure for retrieving an invoice.
 message InvoiceRequest {
-  int32 transaction_id = 1; // The transaction ID for which the invoice is requested.
+  int32 invoice_id = 1; // The order ID for which the invoice is requested.
 }
 
-// InvoiceResponse contains the details of an invoice.
+// Response structure for invoice retrieval.
 message InvoiceResponse {
-  bool success = 1;            // Indicates if the invoice retrieval was successful.
-  int32 invoice_details = 2;  // Detailed information about the invoice.
+  bool success = 1;                           // Indicates if the invoice retrieval was successful.
+  paymentrepository.InvoiceData invoice = 2; // The retrieved invoice data.
 }
