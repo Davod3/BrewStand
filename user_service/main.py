@@ -5,7 +5,14 @@ from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 
 from user_service_pb2 import (
-    CreateUserResponse
+    CreateUserResponse,
+    AuthenticateUserResponse,
+    GetUserResponse,
+    PayCartResponse,
+    AddItemCartResponse,
+    DeleteItemCartResponse,
+    GetCartContentResponse
+
 )
 
 import user_service_pb2_grpc
@@ -13,8 +20,25 @@ import user_service_pb2_grpc
 class UserService(user_service_pb2_grpc.UserServicer):
     
     def CreateUser(self, request, context):
-        # Do some magic
         return CreateUserResponse(response_code = 0)
+    
+    def AuthenticateUser(self, request, context):
+        return AuthenticateUserResponse(response_code = 0, user_id = '')
+    
+    def GetUser(self, request, context):
+        return GetUserResponse(response_code = 0, username = '', address = '')
+    
+    def PayCart(self, request, context):
+        return PayCartResponse(response_code = 0, invoice=None)
+    
+    def AddItemCart(self, request, context):
+        return AddItemCartResponse(response_code = 0)
+    
+    def DeleteItemCart(self, request, context):
+        return DeleteItemCartResponse(response_code = 0)
+    
+    def GetCartContent(self, request, context):
+        return GetCartContentResponse(response_code = 0, content = None)
     
 def serve():
 
