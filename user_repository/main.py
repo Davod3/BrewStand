@@ -8,7 +8,8 @@ from user_repository_pb2 import (
     InsertUserResponse,
     UserCartAddResponse,
     UserCartDeleteResponse,
-    UserCartGetResponse
+    UserCartGetResponse,
+    Batch
 )
 
 import user_repository_pb2_grpc
@@ -49,7 +50,19 @@ class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
         return UserCartDeleteResponse(response_code = result)
     
     def UserCartGet(self, request, context):
-        return UserCartGetResponse(response_code = 0, total_cost = 0, content = None)
+
+        user_cart = CartHandler.getCart(request.user_id)
+
+        def convertToRPC(cart_item):
+            return Batch(batch_id=cart_item.batch_id, volume=cart_item.volume)
+
+        if(user_cart is None):
+             return UserCartGetResponse(response_code = 1, content = None)
+        else:
+            converted_items = map(convertToRPC, user_cart)
+            return UserCartGetResponse(response_code = 0,content = converted_items )
+
+
     
 def serve():
 

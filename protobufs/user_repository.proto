@@ -57,17 +57,15 @@ message UserCartGetRequest {
 
 }
 
-
-message UserCartGetResponse {
-
-    message item {
-        int64 item_id = 1;
+message Batch {
+        int64 batch_id = 1;
         double volume = 2;
     }
 
+message UserCartGetResponse {
+
     int32 response_code = 1;
-    optional double total_cost = 2;
-    repeated item content = 3;
+    repeated Batch content = 2;
 
     /*
     0 - Success

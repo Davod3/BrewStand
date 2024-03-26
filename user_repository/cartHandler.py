@@ -54,6 +54,16 @@ def removeFromCart(user_id, batch_id):
             user.cart.remove(item)
             user.save()
             return 0
+        
+def getCart(user_id):
+
+    #Get User
+    user = User.objects.with_id(user_id)
+
+    if(user is None):
+        return None # Invalid User
+    
+    return user.cart
 
 
 
