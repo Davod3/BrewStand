@@ -12,12 +12,28 @@ from user_repository_pb2 import (
 )
 
 import user_repository_pb2_grpc
+from models.user import User
+from mongoengine import *
+import os
 
 class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
     
     def InsertUser(self, request, context):
-        # Do some magic
-        return InsertUserResponse(response_code = 0)
+
+        username = request.username
+        password = request.password
+        address = request.address
+
+        user = User(username=username, password=password, address=address)
+
+        try:
+            user.save()
+            #Success
+            return InsertUserResponse(response_code = 0)
+        except NotUniqueError:
+            #Repeated username
+            return InsertUserResponse(response_code = 1)
+
     
     def UserCartAdd(self,request, context):
         # Do some magic
@@ -45,4 +61,10 @@ def serve():
     server.wait_for_termination()
 
 if __name__ == "__main__":
+
+    __USER = os.getenv('MONGO_USER')
+    __PASSWORD =  os.getenv('MONGO_PASSWORD')
+    url = f"mongodb+srv://{__USER}:{__PASSWORD}@cluster0.q350jt0.mongodb.net/db?retryWrites=true&w=majority&appName=Cluster0"
+    connect(host=url)
+
     serve()
