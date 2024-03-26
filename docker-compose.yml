@@ -31,6 +31,19 @@ services:
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.11
+  
+  user_repository:
+    build:
+      context: ./
+      dockerfile: ./user_repository/Dockerfile
+    container_name: user_repository
+    expose:
+      - 50061
+    ports:
+      - '50061:50061'
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.21
 
   inventory_db:
     image: postgres:latest

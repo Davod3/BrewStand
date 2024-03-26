@@ -4,17 +4,30 @@ import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 
-from user_pb2 import (
-    CreateUserResponse
+from user_repository_pb2 import (
+    InsertUserResponse,
+    UserCartAddResponse,
+    UserCartDeleteResponse,
+    UserCartGetResponse
 )
 
-import user_pb2_grpc
+import user_repository_pb2_grpc
 
-class UserService(user_pb2_grpc.UserServicer):
+class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
     
-    def CreateUser(self, request, context):
+    def InsertUser(self, request, context):
         # Do some magic
-        return CreateUserResponse(response_code = 0)
+        return InsertUserResponse(response_code = 0)
+    
+    def UserCartAdd(self,request, context):
+        # Do some magic
+        return UserCartAddResponse(response_code = 0)
+    
+    def UserCartDelete(self, request, context):
+        return UserCartDeleteResponse(response_code = 0)
+    
+    def UserCartGet(self, request, context):
+        return UserCartGetResponse(response_code = 0, total_cost = 0, content = None)
     
 def serve():
 
@@ -23,11 +36,11 @@ def serve():
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
 
-    user_pb2_grpc.add_UserServicer_to_server(
-        UserService(), server
+    user_repository_pb2_grpc.add_UserRepositoryServicer_to_server(
+        UserRepositoryService(), server
     )
 
-    server.add_insecure_port("[::]:50051")
+    server.add_insecure_port("[::]:50061")
     server.start()
     server.wait_for_termination()
 

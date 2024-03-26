@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+message InsertUserRequest {
+
+    string username = 1;
+    string password = 2;
+    string address = 3;
+
+}
+
+message InsertUserResponse {
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Invalid user parameters
+    2 - Username already exists
+
+    */
+}
+
+message UserCartAddRequest {
+    
+    int64 user_id = 1;
+    int64 batch_id = 2;
+    double volume = 3; 
+}
+
+message UserCartAddResponse {
+    int32 response_code = 1;
+
+    /*
+    0 - Success
+    1 - User was not found
+    */
+
+}
+
+message UserCartDeleteRequest {
+    int64 user_id = 1;
+    optional int64 batch_id = 2;
+}
+
+message UserCartDeleteResponse {
+    int32 response_code = 1;
+
+    /*
+    0 - Success
+    1 - User was not found
+    2 - Item is not in the cart
+    */
+}
+
+message UserCartGetRequest {
+
+    int64 user_id = 1;
+
+}
+
+
+message UserCartGetResponse {
+
+    message item {
+        int64 item_id = 1;
+        double volume = 2;
+    }
+
+    int32 response_code = 1;
+    optional double total_cost = 2;
+    repeated item content = 3;
+
+    /*
+    0 - Success
+    1 - User was not found
+    */
+
+}
+
+service UserRepository {
+    rpc InsertUser (InsertUserRequest) returns (InsertUserResponse);
+    rpc UserCartAdd (UserCartAddRequest) returns (UserCartAddResponse);
+    rpc UserCartDelete (UserCartDeleteRequest) returns (UserCartDeleteResponse);
+    rpc UserCartGet (UserCartGetRequest) returns (UserCartGetResponse);
+}
