@@ -1,6 +1,7 @@
+
 syntax = "proto3";
 
-package paymentrepository;
+package payment_repository;
 
 // The PaymentRepositoryService handles data storage and retrieval for payments and invoices.
 service PaymentRepositoryService {

@@ -14,25 +14,25 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18payment_repository.proto\x12\x11paymentrepository\"~\n\x0bPaymentData\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x02\x12\x10\n\x08\x63urrency\x18\x03 \x01(\t\x12\x10\n\x08items_id\x18\x04 \x01(\x05\x12\x12\n\ncard_token\x18\x05 \x01(\t\x12\x16\n\x0e\x63\x61rd_last_four\x18\x06 \x01(\t\"(\n\x14StorePaymentResponse\x12\x10\n\x08order_id\x18\x01 \x01(\x05\" \n\x0cPaymentQuery\x12\x10\n\x08order_id\x18\x01 \x01(\x05\"a\n\x0bInvoiceData\x12\x17\n\x0finvoice_details\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x10\n\x08order_id\x18\x03 \x01(\t\x12\x16\n\x0e\x63\x61rd_last_four\x18\x04 \x01(\t\"*\n\x14StoreInvoiceResponse\x12\x12\n\ninvoice_id\x18\x01 \x01(\x05\"\"\n\x0cInvoiceQuery\x12\x12\n\ninvoice_id\x18\x01 \x01(\x05\x32\xfc\x02\n\x18PaymentRepositoryService\x12Y\n\x0cStorePayment\x12\x1e.paymentrepository.PaymentData\x1a\'.paymentrepository.StorePaymentResponse\"\x00\x12T\n\x0fRetrievePayment\x12\x1f.paymentrepository.PaymentQuery\x1a\x1e.paymentrepository.PaymentData\"\x00\x12Y\n\x0cStoreInvoice\x12\x1e.paymentrepository.InvoiceData\x1a\'.paymentrepository.StoreInvoiceResponse\"\x00\x12T\n\x0fRetrieveInvoice\x12\x1f.paymentrepository.InvoiceQuery\x1a\x1e.paymentrepository.InvoiceData\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18payment_repository.proto\x12\x12payment_repository\"~\n\x0bPaymentData\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x02\x12\x10\n\x08\x63urrency\x18\x03 \x01(\t\x12\x10\n\x08items_id\x18\x04 \x01(\x05\x12\x12\n\ncard_token\x18\x05 \x01(\t\x12\x16\n\x0e\x63\x61rd_last_four\x18\x06 \x01(\t\"(\n\x14StorePaymentResponse\x12\x10\n\x08order_id\x18\x01 \x01(\x05\" \n\x0cPaymentQuery\x12\x10\n\x08order_id\x18\x01 \x01(\x05\"a\n\x0bInvoiceData\x12\x17\n\x0finvoice_details\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x10\n\x08order_id\x18\x03 \x01(\t\x12\x16\n\x0e\x63\x61rd_last_four\x18\x04 \x01(\t\"*\n\x14StoreInvoiceResponse\x12\x12\n\ninvoice_id\x18\x01 \x01(\x05\"\"\n\x0cInvoiceQuery\x12\x12\n\ninvoice_id\x18\x01 \x01(\x05\x32\x84\x03\n\x18PaymentRepositoryService\x12[\n\x0cStorePayment\x12\x1f.payment_repository.PaymentData\x1a(.payment_repository.StorePaymentResponse\"\x00\x12V\n\x0fRetrievePayment\x12 .payment_repository.PaymentQuery\x1a\x1f.payment_repository.PaymentData\"\x00\x12[\n\x0cStoreInvoice\x12\x1f.payment_repository.InvoiceData\x1a(.payment_repository.StoreInvoiceResponse\"\x00\x12V\n\x0fRetrieveInvoice\x12 .payment_repository.InvoiceQuery\x1a\x1f.payment_repository.InvoiceData\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'payment_repository_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
-  _globals['_PAYMENTDATA']._serialized_start=47
-  _globals['_PAYMENTDATA']._serialized_end=173
-  _globals['_STOREPAYMENTRESPONSE']._serialized_start=175
-  _globals['_STOREPAYMENTRESPONSE']._serialized_end=215
-  _globals['_PAYMENTQUERY']._serialized_start=217
-  _globals['_PAYMENTQUERY']._serialized_end=249
-  _globals['_INVOICEDATA']._serialized_start=251
-  _globals['_INVOICEDATA']._serialized_end=348
-  _globals['_STOREINVOICERESPONSE']._serialized_start=350
-  _globals['_STOREINVOICERESPONSE']._serialized_end=392
-  _globals['_INVOICEQUERY']._serialized_start=394
-  _globals['_INVOICEQUERY']._serialized_end=428
-  _globals['_PAYMENTREPOSITORYSERVICE']._serialized_start=431
-  _globals['_PAYMENTREPOSITORYSERVICE']._serialized_end=811
+  _globals['_PAYMENTDATA']._serialized_start=48
+  _globals['_PAYMENTDATA']._serialized_end=174
+  _globals['_STOREPAYMENTRESPONSE']._serialized_start=176
+  _globals['_STOREPAYMENTRESPONSE']._serialized_end=216
+  _globals['_PAYMENTQUERY']._serialized_start=218
+  _globals['_PAYMENTQUERY']._serialized_end=250
+  _globals['_INVOICEDATA']._serialized_start=252
+  _globals['_INVOICEDATA']._serialized_end=349
+  _globals['_STOREINVOICERESPONSE']._serialized_start=351
+  _globals['_STOREINVOICERESPONSE']._serialized_end=393
+  _globals['_INVOICEQUERY']._serialized_start=395
+  _globals['_INVOICEQUERY']._serialized_end=429
+  _globals['_PAYMENTREPOSITORYSERVICE']._serialized_start=432
+  _globals['_PAYMENTREPOSITORYSERVICE']._serialized_end=820
 # @@protoc_insertion_point(module_scope)

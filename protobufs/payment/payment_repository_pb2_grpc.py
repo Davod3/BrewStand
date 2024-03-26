@@ -16,22 +16,22 @@ class PaymentRepositoryServiceStub(object):
             channel: A grpc.Channel.
         """
         self.StorePayment = channel.unary_unary(
-                '/paymentrepository.PaymentRepositoryService/StorePayment',
+                '/payment_repository.PaymentRepositoryService/StorePayment',
                 request_serializer=payment__repository__pb2.PaymentData.SerializeToString,
                 response_deserializer=payment__repository__pb2.StorePaymentResponse.FromString,
                 )
         self.RetrievePayment = channel.unary_unary(
-                '/paymentrepository.PaymentRepositoryService/RetrievePayment',
+                '/payment_repository.PaymentRepositoryService/RetrievePayment',
                 request_serializer=payment__repository__pb2.PaymentQuery.SerializeToString,
                 response_deserializer=payment__repository__pb2.PaymentData.FromString,
                 )
         self.StoreInvoice = channel.unary_unary(
-                '/paymentrepository.PaymentRepositoryService/StoreInvoice',
+                '/payment_repository.PaymentRepositoryService/StoreInvoice',
                 request_serializer=payment__repository__pb2.InvoiceData.SerializeToString,
                 response_deserializer=payment__repository__pb2.StoreInvoiceResponse.FromString,
                 )
         self.RetrieveInvoice = channel.unary_unary(
-                '/paymentrepository.PaymentRepositoryService/RetrieveInvoice',
+                '/payment_repository.PaymentRepositoryService/RetrieveInvoice',
                 request_serializer=payment__repository__pb2.InvoiceQuery.SerializeToString,
                 response_deserializer=payment__repository__pb2.InvoiceData.FromString,
                 )
@@ -94,7 +94,7 @@ def add_PaymentRepositoryServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'paymentrepository.PaymentRepositoryService', rpc_method_handlers)
+            'payment_repository.PaymentRepositoryService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -114,7 +114,7 @@ class PaymentRepositoryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/paymentrepository.PaymentRepositoryService/StorePayment',
+        return grpc.experimental.unary_unary(request, target, '/payment_repository.PaymentRepositoryService/StorePayment',
             payment__repository__pb2.PaymentData.SerializeToString,
             payment__repository__pb2.StorePaymentResponse.FromString,
             options, channel_credentials,
@@ -131,7 +131,7 @@ class PaymentRepositoryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/paymentrepository.PaymentRepositoryService/RetrievePayment',
+        return grpc.experimental.unary_unary(request, target, '/payment_repository.PaymentRepositoryService/RetrievePayment',
             payment__repository__pb2.PaymentQuery.SerializeToString,
             payment__repository__pb2.PaymentData.FromString,
             options, channel_credentials,
@@ -148,7 +148,7 @@ class PaymentRepositoryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/paymentrepository.PaymentRepositoryService/StoreInvoice',
+        return grpc.experimental.unary_unary(request, target, '/payment_repository.PaymentRepositoryService/StoreInvoice',
             payment__repository__pb2.InvoiceData.SerializeToString,
             payment__repository__pb2.StoreInvoiceResponse.FromString,
             options, channel_credentials,
@@ -165,7 +165,7 @@ class PaymentRepositoryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/paymentrepository.PaymentRepositoryService/RetrieveInvoice',
+        return grpc.experimental.unary_unary(request, target, '/payment_repository.PaymentRepositoryService/RetrieveInvoice',
             payment__repository__pb2.InvoiceQuery.SerializeToString,
             payment__repository__pb2.InvoiceData.FromString,
             options, channel_credentials,

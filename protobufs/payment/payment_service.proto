@@ -1,7 +1,5 @@
 syntax = "proto3";
-
-package payment;
-
+package payment_service;
 import "payment_repository.proto";
 
 // The PaymentService handles processing payments and communicating with the Payment Repository Service.
