@@ -21,8 +21,8 @@ message InsertUserResponse {
 
 message UserCartAddRequest {
     
-    int64 user_id = 1;
-    int64 batch_id = 2;
+    string user_id = 1;
+    string batch_id = 2;
     double volume = 3; 
 }
 
@@ -37,8 +37,8 @@ message UserCartAddResponse {
 }
 
 message UserCartDeleteRequest {
-    int64 user_id = 1;
-    optional int64 batch_id = 2;
+    string user_id = 1;
+    optional string batch_id = 2;
 }
 
 message UserCartDeleteResponse {
@@ -53,7 +53,7 @@ message UserCartDeleteResponse {
 
 message UserCartGetRequest {
 
-    int64 user_id = 1;
+    string user_id = 1;
 
 }
 

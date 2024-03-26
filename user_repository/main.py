@@ -15,6 +15,7 @@ import user_repository_pb2_grpc
 from models.user import User
 from mongoengine import *
 import os
+import cartHandler as CartHandler
 
 class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
     
@@ -36,8 +37,10 @@ class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
 
     
     def UserCartAdd(self,request, context):
-        # Do some magic
-        return UserCartAddResponse(response_code = 0)
+
+        result = CartHandler.addToCart(request.user_id, request.batch_id, request.volume)
+
+        return UserCartAddResponse(response_code = result)
     
     def UserCartDelete(self, request, context):
         return UserCartDeleteResponse(response_code = 0)
