@@ -4,5 +4,7 @@ def getBatch():
 def getBatches():
     return 'TESTING'
 
-def updateReview():
+def updateReview(item_id, review):
+   
+
     return 'TESTING'
