@@ -4,13 +4,13 @@ import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 
-from user_service_pb2 import (
+from user_pb2 import (
     CreateUserResponse
 )
 
-import user_service_pb2_grpc
+import user_pb2_grpc
 
-class UserService(user_service_pb2_grpc.UserServicer):
+class UserService(user_pb2_grpc.UserServicer):
     
     def CreateUser(self, request, context):
         # Do some magic
@@ -23,7 +23,7 @@ def serve():
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
 
-    user_service_pb2_grpc.add_UserServicer_to_server(
+    user_pb2_grpc.add_UserServicer_to_server(
         UserService(), server
     )
 
