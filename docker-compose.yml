@@ -15,7 +15,7 @@ services:
       - '8080:8080'
     networks:
       brewstand-net:
-        ipv4_address: 172.100.10.10
+        ipv4_address: 172.100.10.5
     environment:
       - USER_SERVICE_HOST=172.100.10.11
 
@@ -45,6 +45,17 @@ services:
       brewstand-net:
         ipv4_address: 172.100.10.21
 
+  user_db:
+      image: mongodb/mongodb-community-server:latest
+      container_name: user_db
+      ports:
+        - "27017:27017"
+      volumes:
+        - ./volumes/user_db:/data/db
+      networks:
+          brewstand-net:
+              ipv4_address: 172.100.10.33
+
   inventory_db:
     image: postgres:latest
     ports:
@@ -57,7 +68,7 @@ services:
       - POSTGRES_DB=inventory_db
     networks:
       brewstand-net:
-        ipv4_address: 172.100.10.14
+        ipv4_address: 172.100.10.34
 
 networks:
   brewstand-net:
