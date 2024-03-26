@@ -9,7 +9,8 @@ from user_repository_pb2 import (
     UserCartAddResponse,
     UserCartDeleteResponse,
     UserCartGetResponse,
-    Batch
+    Batch,
+    GetUserResponse
 )
 
 import user_repository_pb2_grpc
@@ -61,6 +62,25 @@ class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
         else:
             converted_items = map(convertToRPC, user_cart)
             return UserCartGetResponse(response_code = 0,content = converted_items )
+        
+    def GetUser(self, request, context):
+
+        username = request.username
+        password = request.password
+
+        try:
+            user = User.objects.get(username=username)
+            
+            if(user.password != password):
+                return GetUserResponse(response_code=2) #Wrong password
+            
+            return GetUserResponse(response_code=0, username=user.username, address=user.address, user_id=str(user.pk))
+        
+        except DoesNotExist:
+            return GetUserResponse(response_code=1) # User not found
+
+
+
 
 
     

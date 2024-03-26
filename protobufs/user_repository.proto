@@ -19,6 +19,31 @@ message InsertUserResponse {
     */
 }
 
+message GetUserRequest {
+    
+    string username = 1;
+    string password = 2;
+
+}
+
+message GetUserResponse {
+
+    int32 response_code = 1;
+    optional string username = 2;
+    optional string address = 3;
+    optional string user_id = 4;
+
+    /*
+
+    0 - Success
+    1 - User not found
+    2 - Incorrect password
+
+    */
+
+}
+
+
 message UserCartAddRequest {
     
     string user_id = 1;
@@ -79,4 +104,5 @@ service UserRepository {
     rpc UserCartAdd (UserCartAddRequest) returns (UserCartAddResponse);
     rpc UserCartDelete (UserCartDeleteRequest) returns (UserCartDeleteResponse);
     rpc UserCartGet (UserCartGetRequest) returns (UserCartGetResponse);
+    rpc GetUser (GetUserRequest) returns (GetUserResponse);
 }
