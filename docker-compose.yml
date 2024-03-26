@@ -4,7 +4,7 @@ services:
 
   api_gateway:
     depends_on:
-      - user_service
+      - user_controller
     build:
       context: ./
       dockerfile: ./api_gateway/Dockerfile
@@ -20,6 +20,8 @@ services:
       - USER_SERVICE_HOST=172.100.10.10
   
   user_controller:
+    depends_on:
+      - user_service
     build:
       context: ./
       dockerfile: ./user_controller/Dockerfile
@@ -33,6 +35,8 @@ services:
         ipv4_address: 172.100.10.10
 
   user_service:
+    depends_on:
+      - user_repository
     build:
       context: ./
       dockerfile: ./user_service/Dockerfile
@@ -46,6 +50,9 @@ services:
         ipv4_address: 172.100.10.20
   
   user_repository:
+    depends_on:
+      - user_db
+    restart: on-failure:10
     build:
       context: ./
       dockerfile: ./user_repository/Dockerfile
@@ -76,19 +83,45 @@ services:
           brewstand-net:
               ipv4_address: 172.100.10.40
 
+  inventory_repository:
+    depends_on:
+      - inventory_db
+    restart: on-failure:10
+    build:
+      context: ./
+      dockerfile: ./inventory_repository/Dockerfile
+    container_name: inventory_repository
+    expose:
+      - 50062
+    ports:
+      - '50062:50062'
+    volumes:
+      - ./dataset/dataset.csv:/service/dataset/dataset.csv
+    environment:
+      - INVENTORY_DB_NAME=inventory_db
+      - INVENTORY_DB_USER=db_access_inventory
+      - INVENTORY_DB_PASSWORD=VerySecureYesYes123
+      - INVENTORY_DB_HOST=172.100.10.41
+      - INVENTORY_DB_PORT=5432
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.31
+
   inventory_db:
     image: postgres:latest
+    command: postgres -c "config_file=/etc/postgresql/postgresql.conf"
     ports:
       - 5432:5432
     volumes:
       - ./volumes/inventory_db:/var/lib/postgresql/data
+      - ./custom_configs/postgresql.conf:/etc/postgresql/postgresql.conf
     environment:
       - POSTGRES_PASSWORD=VerySecureYesYes123
       - POSTGRES_USER=db_access_inventory
       - POSTGRES_DB=inventory_db
     networks:
       brewstand-net:
-        ipv4_address: 172.100.10.34
+        ipv4_address: 172.100.10.41
 
 networks:
   brewstand-net:
