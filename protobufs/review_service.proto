@@ -1,0 +1,25 @@
+syntax = "proto3"
+
+message ItemReviewRequest {
+
+    string itemId = 1;
+    string score = 2;
+
+}
+
+message ItemReviewResponse {
+
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Invalid review score value
+    2 - Item not found
+
+    */
+}
+
+service Review {
+    rpc ReviewItem (ItemReviewRequest) returns (ItemReviewResponse)
+}
