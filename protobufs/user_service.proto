@@ -14,8 +14,8 @@ message CreateUserResponse {
     /*
 
     0 - Success
-    1 - Invalid user parameters
-    2 - Username already exists
+    1 - Username already exists
+    2 - Invalid user parameters
 
     */
 }
@@ -40,13 +40,13 @@ message AuthenticateUserResponse {
 
 }
 
-message GetUserRequest {
+message GetUserDetailsRequest {
 
     string user_id = 1;
 
 }
 
-message GetUserResponse {
+message GetUserDetailsResponse {
 
     int32 response_code = 1;
     optional string username = 2;
@@ -135,7 +135,7 @@ message GetCartContentRequest {
 
 }
 
-message Batch {
+message CartContent {
         int64 batch_id = 1;
         double volume = 2;
     }
@@ -143,7 +143,7 @@ message Batch {
 message GetCartContentResponse {
 
     int32 response_code = 1;
-    repeated Batch content = 2;
+    repeated CartContent content = 2;
 
     /*
     0 - Success
@@ -155,7 +155,7 @@ message GetCartContentResponse {
 service User {
     rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
     rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse);
-    rpc GetUser (GetUserRequest) returns (GetUserResponse);
+    rpc GetUser (GetUserDetailsRequest) returns (GetUserDetailsResponse);
     rpc PayCart (PayCartRequest) returns (PayCartResponse);
     rpc AddItemCart (AddItemCartRequest) returns (AddItemCartResponse);
     rpc DeleteItemCart (DeleteItemCartRequest) returns (DeleteItemCartResponse);

@@ -45,6 +45,9 @@ services:
       - 50051
     ports:
       - '50051:50051'
+    environment:
+      - USER_REPOSITORY_HOST=172.100.10.30
+      - USER_REPOSITORY_PORT=50061
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.20
