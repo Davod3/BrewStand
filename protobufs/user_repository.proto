@@ -43,6 +43,9 @@ message GetUserResponse {
 
 }
 
+message GetUserByIDRequest {
+    string user_id = 1;
+}
 
 message UserCartAddRequest {
     
@@ -105,4 +108,5 @@ service UserRepository {
     rpc UserCartDelete (UserCartDeleteRequest) returns (UserCartDeleteResponse);
     rpc UserCartGet (UserCartGetRequest) returns (UserCartGetResponse);
     rpc GetUser (GetUserRequest) returns (GetUserResponse);
+    rpc GetUserByID (GetUserByIDRequest) returns (GetUserResponse);
 }

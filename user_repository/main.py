@@ -78,6 +78,14 @@ class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
         
         except DoesNotExist:
             return GetUserResponse(response_code=1) # User not found
+        
+    def GetUserByID(self, request, context):
+
+        try:
+            user = User.objects.get(id=request.user_id)
+            return GetUserResponse(response_code=0, username=user.username, address=user.address, user_id=str(user.pk))
+        except DoesNotExist:
+            return GetUserResponse(response_code=1) # User not found
 
 
 

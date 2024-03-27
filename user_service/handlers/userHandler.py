@@ -6,7 +6,8 @@ from user_repository_pb2 import (
     GetUserRequest,
     UserCartAddRequest,
     UserCartDeleteRequest,
-    UserCartGetRequest
+    UserCartGetRequest,
+    GetUserByIDRequest
 )
 
 from user_repository_pb2_grpc import UserRepositoryStub

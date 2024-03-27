@@ -34,6 +34,9 @@ class UserService(user_service_pb2_grpc.UserServicer):
         return AuthenticateUserResponse(response_code = response_code, user_id = received_id)
     
     def GetUser(self, request, context):
+
+        response = UserHandler.getUser(request.user_id)
+
         return GetUserDetailsResponse(response_code = 0, username = '', address = '')
     
     def PayCart(self, request, context):
