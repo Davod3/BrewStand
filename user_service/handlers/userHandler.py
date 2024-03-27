@@ -44,3 +44,15 @@ def registerUser(username, password, address):
 
         #Credentials don't have a valid format
         return 2
+    
+def authenticateUser(username, password):
+    
+    request = GetUserRequest(username = username, password = password)
+    response = client.GetUser(request)
+
+    if(response.response_code == 0):
+        return (response.response_code, response.user_id)
+    else:
+        return(response.response_code, '')
+
+        
