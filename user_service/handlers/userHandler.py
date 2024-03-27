@@ -55,5 +55,12 @@ def authenticateUser(username, password):
         return (response.response_code, response.user_id)
     else:
         return(response.response_code, '')
+    
+def getUserByID(user_id):
+
+    request = GetUserByIDRequest(user_id=user_id)
+    response = client.GetUserByID(request)
+
+    return response
 
         
