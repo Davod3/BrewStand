@@ -58,8 +58,17 @@ def getCart(userId):
     else:
         return '', 500
 
-def removeFromCart(userId, itemId=None):
-    return 'TESTING'
+def removeFromCart(userId, itemId=0):
+
+    request = DeleteItemCartRequest(user_id = userId, batch_id = itemId)
+    response = client.DeleteItemCart(request)
+
+    if(response.response_code == 0 or response.response_code == 2):
+        return '', 200
+    elif(response.response_code == 1):
+        return '', 404
+    else:
+        return '', 500
 
 def checkoutCart(userId):
     return 'TESTING'
