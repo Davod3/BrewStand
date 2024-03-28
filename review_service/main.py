@@ -15,7 +15,7 @@ class ReviewService (review_service_pb2_grpc.ReviewServicer):
 
     def ReviewItem(self, request, context):
 
-        result = reviewHandler.validScore(request.item_id, request.score)
+        result = reviewHandler.validScore(request.batch_id, request.user_score)
         return ItemReviewResponse(response_code=result)
 
 def serve():

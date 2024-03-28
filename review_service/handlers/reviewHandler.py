@@ -2,17 +2,12 @@ import os
 import grpc
 import handlers.itemHandlerReview as itemHandlerReview
 
-from review_service_pb2 import(
-    ItemReviewRequest
-    # A ideia é esta, mas tem de ser o Item Repository
-)
-
 
 def validScore(batch_id,score):
 
     # Aqui dentro tens de ver se o score dado é válido e depois contactar o Item Repository.
 
-    if (0<=score<10):
+    if (0<=score<10 and itemHandlerReview.validateBatch(batch_id)==True):
 
         # O score é válido. Contacta o Item Repository
         # Do item repository tiras as cenas que precisas para fazer as contas
@@ -23,7 +18,6 @@ def validScore(batch_id,score):
         newscore = (oldScore * numero_pessoas + score)/numero_pessoas + 1
         
         """
-
         ########################################
         # Estou confuso com o que meter aqui   #
         ########################################
