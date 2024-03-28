@@ -7,11 +7,11 @@ import grpc
 
 from user_service_pb2 import (
     CreateUserRequest,
-    AuthenticateUserRequest,
     PayCartRequest,
     AddItemCartRequest,
     DeleteItemCartRequest,
     GetCartContentRequest,
+    GetUserRequest
 )
 
 from user_service_pb2_grpc import UserStub

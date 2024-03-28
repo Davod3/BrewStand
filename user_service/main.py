@@ -6,7 +6,6 @@ from grpc_interceptor.exceptions import NotFound
 
 from user_service_pb2 import (
     CreateUserResponse,
-    AuthenticateUserResponse,
     GetUserDetailsResponse,
     PayCartResponse,
     AddItemCartResponse,
@@ -23,15 +22,9 @@ class UserService(user_service_pb2_grpc.UserServicer):
     
     def CreateUser(self, request, context):
 
-        result = UserHandler.registerUser(request.username, request.password, request.address)
+        response = UserHandler.registerUser(request.username, request.password, request.address)
 
-        return CreateUserResponse(response_code = result)
-    
-    def AuthenticateUser(self, request, context):
-
-        (response_code, received_id) = UserHandler.authenticateUser(request.username, request.password)
-
-        return AuthenticateUserResponse(response_code = response_code, user_id = received_id)
+        return CreateUserResponse(response_code = response.response_code, user_id=response.user_id)
     
     def GetUser(self, request, context):
 
