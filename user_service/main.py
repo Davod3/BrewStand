@@ -43,13 +43,19 @@ class UserService(user_service_pb2_grpc.UserServicer):
         return PayCartResponse(response_code = 0, invoice=None)
     
     def AddItemCart(self, request, context):
-        return AddItemCartResponse(response_code = 0)
+
+        response = UserHandler.addToCart(request.user_id, request.batch_id, request.volume)
+
+        return AddItemCartResponse(response_code = response)
     
     def DeleteItemCart(self, request, context):
         return DeleteItemCartResponse(response_code = 0)
     
     def GetCartContent(self, request, context):
-        return GetCartContentResponse(response_code = 0, content = None)
+
+        (response_code, cart_content, total_cost) = UserHandler.getCartContent(request.user_id)
+
+        return GetCartContentResponse(response_code=response_code, content=cart_content, total_price=total_cost)
     
 def serve():
 

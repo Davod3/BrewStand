@@ -1,5 +1,6 @@
 import os
 import grpc
+import handlers.itemHandler as ItemHandler
 
 from user_repository_pb2 import (
     InsertUserRequest,
@@ -11,6 +12,8 @@ from user_repository_pb2 import (
 )
 
 from user_repository_pb2_grpc import UserRepositoryStub
+
+from user_service_pb2 import CartContent
 
 user_repository_host = os.getenv("USER_REPOSITORY_HOST", "localhost")
 user_repository_port = os.getenv("USER_REPOSITORY_PORT", "50061")
@@ -62,5 +65,51 @@ def getUserByID(user_id):
     response = client.GetUserByID(request)
 
     return response
+
+def addToCart(user_id, batch_id, volume):
+
+    if(volume <= 0):
+        #Volume is invalid
+        return 3
+
+    item_response_code = ItemHandler.validateItem(batch_id)
+
+    if(item_response_code == 0):
+        
+        #Item is valid, add to cart
+        request = UserCartAddRequest(user_id=user_id, batch_id=batch_id, volume=volume)
+        response = client.UserCartAdd(request)
+
+        return response.response_code
+    
+    else:
+
+        #Item is not valid. Return correct response code
+        return item_response_code
+    
+def getCartContent(user_id):
+
+    request = UserCartGetRequest(user_id=user_id)
+    response = client.UserCartGet(request)
+
+    if(response.response_code == 0):
+
+        #Query went ok, extract items
+        items = response.content
+        total_cost = 0
+        cart_contents = list()
+
+        for item in items:
+            cart_contents.append(CartContent(batch_id=item.batch_id, volume=item.volume))
+            total_cost += ItemHandler.getBatchCost(item.batch_id) * item.volume
+
+
+        return (0, cart_contents, total_cost)
+    
+    else:
+
+        #User was not found
+        return (response.response_code, [], 0)
+
 
         
