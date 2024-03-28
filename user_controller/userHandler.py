@@ -47,13 +47,13 @@ def createUser():
         response = client.CreateUser(request)
 
         if(response.response_code == 0):
-            return 'Success', 200
+            return str(response.user_id), 200
         elif(response.response_code == 1):
-            return 'Username already exists', 403
+            return '', 403
         elif(response.response_code == 2):
-            return 'Invalid user parameters', 400
+            return '', 400
         else:
-            return 'Service unavailable. Try again later', 500
+            return '', 500
 
     else:
         return 'Invalid request body', 400
