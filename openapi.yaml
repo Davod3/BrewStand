@@ -154,43 +154,18 @@ paths:
               $ref: '#/components/schemas/User'
       responses:
         '200':
-          description: Successful Operation. User was added.
+          description: Successful Operation. User was added with the resulting ID
+          content:
+            appication/json:
+              schema:
+                type: string
+                example: "1234abcd345"
+                description: Id of the created user
+                
         '400':
           description: Invalid request body. Must include a valid username and address.
         '403':
           description: Username already exists. Please try again with a new username.
-  /user/authentication:
-    get:
-      tags:
-        - User
-      summary: Authenticates a User.
-      description: Authenticates a User, returning an API Access Token if successfull.
-      operationId: user.authenticateUser
-      parameters:
-        - name: username
-          in: query
-          description: The username of the user to authenticate.
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: The password of the user to authenticate
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful Operation.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-        '404':
-          description: Requested user was not found.
   /items/{itemId}:
     get:
       tags:
@@ -319,6 +294,13 @@ paths:
       security:
         - ApiKeyAuth: []
       operationId: order.getOrders
+      parameters:
+        - name: userId
+          in: query
+          description: The id of the user whose orders we want to view
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Successful Operation
@@ -366,6 +348,13 @@ paths:
       security:
         - ApiKeyAuth: []
       operationId: billing.getInvoices
+      parameters:
+        - name: userId
+          in: query
+          description: The ID of the user whose invoices we want to see
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Successful Operation

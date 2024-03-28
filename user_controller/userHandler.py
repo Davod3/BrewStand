@@ -11,7 +11,7 @@ from user_service_pb2 import (
     AddItemCartRequest,
     DeleteItemCartRequest,
     GetCartContentRequest,
-    GetUserRequest
+    GetUserDetailsRequest
 )
 
 from user_service_pb2_grpc import UserStub
