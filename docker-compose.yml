@@ -36,8 +36,6 @@ services:
         ipv4_address: 172.100.10.20
   
   user_repository:
-    depends_on:
-      - user_db
     restart: on-failure:10
     build:
       context: ./
