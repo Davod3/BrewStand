@@ -48,7 +48,10 @@ def getCart(userId):
     response = client.GetCartContent(request)
 
     if(response.response_code == 0):
-        cart_content = {'items' : list(response.content), 'totalCost' : float(response.total_price)}
+
+        cart_content = __getCartContent(response.content)
+
+        cart_content = {'items' : cart_content, 'totalCost' : float(response.total_price)}
         return cart_content, 200
     elif(response.response_code == 1):
         return '', 404
@@ -70,9 +73,9 @@ def createUser():
         response = client.CreateUser(request)
 
         if(response.response_code == 0):
-            return f"{response.user_id}", 200
+            return {'id' : response.user_id}, 200
         elif(response.response_code == 1):
-            return 'Teste', 403
+            return '', 403
         elif(response.response_code == 2):
             return '', 400
         else:
@@ -81,5 +84,11 @@ def createUser():
     else:
         return 'Invalid request body', 400
 
-def authenticateUser(username, password):
-    return 'Testing'
+def __getCartContent(item_list):
+
+    cart_content = list()
+
+    for item in item_list:
+        cart_content.append({'itemID' : item.batch_id, 'volume' : item.volume})
+
+    return cart_content
