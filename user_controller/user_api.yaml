@@ -1,0 +1,247 @@
+openapi: 3.0.3
+info:
+  title: BrewStand_UserAPI
+  description: |-
+    This is the definition of the REST API for the BrewStand User Service. With this API users will be able to register in the system, authenticate themselves and manage their cart.
+  version: 1.0.0
+servers:
+  - url: /
+tags:
+  - name: User
+    description: Supports operations related with account creation, authentication as well as cart and billing management
+paths:
+  /user/{userId}/cart:
+      put:
+        tags:
+          - User
+        summary: Adds an item to the user's cart.
+        description: Adds an item with id provided in the request body to the cart belonging to the  user with user_id 
+        operationId: userHandler.addToCart
+        requestBody:
+          description: Item ID and respective volume to be added to the cart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  batchID:
+                    type: integer
+                    format: int64
+                    example: 10
+                  volume:
+                    type: number
+                    format: double
+                    example: 38.5
+        parameters:
+          - name: userId
+            in: path
+            description: The ID of the user whose cart we want to access
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:    
+          '200':
+            description: Successful operation. Item was added to the cart
+          '400': 
+            description: Invalid request body. Must include valid batch ID and volume
+          '404': 
+            description: User with the given userId was not found.
+      get:
+        tags:
+          - User
+        summary: Gets the items in the user's cart.
+        description: Gets the contents of the cart belonging to the user with the given userId
+        operationId: userHandler.getCart
+        parameters:
+          - name: userId
+            in: path
+            description: The ID of the user whose cart we want to access
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:    
+          '200':
+            description: Successful operation.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UserCart'
+          '404': 
+            description: User with the given userId was not found.
+            
+      delete:
+        tags:
+          - User
+        summary: Deletes items from the user's cart.
+        description: Deletes all items or a specific one if the id is specified.
+        operationId: userHandler.removeFromCart
+        parameters:
+          - name: userId
+            in: path
+            description: The ID of the user whose cart we want to access
+            required: true
+            schema:
+              type: integer
+              format: int64
+          - name: itemId
+            in: query
+            description: The id of the specific item we want to delete from the cart
+            required: false
+            schema:
+              type: integer
+              format: int64
+        responses:    
+          '200':
+            description: Successful operation.
+          '404': 
+            description: User with the given userId was not found.
+  /user/{userId}/cart/payment:
+    post:
+      tags:
+        - User
+      summary: Initiates the payment process for the items in a user's cart.
+      description: Initiates the payment process for the items in a user's cart. If the payment succeeds the cart is cleared and an invoice containing tracking information for the order is returned.
+      operationId: userHandler.checkoutCart
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user whose cart we want to access.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200': 
+          description: Successful operation. Items in the cart are paid and an order created.
+          content:
+            application/json:
+              schema:
+                $ref : '#/components/schemas/Invoice'
+        '404':
+          description: User with the given userId was not found
+        '500': 
+          description: Something went wrong while processing the payment. Please try again later.
+  /user:
+    post:
+      tags:
+        - User
+      summary: Adds a new user to the system.
+      description: Creates a new user in the system with the given parameters.
+      operationId: userHandler.createUser
+      requestBody:
+        description: The details of the user to be added.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Successful Operation. User was added.
+        '400':
+          description: Invalid request body. Must include a valid username and address.
+        '403':
+          description: Username already exists. Please try again with a new username.
+  /user/authentication:
+    get:
+      tags:
+        - User
+      summary: Authenticates a User.
+      description: Authenticates a User, returning an API Access Token if successfull.
+      operationId: userHandler.authenticateUser
+      parameters:
+        - name: username
+          in: query
+          description: The username of the user to authenticate.
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password of the user to authenticate
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful Operation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '404':
+          description: Requested user was not found.
+          
+components:
+  schemas:
+    UserCart:
+        type: object
+        properties:
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                itemID:
+                  type: integer
+                  format: int64
+                  example: 10
+                  description:  A unique identifier assigned to each batch of beer produced.
+                volume:
+                  type: number
+                  format: double
+                  description: The volume of the item being acquired, in liters.
+          totalCost:
+            type: number
+            format: double
+            example: 35.55
+            description: Total cost of the items in the cart in euros.
+    Invoice:
+      type: object
+      properties:
+        invoiceID:
+          type: integer
+          format: int64
+          example: 10
+          description:  A unique identifier assigned to each invoice processed.
+        price:
+          type: number
+          format: double
+          example: 335.5
+          description: The total cost for the order.
+        orderID:
+          type: integer
+          format: int64
+          example: 10
+          description: The order id. Used for tracking purposes.
+        customerID:
+          type: integer
+          format: int64
+          example: 10
+          description: The id of the user who initiated the payment process.
+        fiscalAddress:
+          type: string
+          example: Campo Grande 016, 1749-016 Lisboa
+          description: The address used for billing purposes.
+        details:
+          type: string
+          description: Optional details and extra notes about the order.
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          example: José123
+          description: The username used to refer to the user. Must be unique
+        password:
+          type: string
+          example: $ThisIsAPassword
+          description: The password the user intends to use for authentication
+        address:
+          type: string
+          example: Campo Grande 016, 1749-016 Lisboa
+          description: The address to where orders will be sent.
