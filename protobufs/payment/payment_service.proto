@@ -35,7 +35,7 @@ message PaymentResponse {
 
 // Request structure for retrieving an invoice.
 message InvoiceRequest {
-  int32 invoice_id = 1; // The order ID for which the invoice is requested.
+  int32 order_id = 1; // The order ID for which the invoice is requested.
 }
 
 // Response structure for invoice retrieval.

@@ -5,7 +5,6 @@ from grpc_interceptor.exceptions import NotFound
 import payment_service_pb2
 import payment_service_pb2_grpc
 import paymentHandler
-import invoiceHandler
 
 class PaymentService(payment_service_pb2_grpc.PaymentServicer):
 
@@ -28,7 +27,7 @@ class PaymentService(payment_service_pb2_grpc.PaymentServicer):
 
     def GetInvoice(self, request, context):
         try:
-            invoice_data = invoiceHandler.retrieve_invoice(request.invoice_id)
+            invoice_data = retrieve_invoice(request.order_id)
             return payment_service_pb2.InvoiceResponse(
                 success=True,
                 invoice=invoice_data

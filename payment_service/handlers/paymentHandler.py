@@ -1,4 +1,4 @@
-# PaymentHandler.py
+# paymentHandler.py
 
 class PaymentHandler:
     @staticmethod

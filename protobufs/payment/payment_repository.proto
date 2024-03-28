@@ -16,6 +16,9 @@ service PaymentRepositoryService {
 
   // Retrieves invoice details.
   rpc RetrieveInvoice (InvoiceQuery) returns (InvoiceData) {}
+
+  // Retrieves all invoices for a specific user.
+  rpc GetUserInvoices (UserInvoicesQuery) returns (UserInvoicesResponse) {}
 }
 
 // Data structure for storing payment details.
@@ -41,8 +44,8 @@ message PaymentQuery {
 // Data structure for storing invoice details.
 message InvoiceData {
   string invoice_details = 1;
-  string user_id = 2;
-  string order_id = 3;
+  int32 user_id = 2;
+  int32 order_id = 3;
   string card_last_four = 4;  // Last four digits of the card number for reference on the invoice.
 }
 
@@ -53,5 +56,16 @@ message StoreInvoiceResponse {
 
 // Query structure for retrieving invoice details.
 message InvoiceQuery {
-   int32 invoice_id = 1;
+   int32 order_id = 1;
+   int32 user_id = 2;
+}
+
+// Query structure for retrieving all invoices of a specific user.
+message UserInvoicesQuery {
+  int32 user_id = 1;  // User ID to query invoices for.
+}
+
+// Response structure for getting all invoices of a specific user.
+message UserInvoicesResponse {
+  repeated InvoiceData invoices = 1;  // List of all invoices for the user.
 }

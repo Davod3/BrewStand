@@ -10,20 +10,22 @@ def get_grpc_stub():
     stub = payment_pb2_grpc.PaymentServiceStub(channel)
     return stub
 
-@app.route('/billing/<int:invoiceId>', methods=['GET'])
+@app.route('/billing/<int:orderId>', methods=['GET'])
 def get_invoice(invoiceId):
+    user_id = get_user_id_from_token()  # Extract user ID from token
     stub = get_grpc_stub()
     try:
-        response = stub.GetInvoice(payment_pb2.InvoiceRequest(invoice_id=invoiceId))
+        response = stub.GetInvoice(payment_pb2.InvoiceRequest(user_id=user_id, invoice_id=orderId))
         return jsonify(response.invoice)
     except grpc.RpcError as e:
         abort(404, "Requested invoice was not found")
 
 @app.route('/billing', methods=['GET'])
 def get_invoices():
+    user_id = get_user_id_from_token()  # Extract user ID from token
     stub = get_grpc_stub()
     try:
-        response = stub.GetAllInvoices(payment_pb2.GetAllInvoicesRequest())
+        response = stub.GetAllInvoices(payment_pb2.GetAllInvoicesRequest(user_id))
         return jsonify([invoice for invoice in response.invoices])
     except grpc.RpcError as e:
         abort(404, "Requested invoices were not found")
