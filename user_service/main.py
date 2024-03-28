@@ -49,7 +49,10 @@ class UserService(user_service_pb2_grpc.UserServicer):
         return AddItemCartResponse(response_code = response)
     
     def DeleteItemCart(self, request, context):
-        return DeleteItemCartResponse(response_code = 0)
+
+        result = UserHandler.deleteFromCart(user_id=request.user_id,batch_id=request.batch_id)
+
+        return DeleteItemCartResponse(response_code = result)
     
     def GetCartContent(self, request, context):
 

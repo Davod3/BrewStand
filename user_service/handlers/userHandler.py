@@ -110,6 +110,13 @@ def getCartContent(user_id):
 
         #User was not found
         return (response.response_code, [], 0)
+    
+def deleteFromCart(user_id, batch_id=0):
+
+    request = UserCartDeleteRequest(user_id=user_id, batch_id=batch_id)
+    response = client.UserCartDelete(request)
+
+    return response.response_code
 
 
         
