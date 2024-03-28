@@ -23,6 +23,14 @@ def validScore(id,score):
         # Do item repository tiras as cenas que precisas para fazer as contas
         # Quando tiveres o score novo, chamas uma função do ItemRepository para dar update (tens de coordenar com a Tânia)
 
+        oldScore = 1
+        numero_pessoas= 1
+
+        newscore = (oldScore * numero_pessoas + score)/numero_pessoas + 1
+
+        #função para devolver à Tânia e dar update na DB
+    
+
         return 0 # Muda isto para ter em conta a resposta do item repository
     
     else:
