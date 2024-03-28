@@ -17,7 +17,7 @@ def validScore(id,score):
 
     # Aqui dentro tens de ver se o score dado é válido e depois contactar o Item Repository.
 
-    if (0<=score<6):
+    if (0<=score<10):
 
         # O score é válido. Contacta o Item Repository
         # Do item repository tiras as cenas que precisas para fazer as contas

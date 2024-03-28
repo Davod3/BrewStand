@@ -1,4 +1,4 @@
-FROM python: 3
+FROM python:3
 
 RUN mkdir /service
 RUN mkdir /service/protobufs
