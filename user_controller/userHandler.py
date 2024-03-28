@@ -22,20 +22,55 @@ user_service_channel = grpc.insecure_channel(f"{user_service_host}:{user_service
 
 client = UserStub(user_service_channel)
 
-def addToCart(user_id):
+def addToCart(userId):
 
     if connexion.request.is_json:
         cartBody = UserIdCartBody.from_dict(connexion.request.get_json())
 
-    return cartBody
+        request = AddItemCartRequest(user_id = userId, batch_id=cartBody.batch_id, volume=cartBody.volume)
+        response = client.AddItemCart(request)
 
-def getCart(user_id):
-    return 'TESTING'
+        if(response.response_code==0):
+            return '',200
+        elif(response.response_code==1):
+            return '',404
+        elif(response.response_code==2 or response.response_code==3):
+            return '', 400
+        else:
+            return '', 500
 
-def removeFromCart(user_id, item_id=None):
-    return 'TESTING'
+    else:
+        return '', 400
 
-def checkoutCart(user_id):
+def getCart(userId):
+
+    request = GetCartContentRequest(user_id=userId)
+    response = client.GetCartContent(request)
+
+    if(response.response_code == 0):
+
+        cart_content = __getCartContent(response.content)
+
+        cart_content = {'items' : cart_content, 'totalCost' : float(response.total_price)}
+        return cart_content, 200
+    elif(response.response_code == 1):
+        return '', 404
+    else:
+        return '', 500
+
+def removeFromCart(userId, itemId=0):
+
+    request = DeleteItemCartRequest(user_id = userId, batch_id = itemId)
+    response = client.DeleteItemCart(request)
+
+    if(response.response_code == 0 or response.response_code == 2):
+        return '', 200
+    elif(response.response_code == 1):
+        return '', 404
+    else:
+        return '', 500
+
+def checkoutCart(userId):
     return 'TESTING'
 
 def createUser():
@@ -47,7 +82,7 @@ def createUser():
         response = client.CreateUser(request)
 
         if(response.response_code == 0):
-            return str(response.user_id), 200
+            return {'id' : response.user_id}, 200
         elif(response.response_code == 1):
             return '', 403
         elif(response.response_code == 2):
@@ -58,5 +93,11 @@ def createUser():
     else:
         return 'Invalid request body', 400
 
-def authenticateUser(username, password):
-    return 'Testing'
+def __getCartContent(item_list):
+
+    cart_content = list()
+
+    for item in item_list:
+        cart_content.append({'itemID' : item.batch_id, 'volume' : item.volume})
+
+    return cart_content
