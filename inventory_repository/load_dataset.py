@@ -76,7 +76,7 @@ def load():
                                  float(row[15]), 
                                  float(__getCost()), 
                                  float(0),
-                                 float(1))
+                                 float(0))
 
                     print(n_rows, clean_row)
                     n_rows += 1
