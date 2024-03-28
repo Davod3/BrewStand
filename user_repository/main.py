@@ -32,7 +32,7 @@ class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
         try:
             user.save()
             #Success
-            return InsertUserResponse(response_code = 0)
+            return InsertUserResponse(response_code = 0, user_id=str(user.pk))
         except NotUniqueError:
             #Repeated username
             return InsertUserResponse(response_code = 1)
@@ -65,31 +65,11 @@ class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
         
     def GetUser(self, request, context):
 
-        username = request.username
-        password = request.password
-
-        try:
-            user = User.objects.get(username=username)
-            
-            if(user.password != password):
-                return GetUserResponse(response_code=2) #Wrong password
-            
-            return GetUserResponse(response_code=0, username=user.username, address=user.address, user_id=str(user.pk))
-        
-        except DoesNotExist:
-            return GetUserResponse(response_code=1) # User not found
-        
-    def GetUserByID(self, request, context):
-
         try:
             user = User.objects.get(id=request.user_id)
             return GetUserResponse(response_code=0, username=user.username, address=user.address, user_id=str(user.pk))
         except DoesNotExist:
             return GetUserResponse(response_code=1) # User not found
-
-
-
-
 
     
 def serve():

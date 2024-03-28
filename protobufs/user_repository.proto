@@ -10,6 +10,7 @@ message InsertUserRequest {
 
 message InsertUserResponse {
     int32 response_code = 1;
+    optional string user_id = 2;
 
     /*
 
@@ -20,10 +21,7 @@ message InsertUserResponse {
 }
 
 message GetUserRequest {
-    
-    string username = 1;
-    string password = 2;
-
+    string user_id = 1;
 }
 
 message GetUserResponse {
@@ -41,10 +39,6 @@ message GetUserResponse {
 
     */
 
-}
-
-message GetUserByIDRequest {
-    string user_id = 1;
 }
 
 message UserCartAddRequest {
@@ -108,5 +102,4 @@ service UserRepository {
     rpc UserCartDelete (UserCartDeleteRequest) returns (UserCartDeleteResponse);
     rpc UserCartGet (UserCartGetRequest) returns (UserCartGetResponse);
     rpc GetUser (GetUserRequest) returns (GetUserResponse);
-    rpc GetUserByID (GetUserByIDRequest) returns (GetUserResponse);
 }

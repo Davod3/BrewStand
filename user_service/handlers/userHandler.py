@@ -7,8 +7,7 @@ from user_repository_pb2 import (
     GetUserRequest,
     UserCartAddRequest,
     UserCartDeleteRequest,
-    UserCartGetRequest,
-    GetUserByIDRequest
+    UserCartGetRequest
 )
 
 from user_repository_pb2_grpc import UserRepositoryStub
@@ -51,17 +50,19 @@ def registerUser(username, password, address):
     
 def authenticateUser(username, password):
     
-    request = GetUserRequest(username = username, password = password)
-    response = client.GetUser(request)
+    #request = GetUserRequest(username = username, password = password)
+    #response = client.GetUser(request)
 
-    if(response.response_code == 0):
-        return (response.response_code, response.user_id)
-    else:
-        return(response.response_code, '')
+    #if(response.response_code == 0):
+    #    return (response.response_code, response.user_id)
+    #else:
+    #    return(response.response_code, '')
+
+    return(1, '')
     
 def getUserByID(user_id):
 
-    request = GetUserByIDRequest(user_id=user_id)
+    request = GetUserRequest(user_id=user_id)
     response = client.GetUserByID(request)
 
     return response
