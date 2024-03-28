@@ -22,20 +22,43 @@ user_service_channel = grpc.insecure_channel(f"{user_service_host}:{user_service
 
 client = UserStub(user_service_channel)
 
-def addToCart(user_id):
+def addToCart(userId):
 
     if connexion.request.is_json:
         cartBody = UserIdCartBody.from_dict(connexion.request.get_json())
 
-    return cartBody
+        request = AddItemCartRequest(user_id = userId, batch_id=cartBody.batch_id, volume=cartBody.volume)
+        response = client.AddItemCart(request)
 
-def getCart(user_id):
+        if(response.response_code==0):
+            return '',200
+        elif(response.response_code==1):
+            return '',404
+        elif(response.response_code==2 or response.response_code==3):
+            return '', 400
+        else:
+            return '', 500
+
+    else:
+        return '', 400
+
+def getCart(userId):
+
+    request = GetCartContentRequest(user_id=userId)
+    response = client.GetCartContent(request)
+
+    if(response.response_code == 0):
+        cart_content = {'items' : list(response.content), 'totalCost' : float(response.total_price)}
+        return cart_content, 200
+    elif(response.response_code == 1):
+        return '', 404
+    else:
+        return '', 500
+
+def removeFromCart(userId, itemId=None):
     return 'TESTING'
 
-def removeFromCart(user_id, item_id=None):
-    return 'TESTING'
-
-def checkoutCart(user_id):
+def checkoutCart(userId):
     return 'TESTING'
 
 def createUser():
@@ -47,9 +70,9 @@ def createUser():
         response = client.CreateUser(request)
 
         if(response.response_code == 0):
-            return str(response.user_id), 200
+            return f"{response.user_id}", 200
         elif(response.response_code == 1):
-            return '', 403
+            return 'Teste', 403
         elif(response.response_code == 2):
             return '', 400
         else:

@@ -38,8 +38,7 @@ paths:
             description: The ID of the user whose cart we want to access
             required: true
             schema:
-              type: integer
-              format: int64
+              type: string
         responses:    
           '200':
             description: Successful operation. Item was added to the cart
@@ -59,8 +58,7 @@ paths:
             description: The ID of the user whose cart we want to access
             required: true
             schema:
-              type: integer
-              format: int64
+              type: string
         responses:    
           '200':
             description: Successful operation.
@@ -83,8 +81,7 @@ paths:
             description: The ID of the user whose cart we want to access
             required: true
             schema:
-              type: integer
-              format: int64
+              type: string
           - name: itemId
             in: query
             description: The id of the specific item we want to delete from the cart
@@ -110,8 +107,7 @@ paths:
           description: The ID of the user whose cart we want to access.
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200': 
           description: Successful operation. Items in the cart are paid and an order created.
