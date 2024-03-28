@@ -9,12 +9,13 @@ from review_service_pb2 import(
 )
 
 import review_service_pb2_grpc
+import reviewHandler
 
-class ItemReview (review_service_pb2_grpc.Reviewservicer):
+class ReviewService (review_service_pb2_grpc.ReviewServicer):
 
-    def InsertReview(self, request, context):
+    def ReviewItem(self, request, context):
 
-        result = reviewHandler.validScore(request.id, request.score)
+        result = reviewHandler.validScore(request.item_id, request.score)
         return ItemReviewResponse(response_code=result)
 
 def serve():
@@ -24,11 +25,11 @@ def serve():
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
 
-    user_service_pb2_grpc.add_ReviewService_to_server(
+    review_service_pb2_grpc.add_ReviewServicer_to_server(
         ReviewService(), server
     )
 
-    server.add_insecure_port("[::]:50054")
+    server.add_insecure_port("[::]:50052")
     server.start()
     server.wait_for_termination()
 

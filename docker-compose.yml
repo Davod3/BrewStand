@@ -1,23 +1,6 @@
 version: '3.8'
 
 services:
-
-  api_gateway:
-    depends_on:
-      - user_controller
-    build:
-      context: ./
-      dockerfile: ./api_gateway/Dockerfile
-    container_name: api_gateway
-    expose:
-      - 8080
-    ports:
-      - '8080:8080'
-    networks:
-      brewstand-net:
-        ipv4_address: 172.100.10.5
-    environment:
-      - USER_SERVICE_HOST=172.100.10.10
   
   user_controller:
     depends_on:
@@ -125,6 +108,24 @@ services:
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.41
+
+  review_service:
+    depends_on:
+      - inventory_repository
+    build:
+      context: ./
+      dockerfile: ./review_service/Dockerfile
+    container_name: review_service
+    expose:
+      - 50052
+    ports:
+      - '50052:50052'
+    environment:
+      - INVENTORY_REPOSITORY_HOST=172.100.10.31
+      - INVENTORY_REPOSITORY_PORT=50062
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.21
 
 networks:
   brewstand-net:
