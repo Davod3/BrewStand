@@ -17,16 +17,18 @@ def validScore(batch_id,score):
         # O score é válido. Contacta o Item Repository
         # Do item repository tiras as cenas que precisas para fazer as contas
         # Quando tiveres o score novo, chamas uma função do ItemRepository para dar update (tens de coordenar com a Tânia)
-
-        oldScore = itemHandlerReview.getBatchScore
-        numero_pessoas= itemHandlerReview.getNvotos
+        """ 
+        oldScore = itemHandlerReview.getBatchScore()
+        numero_pessoas= itemHandlerReview.getNvotos()
         newscore = (oldScore * numero_pessoas + score)/numero_pessoas + 1
+        
+        """
 
-        request = NewScoreRequest(batch_id=batch_id, score=newscore)
-        response = NewScore(request)
-        #função para devolver à Tânia e dar update na DB ...
+        ########################################
+        # Estou confuso com o que meter aqui   #
+        ########################################
 
-        return response # Muda isto para ter em conta a resposta do item repository
+        return 0 # Muda isto para ter em conta a resposta do item repository
     
     else:
         #O score é inválido. Retorna só o error code certo
