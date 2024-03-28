@@ -9,7 +9,7 @@ from review_service_pb2 import(
 )
 
 import review_service_pb2_grpc
-import reviewHandler
+import review_service.handlers.reviewHandler as reviewHandler
 
 class ReviewService (review_service_pb2_grpc.ReviewServicer):
 

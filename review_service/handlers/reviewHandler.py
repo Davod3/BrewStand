@@ -6,13 +6,7 @@ from review_service_pb2 import(
     # A ideia é esta, mas tem de ser o Item Repository
 )
 
-'''
-def validID(id):
-    return True
 
-
-Não valides o ID aqui
-'''
 def validScore(id,score):
 
     # Aqui dentro tens de ver se o score dado é válido e depois contactar o Item Repository.
@@ -28,8 +22,9 @@ def validScore(id,score):
 
         newscore = (oldScore * numero_pessoas + score)/numero_pessoas + 1
 
-        #função para devolver à Tânia e dar update na DB
-    
+        #função para devolver à Tânia e dar update na DB ...
+
+        
 
         return 0 # Muda isto para ter em conta a resposta do item repository
     
