@@ -1,0 +1,47 @@
+openapi: 3.0.3
+info:
+  title: BrewStand_ReviewAPI
+  description: |-
+    This is the definition of the REST API for the BrewStand Review Service. With this API users will be able to give a review score to a given beer batch.
+  version: 1.0.0
+servers:
+  - url: /
+tags:
+  - name: Item
+    description: Supports operations related with viewing and buying batches of beer
+paths:
+  /items/{itemId}/review:
+    put:
+      tags:
+        - Item
+      summary: Add a review to a specific beer batch.
+      description: Add a review to a specific beer batch.
+      operationId: reviewHandler.updateReview
+      parameters:
+        - name: itemId
+          in: path
+          description: The ID of the batch whose details we want to view.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: The review score to be attributed, from 0 to 10.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                score:
+                  type: number
+                  format: double
+                  example: 7.8
+                  description: The user attributed rating for the beer batch, from 0 to 10.
+      responses:
+        '200':
+          description: Successful Operation. Review score was updated.
+        '400':
+          description: Invalid review score value. Must be between 0 and 10.
+        '404':
+          description: Requested item was not found.
+    

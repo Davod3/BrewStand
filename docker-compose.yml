@@ -95,6 +95,24 @@ services:
       brewstand-net:
         ipv4_address: 172.100.10.41
 
+  review_controller:
+    depends_on:
+      - review_service
+    build:
+      context: ./
+      dockerfile: ./review_controller/Dockerfile
+    container_name: review_controller
+    expose:
+      - 3003
+    ports:
+      - '3003:3003'
+    environment:
+      - REVIEW_SERVICE_HOST=172.100.10.23
+      - REVIEW_SERVICE_PORT=50053
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.13
+
   review_service:
     depends_on:
       - inventory_repository
@@ -111,7 +129,7 @@ services:
       - INVENTORY_REPOSITORY_PORT=50062
     networks:
       brewstand-net:
-        ipv4_address: 172.100.10.21
+        ipv4_address: 172.100.10.23
 
 networks:
   brewstand-net:

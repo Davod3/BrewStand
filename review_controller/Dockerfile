@@ -3,7 +3,7 @@ FROM python:3
 RUN mkdir /service
 RUN mkdir /service/protobufs
 COPY ./protobufs/ /service/protobufs
-COPY ./review_service/ /service/
+COPY ./review_controller/ /service/
 
 WORKDIR /service/
 RUN pip install -r requirements.txt
