@@ -147,6 +147,18 @@ services:
       brewstand-net:
         ipv4_address: 172.100.10.14
 
+  order_service:
+    build:
+      context: ./
+      dockerfile: ./order_service/Dockerfile
+    container_name: order_service
+    expose:
+      - 50054
+    ports:
+      - '50054:50054'
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.24
 
 networks:
   brewstand-net:
