@@ -38,6 +38,76 @@ message GetOrdersResponse {
 }
 
 
+message CreateOrderRequest {
+    string user_id = 1;
+}
+
+message CreateOrderResponse {
+    int32 response_code = 1;
+    optional int64 order_id = 2;
+
+    /*
+
+    0 - Success
+    1 - User not found
+
+    */
+}
+
+
+message AddItemToOrderRequest {
+    int64 order_id = 1;
+    int64 batch_id = 2;
+    double volume = 3;
+}
+
+message AddItemToOrderResponse {
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Order not found
+    2 - Item not found
+    3 - Not enough stock
+
+    */
+}
+
+
+message RemoveItemFromOrderRequest {
+    int64 order_id = 1;
+    int64 batch_id = 2;
+}
+
+message RemoveItemFromOrderResponse {
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Order not found
+    2 - Item not found
+
+    */
+}
+
+
+message MarkOrderAsCompleteRequest {
+    int64 order_id = 1;
+}
+
+message MarkOrderAsCompleteResponse {
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Order not found
+
+    */
+}
+
 
 message ValidateOrderRequest {
     repeated OrderItem items = 1;
