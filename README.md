@@ -7,6 +7,7 @@ available types
 
 ## Requirements
 Docker
+
 Docker Compose
 
 ## Usage
@@ -24,6 +25,11 @@ http://localhost:3000/ui
 ```
 
 Review API:
+```
+http://localhost:3003/ui
+```
+
+Order API:
 ```
 http://localhost:3003/ui
 ```
