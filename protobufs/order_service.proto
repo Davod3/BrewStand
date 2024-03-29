@@ -79,16 +79,6 @@ message CreateOrderResponse {
     */
 }
 
-message ValidateOrderRequest {
-    int64 order_id = 1;
-    repeated ItemService items = 2;
-}
-
-message ValidateOrderResponse {
-    int32 response_code = 1;
-    bool valid = 2;
-}
-
 // Order service
 service Order {
     rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
@@ -99,7 +89,4 @@ service Order {
 
     rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
     // Creates a new empty order with no items and sets it as the current order for the user
-
-    rpc ValidateOrder (ValidateOrderRequest) returns (ValidateOrderResponse);
-    // Validates an order to check if there is enough stock to complete it
 }

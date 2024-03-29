@@ -135,16 +135,6 @@ message MarkOrderAsCompleteResponse {
     */
 }
 
-message ValidateOrderRequest {
-    int64 order_id = 1;
-    repeated ItemRepo items = 2;
-}
-
-message ValidateOrderResponse {
-    int32 response_code = 1;
-    bool valid = 2;
-}
-
 // Order Repository
 service OrderRepository {
     rpc InsertOrder (InsertOrderRequest) returns (InsertOrderResponse);
@@ -167,8 +157,5 @@ service OrderRepository {
 
     rpc MarkOrderAsComplete (MarkOrderAsCompleteRequest) returns (MarkOrderAsCompleteResponse);
     // Marks the current order as completed
-
-    rpc ValidateOrder (ValidateOrderRequest) returns (ValidateOrderResponse);
-    // Validates an order to check if there is enough stock to complete it
 
 }

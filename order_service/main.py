@@ -4,16 +4,15 @@ import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 
-from order_pb2 import (
+from order_service_pb2 import (
     GetOrderResponse,
     GetOrderResponse,
     CreateOrderResponse,
-    ValidateOrderResponse
 )
 
-import order_pb2_grpc
+import order_service_pb2_grpc
 
-class OrderService(order_pb2_grpc.OrderServicer):
+class OrderService(order_service_pb2_grpc.OrderServicer):
 
     def GetOrder(self, request, context):
         # TO DO
@@ -30,11 +29,6 @@ class OrderService(order_pb2_grpc.OrderServicer):
         user_id = request.user_id
         return CreateOrderResponse(response_code=0)
 
-    def ValidateOrder(self, request, context):
-        # TO DO
-        order_id = request.order_id
-        return ValidateOrderResponse(response_code=0, valid=True)
-
 def serve():
 
     interceptors = [ExceptionToStatusInterceptor()]
@@ -42,7 +36,7 @@ def serve():
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
 
-    order_pb2_grpc.add_OrderServicer_to_server(
+    order_service_pb2_grpc.add_OrderServicer_to_server(
         OrderService(), server
     )
 
