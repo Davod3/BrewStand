@@ -7,19 +7,27 @@ available types
 
 ## Requirements
 Docker
+Docker Compose
 
 ## Usage
-To run the API Gateway as well as all the services locally, please execute the following from the root directory:
+To run all the services locally, please execute the following from the root directory:
 
 ```
 ./start.sh
 ```
 
-and open your browser to here:
+If all the micro services started successfully, their APIs should be accessible as follows:
 
+User API:
 ```
-http://localhost:8080/api/ui
+http://localhost:3000/ui
 ```
+
+Review API:
+```
+http://localhost:3003/ui
+```
+
 To stop the execution run the following from the root directory:
 
 ```
