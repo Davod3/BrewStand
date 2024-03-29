@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+//Messages
+
+message GetOrderRequest {
+    int64 order_id = 1;
+}
+
+message GetOrderResponse {
+    int32 response_code = 1;
+    optional Order order = 2;
+
+    /*
+
+    0 - Success
+    1 - Order not found
+
+    */
+}
+
+
+message GetOrdersRequest {
+    string user_id = 1;
+}
+
+message GetOrdersResponse {
+    int32 response_code = 1;
+    repeated Order orders = 2;
+
+    /*
+
+    0 - Success
+    1 - User not found
+
+    */
+}
+
+
+
+message ValidateOrderRequest {
+    repeated OrderItem items = 1;
+}
+
+message ValidateOrderResponse {
+    int32 response_code = 1;
+    bool valid = 2;
+}
+
+message Order {
+    int64 id = 1;
+    repeated Item items = 2;
+    string customer_name = 3;
+    google.protobuf.Timestamp creation_time = 4;
+    string status = 5;
+    bool complete = 6;
+    string address = 7;    
+}
+
+// Order service
+service Order {
+    rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
+    // Returns the details of a specific order by its ID
+
+    rpc GetOrders(GetOrdersRequest) returns (stream GetOrdersResponse);
+    // Retunrs all orders for a given user
+
+    rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+    // Creates a new empty order with no items and sets it as the current order for the user
+
+    rpc AddItemToOrder (AddItemToOrderRequest) returns (AddItemToOrderResponse);
+    // Add an item to the current order
+
+    rpc RemoveItemFromOrder (RemoveItemFromOrderRequest) returns (RemoveItemFromOrderResponse);
+    // Removes an item from the current order
+
+    rpc SetAddressForOrder (SetAddressForOrderRequest) returns (SetAddressForOrderResponse);
+    // Sets the delivery address for the current order
+
+    rpc MarkOrderAsComplete (MarkOrderAsCompleteRequest) returns (MarkOrderAsCompleteResponse);
+    // Marks the current order as completed
+
+    rpc ValidateOrder (ValidateOrderRequest) returns (ValidateOrderResponse);
+    // Validates an order to check if there is enough stock to complete it
+}
