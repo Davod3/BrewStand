@@ -9,13 +9,13 @@ from review_service_pb2 import(
 )
 
 import review_service_pb2_grpc
-import review_service.handlers.reviewHandler as reviewHandler
+import handlers.reviewHandler as ReviewHandler
 
 class ReviewService (review_service_pb2_grpc.ReviewServicer):
 
     def ReviewItem(self, request, context):
 
-        result = reviewHandler.validScore(request.batch_id, request.user_score)
+        result = ReviewHandler.review(request.item_id, request.score)
         return ItemReviewResponse(response_code=result)
 
 def serve():
@@ -29,7 +29,7 @@ def serve():
         ReviewService(), server
     )
 
-    server.add_insecure_port("[::]:50052")
+    server.add_insecure_port("[::]:50053")
     server.start()
     server.wait_for_termination()
 
