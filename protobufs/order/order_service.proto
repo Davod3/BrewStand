@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
-
 //Messages
 
 message GetOrderRequest {
@@ -54,78 +52,14 @@ message CreateOrderResponse {
     */
 }
 
-
-message AddItemToOrderRequest {
-    int64 order_id = 1;
-    int64 batch_id = 2;
-    double volume = 3;
-}
-
-message AddItemToOrderResponse {
-    int32 response_code = 1;
-
-    /*
-
-    0 - Success
-    1 - Order not found
-    2 - Item not found
-    3 - Not enough stock
-
-    */
-}
-
-
-message RemoveItemFromOrderRequest {
-    int64 order_id = 1;
-    int64 batch_id = 2;
-}
-
-message RemoveItemFromOrderResponse {
-    int32 response_code = 1;
-
-    /*
-
-    0 - Success
-    1 - Order not found
-    2 - Item not found
-
-    */
-}
-
-
-message MarkOrderAsCompleteRequest {
-    int64 order_id = 1;
-}
-
-message MarkOrderAsCompleteResponse {
-    int32 response_code = 1;
-
-    /*
-
-    0 - Success
-    1 - Order not found
-
-    */
-}
-
-
 message ValidateOrderRequest {
+    int64 order_id = 1
     repeated OrderItem items = 1;
 }
 
 message ValidateOrderResponse {
     int32 response_code = 1;
     bool valid = 2;
-}
-
-message Order {
-    int64 id = 1;
-    repeated Item items = 2;
-    string customer_name = 3;
-    google.protobuf.Timestamp creation_time = 4;
-    string status = 5;
-    bool complete = 6;
-    string address = 7;    
 }
 
 // Order service
@@ -138,18 +72,6 @@ service Order {
 
     rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
     // Creates a new empty order with no items and sets it as the current order for the user
-
-    rpc AddItemToOrder (AddItemToOrderRequest) returns (AddItemToOrderResponse);
-    // Add an item to the current order
-
-    rpc RemoveItemFromOrder (RemoveItemFromOrderRequest) returns (RemoveItemFromOrderResponse);
-    // Removes an item from the current order
-
-    rpc SetAddressForOrder (SetAddressForOrderRequest) returns (SetAddressForOrderResponse);
-    // Sets the delivery address for the current order
-
-    rpc MarkOrderAsComplete (MarkOrderAsCompleteRequest) returns (MarkOrderAsCompleteResponse);
-    // Marks the current order as completed
 
     rpc ValidateOrder (ValidateOrderRequest) returns (ValidateOrderResponse);
     // Validates an order to check if there is enough stock to complete it

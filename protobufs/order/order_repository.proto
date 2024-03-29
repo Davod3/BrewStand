@@ -1,0 +1,155 @@
+syntax = "proto3";
+
+// Messages
+
+message InsertOrderRequest {
+    string user_id = 1;
+    repeated Item items = 2;
+    string address = 3;
+}
+
+message InsertOrderResponse {
+    int32 response_code = 1;
+    optional int64 order_id = 2;
+
+    /*
+
+    0 - Success
+    1 - User not found
+
+    */
+}
+
+message GetOrderRequest {
+    int64 order_id = 1;
+}
+
+message GetOrderResponse {
+    int32 response_code = 1;
+    optional Order order = 2;
+
+    /*
+
+    0 - Success
+    1 - Order not found
+
+    */
+}
+
+message GetOrdersRequest {
+    string user_id = 1;
+}
+
+message GetOrdersResponse {
+    int32 response_code = 1;
+    repeated Order orders = 2;
+
+    /*
+
+    0 - Success
+    1 - User not found
+
+    */
+}
+
+message AddItemToOrderRequest {
+    int64 order_id = 1;
+    Item item = 2;
+}
+
+message AddItemToOrderResponse {
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Order not found
+
+    */
+}
+
+message RemoveItemFromOrderRequest {
+    int64 order_id = 1;
+    int64 item_id = 2;
+}
+
+message RemoveItemFromOrderResponse {
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Order not found
+    2 - Item not found in the order
+
+    */
+}
+
+message SetAddressForOrderRequest {
+    int64 order_id = 1;
+    string address = 2;
+}
+
+message SetAddressForOrderResponse {
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Order not found
+
+    */
+}
+
+message MarkOrderAsCompleteRequest {
+    int64 order_id = 1;
+}
+
+message MarkOrderAsCompleteResponse {
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Order not found
+
+    */
+}
+
+message ValidateOrderRequest {
+    int64 order_id = 1
+    repeated OrderItem items = 1;
+}
+
+message ValidateOrderResponse {
+    int32 response_code = 1;
+    bool valid = 2;
+}
+
+// Order Repository
+service OrderRepository {
+    rpc InsertOrder (InsertOrderRequest) returns (InsertOrderResponse);
+    // Endpoint to insert  a new order in the repository
+
+    rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
+    // Endpoint to get  an existing order from the repository
+
+    rpc GetOrders (GetOrdersRequest) returns (GetOrdersResponse);
+    // Endpoint to get  all orders of a specific user from the repository
+
+    rpc AddItemToOrder (AddItemToOrderRequest) returns (AddItemToOrderResponse);
+    // Add an item to the current order
+
+    rpc RemoveItemFromOrder (RemoveItemFromOrderRequest) returns (RemoveItemFromOrderResponse);
+    // Removes an item from the current order
+
+    rpc SetAddressForOrder (SetAddressForOrderRequest) returns (SetAddressForOrderResponse);
+    // Sets the delivery address for the current order
+
+    rpc MarkOrderAsComplete (MarkOrderAsCompleteRequest) returns (MarkOrderAsCompleteResponse);
+    // Marks the current order as completed
+
+    rpc ValidateOrder (ValidateOrderRequest) returns (ValidateOrderResponse);
+    // Validates an order to check if there is enough stock to complete it
+
+}
