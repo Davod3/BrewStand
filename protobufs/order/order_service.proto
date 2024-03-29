@@ -1,5 +1,32 @@
 syntax = "proto3";
 
+// Data structure for storing order details
+
+message OrderService {
+    int64 id = 1;
+    repeated ItemService items = 2;
+    string user_id = 3;
+    string ship_date = 4;
+    string status = 5;
+    bool complete = 6;
+    string address = 7;    
+}
+
+// Data structure for storing item details
+
+message ItemService {
+    int64 item_id = 1;
+    double volume = 2;
+}
+
+// Messages
+
+message InsertOrderRequest {
+    string user_id = 1;
+    repeated ItemService items = 2;
+    string address = 3;
+}
+
 //Messages
 
 message GetOrderRequest {
@@ -8,7 +35,7 @@ message GetOrderRequest {
 
 message GetOrderResponse {
     int32 response_code = 1;
-    optional Order order = 2;
+    optional OrderService order = 2;
 
     /*
 
@@ -25,7 +52,7 @@ message GetOrdersRequest {
 
 message GetOrdersResponse {
     int32 response_code = 1;
-    repeated Order orders = 2;
+    repeated OrderService orders = 2;
 
     /*
 
@@ -53,8 +80,8 @@ message CreateOrderResponse {
 }
 
 message ValidateOrderRequest {
-    int64 order_id = 1
-    repeated OrderItem items = 1;
+    int64 order_id = 1;
+    repeated ItemService items = 2;
 }
 
 message ValidateOrderResponse {
