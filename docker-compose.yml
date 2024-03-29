@@ -103,9 +103,9 @@ services:
       dockerfile: ./review_service/Dockerfile
     container_name: review_service
     expose:
-      - 50052
+      - 50053
     ports:
-      - '50052:50052'
+      - '50053:50053'
     environment:
       - INVENTORY_REPOSITORY_HOST=172.100.10.31
       - INVENTORY_REPOSITORY_PORT=50062
