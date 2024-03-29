@@ -7,6 +7,7 @@ available types
 
 ## Requirements
 Docker
+
 Docker Compose
 
 ## Usage
@@ -26,6 +27,11 @@ http://localhost:3000/ui
 Review API:
 ```
 http://localhost:3003/ui
+```
+
+Order API:
+```
+http://localhost:3004/ui
 ```
 
 To stop the execution run the following from the root directory:

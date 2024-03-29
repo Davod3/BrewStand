@@ -131,6 +131,23 @@ services:
       brewstand-net:
         ipv4_address: 172.100.10.23
 
+  order_controller:
+    build:
+      context: ./
+      dockerfile: ./order_controller/Dockerfile
+    container_name: order_controller
+    expose:
+      - 3004
+    ports:
+      - '3004:3004'
+    environment:
+      - ORDER_SERVICE_HOST=172.100.10.24
+      - ORDER_SERVICE_PORT=50054
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.14
+
+
 networks:
   brewstand-net:
       driver: bridge
