@@ -11,7 +11,6 @@ from user_service_pb2 import (
     AddItemCartRequest,
     DeleteItemCartRequest,
     GetCartContentRequest,
-    GetUserDetailsRequest
 )
 
 from user_service_pb2_grpc import UserStub
@@ -40,7 +39,7 @@ def addToCart(userId):
             return '', 500
 
     else:
-        return '', 400
+        return 'Invalid request body', 400
 
 def getCart(userId):
 

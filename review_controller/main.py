@@ -1,10 +1,9 @@
-from flask import Flask
+import config
+from utils import encoder
 
-app = Flask(__name__)
-
-@app.route('/items/{itemId}/review', methods=['PUT'])
-def newScore():
-    return "Testing"
+app = config.connex_app
+app.add_api(config.basedir / "review_api.yaml")
+app.app.json_encoder = encoder.JSONEncoder
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int("3004"), debug=True)
+    app.run(host="0.0.0.0", port=int("3003"), debug=True)
