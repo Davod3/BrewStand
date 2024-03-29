@@ -136,7 +136,7 @@ message MarkOrderAsCompleteResponse {
 }
 
 message ValidateOrderRequest {
-    int64 order_id = 1
+    int64 order_id = 1;
     repeated ItemRepo items = 2;
 }
 
