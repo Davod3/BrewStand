@@ -5,45 +5,30 @@ package payment_repository;
 
 // The PaymentRepositoryService handles data storage and retrieval for payments and invoices.
 service PaymentRepositoryService {
-  // Stores payment details.
-  rpc StorePayment (PaymentData) returns (StorePaymentResponse) {}
-
-  // Retrieves payment details.
-  rpc RetrievePayment (PaymentQuery) returns (PaymentData) {}
-
   // Stores invoice details.
   rpc StoreInvoice (InvoiceData) returns (StoreInvoiceResponse) {}
 
   // Retrieves invoice details.
   rpc RetrieveInvoice (InvoiceQuery) returns (InvoiceData) {}
+
+  // Retrieves all invoices for a specific user.
+  rpc GetUserInvoices (UserInvoicesQuery) returns (UserInvoicesResponse) {}
 }
 
 // Data structure for storing payment details.
 message PaymentData {
-  int32 user_id = 1;
   float amount = 2;
   string currency = 3;
   int32 items_id = 4;
-  string card_token = 5;        // Token representing the card details.
   string card_last_four = 6;    // Last four digits of the card number.
 }
 
-// Response for storing payment data.
-message StorePaymentResponse {
-  int32 order_id = 1;
-}
-
-// Query structure for retrieving payment details.
-message PaymentQuery {
-  int32 order_id = 1;
-}
 
 // Data structure for storing invoice details.
 message InvoiceData {
-  string invoice_details = 1;
-  string user_id = 2;
-  string order_id = 3;
-  string card_last_four = 4;  // Last four digits of the card number for reference on the invoice.
+  PaymentData invoice_details = 1;
+  int32 user_id = 2;
+  int32 order_id = 3;
 }
 
 // Response for storing invoice data.
@@ -53,5 +38,16 @@ message StoreInvoiceResponse {
 
 // Query structure for retrieving invoice details.
 message InvoiceQuery {
-   int32 invoice_id = 1;
+   int32 order_id = 1;
+   int32 user_id = 2;
+}
+
+// Query structure for retrieving all invoices of a specific user.
+message UserInvoicesQuery {
+  int32 user_id = 1;  // User ID to query invoices for.
+}
+
+// Response structure for getting all invoices of a specific user.
+message UserInvoicesResponse {
+  repeated InvoiceData invoices = 1;  // List of all invoices for the user.
 }
