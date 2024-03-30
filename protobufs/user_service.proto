@@ -45,6 +45,9 @@ message GetUserDetailsResponse {
 message PayCartRequest {
 
     string user_id = 1;
+    string card_number = 2;
+    string card_expiry = 3;
+    string card_cvc = 4;
 
 }
 
@@ -53,7 +56,7 @@ message Invoice {
     int64 invoice_id = 1;
     double price = 2;
     int64 order_id = 3;
-    int64 customer_id = 4;
+    string customer_id = 4;
     string fiscal_address = 5;
     optional string details = 6;
 

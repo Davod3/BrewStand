@@ -10,7 +10,8 @@ from user_service_pb2 import (
     PayCartResponse,
     AddItemCartResponse,
     DeleteItemCartResponse,
-    GetCartContentResponse
+    GetCartContentResponse,
+    Invoice
 
 )
 
@@ -33,7 +34,10 @@ class UserService(user_service_pb2_grpc.UserServicer):
         return GetUserDetailsResponse(response_code = response.response_code, username = response.username, address = response.address)
     
     def PayCart(self, request, context):
-        return PayCartResponse(response_code = 0, invoice=None)
+
+        (response_code,invoice_id, price,order_id,customer_id,fiscal_address,details) = BillingHandler.initiatePayment(request.user_id, request.card_number, request.card_expiry, request.card_cvc)
+
+        return PayCartResponse(response_code = response_code, invoice=Invoice(invoice_id=invoice_id, price=price, order_id=order_id, customer_id=customer_id, fiscal_address=fiscal_address, details=details))
     
     def AddItemCart(self, request, context):
 

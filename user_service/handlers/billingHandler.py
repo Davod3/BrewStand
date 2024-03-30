@@ -15,6 +15,23 @@ from payment_service_pb2_grpc import PaymentServiceStub
 
 #client = PaymentServiceStub(user_repository_channel)
 
-def initiatePayment(user_id):
+def initiatePayment(user_id, card_number, card_expiry, card_cvc):
 
-    return None
+    #Get user_id and card_details
+    #Get cart contents
+
+    response_code = 0
+    invoice_id = 123
+    price = 0
+    order_id = 0
+    customer_id = ''
+    fiscal_address = ''
+    details = ''
+
+    return (response_code,
+            invoice_id,
+            price,
+            order_id,
+            customer_id,
+            fiscal_address,
+            details)
