@@ -9,6 +9,9 @@ service PaymentService {
 
   // Retrieves an invoice for a particular order.
   rpc GetInvoice (InvoiceRequest) returns (InvoiceResponse) {}
+
+  // Retrieves all invoices for a specific user.
+  rpc GetAllUserInvoices (UserInvoicesRequest) returns (UserInvoicesResponse) {}
 }
 
 // Request structure for processing a payment.
@@ -35,11 +38,22 @@ message PaymentResponse {
 
 // Request structure for retrieving an invoice.
 message InvoiceRequest {
-  int32 invoice_id = 1; // The order ID for which the invoice is requested.
+  int32 order_id = 1; // The order ID for which the invoice is requested.
+  int32 user_id = 2:
 }
 
 // Response structure for invoice retrieval.
 message InvoiceResponse {
   bool success = 1;                           // Indicates if the invoice retrieval was successful.
   payment_repository.InvoiceData invoice = 2; // The retrieved invoice data.
+}
+
+/ Request structure for retrieving all invoices of a specific user.
+message UserInvoicesRequest {
+  int32 user_id = 1; // User ID for fetching invoices.
+}
+
+// Response structure for retrieving all user invoices.
+message UserInvoicesResponse {
+  repeated payment_repository.InvoiceData invoices = 1; // List of invoices for the user.
 }
