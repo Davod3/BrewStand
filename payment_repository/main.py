@@ -69,7 +69,7 @@ def serve():
         PaymentRepositoryService(), server
     )
 
-    server.add_insecure_port("[::]:50064")
+    server.add_insecure_port("[::]:50065")
     server.start()
     server.wait_for_termination()
 

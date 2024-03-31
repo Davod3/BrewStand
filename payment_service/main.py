@@ -44,9 +44,9 @@ def serve():
         PaymentService(), server
     )
 
-    server.add_insecure_port("[::]:50054")
+    server.add_insecure_port("[::]:50055")
     server.start()
-    print("Payment Service running on port 50054")
+    print("Payment Service running on port 50055")
     server.wait_for_termination()
 
 if __name__ == "__main__":
