@@ -20,19 +20,19 @@ class PaymentService(payment_service_pb2_grpc.PaymentServicer):
 
         response = PaymentHandler.process_payment(request.user_id, request.amount, request.currency, request.items_id, request.card_details )
 
-        return ProcessPaymentResponse(response_code = response.response_code, invoiceId=response.invoiceId, invoice = response.invoice)
+        return ProcessPaymentResponse(response_code = response.response_code, invoice = response.invoice)
 
     def GetInvoice(self, request, context):
         
         response = InvoiceHandler.getInvoice()
         
-        return InvoiceResponse()
+        return InvoiceResponse(response_code = response.response_code, invoice=response.invoice)
 
     def GetUserInvoices(self, request, context):
         
         response = InvoiceHandler.getUserInvoices(userId = request.userId)
         
-        return InvoiceResponse(response_code = response.response_code, invoiceId=response.invoiceId, invoice=response.invoice)
+        return InvoiceResponse(response_code = response.response_code, invoice=response.invoice)
       
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]

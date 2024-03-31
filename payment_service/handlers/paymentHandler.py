@@ -96,12 +96,12 @@ class PaymentHandler:
         return card_last_four, None
 
     @staticmethod
-    def process_payment(user_id, amount, currency, items_id, fiscal_address, card_details):
+    def process_payment(user_id, amount, currency, items_name, fiscal_address, card_details):
         card_last_four, error_message = PaymentHandler.validate_payment(
             user_id=user_id,
             amount=amount,
             currency=currency,
-            items_id=items_id,
+            items_name=items_name,
             fiscal_address=fiscal_address,
             card_details=card_details 
         )
@@ -126,6 +126,7 @@ class PaymentHandler:
             userID=user_id,
             fiscalAddress=fiscal_address,
             cardLastFour=card_last_four
+            items_name = items_name
         )
 
         store_invoice_response = client.StoreInvoice(

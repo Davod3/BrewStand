@@ -29,7 +29,7 @@ def process_payment():
             userId=data['userId'],
             amount=data['amount'],
             currency=data['currency'],
-            itemsId=data['itemsId'],
+            itemsName=data['itemsName'],
             fiscalAddress=data['fiscalAddress'],
             cardDetails=data['cardDetails']
         )
