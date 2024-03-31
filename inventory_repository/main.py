@@ -1,27 +1,25 @@
+from concurrent import futures
 import load_dataset
-
-from inventory_service_pb2 import (
-    validateItemResponse,
-    getBatchCostResponse,
-    getBatchScoreResponse,
-    getBatchUsersReviewResponse,
-    getBatchResponse,
-    getCompareBatchesResponse,
-    updateScoreResponse,
-    validateOrderResponse
-)
-
-import inventory_repository_pb2
 import psycopg2
 import grpc
 import os
-from concurrent import futures
 
-class InventoryRepositoryService(inventory_repository_pb2.InventoryRepositoryServicer): #grpc
+from inventory_repository_pb2 import (
+    GetBatchResponse,
+    GetBatchesResponse,
+    GetBatchScoreResponse,
+    GetBatchCostResponse,
+    GetBatchUsersReviewResponse,
+    BatchDetails
+)
 
-    def __init__(self):
-        pass
+import inventory_repository_pb2_grpc
 
+from grpc_interceptor import ExceptionToStatusInterceptor
+
+class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServicer):
+
+    '''
     def validateItem(self, request, context):
         try:
             conn = psycopg2.connect(
@@ -49,6 +47,8 @@ class InventoryRepositoryService(inventory_repository_pb2.InventoryRepositorySer
             if conn:
                 conn.close()
 
+    '''
+
     def getBatchCost(self, request, context):
         try:
             conn = psycopg2.connect(
@@ -60,20 +60,20 @@ class InventoryRepositoryService(inventory_repository_pb2.InventoryRepositorySer
             )
             cursor = conn.cursor()
 
-            cursor.execute("SELECT cost FROM inventory WHERE batch_id = %s", (request.batch_id,))
+            cursor.execute("SELECT cost FROM inventory WHERE batch_id = %s", [request.batch_id])
             result = cursor.fetchone()
 
             if result is not None:
-                return inventory_repository_pb2.CostResponse(cost=float(result[0]))
+                return GetBatchCostResponse(response_code=0, cost=float(result[0]))
             else:
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details("Batch not found")
-                return inventory_repository_pb2.CostResponse(cost=0.0)
+                return GetBatchCostResponse(response_code=1, cost=0.0)
         except psycopg2.Error as e:
             print("Error retrieving batch cost:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return inventory_repository_pb2.CostResponse(cost=0.0)
+            return GetBatchCostResponse(response_code=-1, cost=0.0)
         finally:
             if conn:
                 conn.close()
@@ -89,20 +89,20 @@ class InventoryRepositoryService(inventory_repository_pb2.InventoryRepositorySer
             )
             cursor = conn.cursor()
 
-            cursor.execute("SELECT user_score FROM inventory WHERE batch_id = %s", (request.batch_id,))
+            cursor.execute("SELECT user_score FROM inventory WHERE batch_id = %s", [request.batch_id])
             result = cursor.fetchone()
 
             if result is not None:
-                return inventory_repository_pb2.ScoreResponse(score=float(result[0]))
+                return GetBatchScoreResponse(response_code=0, score=float(result[0]))
             else:
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details("Batch not found")
-                return inventory_repository_pb2.ScoreResponse(score=0.0)
+                return GetBatchScoreResponse(response_code=1 ,score=0.0)
         except psycopg2.Error as e:
             print("Error retrieving batch score:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return inventory_repository_pb2.ScoreResponse(score=0.0)
+            return GetBatchScoreResponse(response_code=-1, score=0.0)
         finally:
             if conn:
                 conn.close()
@@ -118,20 +118,20 @@ class InventoryRepositoryService(inventory_repository_pb2.InventoryRepositorySer
             )
             cursor = conn.cursor()
 
-            cursor.execute("SELECT user_review FROM inventory WHERE batch_id = %s", (request.batch_id,))
+            cursor.execute("SELECT n_users_review FROM inventory WHERE batch_id = %s", [request.batch_id])
             result = cursor.fetchone()
 
             if result is not None:
-                return inventory_repository_pb2.ReviewResponse(review=result[0])
+                return GetBatchUsersReviewResponse(response_code=0, n_users_review=result[0])
             else:
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details("Batch not found")
-                return inventory_repository_pb2.ReviewResponse(review="No reviews available")
+                return GetBatchUsersReviewResponse(response_code=1,n_users_review=0)
         except psycopg2.Error as e:
             print("Error retrieving batch user review:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return inventory_repository_pb2.ReviewResponse(review="No reviews available")
+            return GetBatchUsersReviewResponse(response_code=-1, review=0)
         finally:
             if conn:
                 conn.close()
@@ -147,12 +147,13 @@ class InventoryRepositoryService(inventory_repository_pb2.InventoryRepositorySer
             )
             cursor = conn.cursor()
 
-            cursor.execute("SELECT * FROM inventory WHERE batch_id = %s", (request.batch_id,))
+            cursor.execute("SELECT * FROM inventory WHERE batch_id = %s", [request.batch_id])
             result = cursor.fetchone()
 
             if result is not None:
-                batch_info = inventory_repository_pb2.BatchInfo(
-                    batch_id=result[0],
+
+                batch_info = BatchDetails(
+                    batch_id=int(result[0]),
                     brew_date=str(result[1]),
                     beer_style=result[2],
                     location=result[3],
@@ -162,21 +163,84 @@ class InventoryRepositoryService(inventory_repository_pb2.InventoryRepositorySer
                     quality_score=float(result[7]),
                     cost=float(result[8]),
                     user_score=float(result[9]),
-                    n_users_review=float(result[10])
+                    n_users_review=int(result[10])
+                ) 
+
+                response = GetBatchResponse(
+                    response_code = 0,
+                    batch = batch_info
                 )
-                return batch_info
+
+                return response
             else:
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details("Batch not found")
-                return inventory_repository_pb2.BatchInfo()
+                return GetBatchResponse(response_code=1)
         except psycopg2.Error as e:
             print("Error retrieving batch info:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return inventory_repository_pb2.BatchInfo()
+            return GetBatchResponse(response_code=-1)
         finally:
             if conn:
                 conn.close()
+
+    def getBatches(self, request, context):
+        try:
+            conn = psycopg2.connect(
+                dbname=os.getenv('INVENTORY_DB_NAME'),
+                user=os.getenv('INVENTORY_DB_USER'),
+                password=os.getenv('INVENTORY_DB_PASSWORD'),
+                host=os.getenv('INVENTORY_DB_HOST'),
+                port=os.getenv('INVENTORY_DB_PORT')
+            )
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT * FROM inventory")
+            result = cursor.fetchall()
+
+            if result is not None:
+
+                items = list()
+
+                for item in result:
+
+                    batch_info = BatchDetails(
+                        batch_id=int(item[0]),
+                        brew_date=str(item[1]),
+                        beer_style=item[2],
+                        location=item[3],
+                        ph_level=float(item[4]),
+                        alcohol_content=float(item[5]),
+                        volume_produced=float(item[6]),
+                        quality_score=float(item[7]),
+                        cost=float(item[8]),
+                        user_score=float(item[9]),
+                        n_users_review=int(item[10])
+                    )
+
+                    items.append(batch_info)
+
+                response = GetBatchesResponse(
+                    response_code = 0,
+                    batches = items
+                )
+
+                return response
+            else:
+                context.set_code(grpc.StatusCode.NOT_FOUND)
+                context.set_details("Batch not found")
+                return GetBatchesResponse(response_code=1, batches=[])
+        except psycopg2.Error as e:
+            print("Error retrieving batch info:", e)
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details("Internal server error")
+            return GetBatchesResponse(response_code=-1, batches=[])
+        finally:
+            if conn:
+                conn.close()
+
+    '''
 
     def getCompareBatches(self, request, context):
         try:
@@ -237,6 +301,8 @@ class InventoryRepositoryService(inventory_repository_pb2.InventoryRepositorySer
             if conn:
                 conn.close()
 
+    '''
+    '''
     def updateScore(self, request, context):
         try:
             conn = psycopg2.connect(
@@ -265,7 +331,8 @@ class InventoryRepositoryService(inventory_repository_pb2.InventoryRepositorySer
         finally:
             if conn:
                 conn.close()
-
+    '''
+    '''
     def validateOrder(self, request, context):
         try:
             conn = psycopg2.connect(
@@ -298,13 +365,20 @@ class InventoryRepositoryService(inventory_repository_pb2.InventoryRepositorySer
         finally:
             if conn:
                 conn.close()
+    '''
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    inventory_repository_pb2.add_InventoryRepositoryServicer_to_server( #grpc
-        InventoryRepositoryService(), server
+
+    interceptors = [ExceptionToStatusInterceptor()]
+    server = grpc.server(
+        futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    server.add_insecure_port("[::]:50061")
+
+    inventory_repository_pb2_grpc.add_InventoryRepositoryServicer_to_server(
+        InventoryRepository(), server
+    )
+
+    server.add_insecure_port("[::]:50062")
     server.start()
     server.wait_for_termination()
 
