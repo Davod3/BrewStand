@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+message GetBatchRequest {
+
+    string batch_id = 1;
+
+}
+
+message GetBatchResponse {
+
+    int32 response_code = 1;
+    optional string brew_date = 2;
+    optional string beer_style = 3;
+    optional string location = 4;
+    optional float ph_level = 5;
+    optional float alcohol_content = 6;
+    optional float volume_produced = 7;
+    optional float quality_score = 8;
+    optional float cost = 9;
+    optional float user_score = 10;
+    optional int32 n_users_review = 11;
+
+    /*
+
+    0 - Success
+    1 - Batch not found
+
+    */
+
+}
+
+message GetBatchCostRequest {
+
+    string batch_id = 1;
+
+}
+
+message GetBatchCostResponse {
+
+    int32 response_code = 1;
+    optional string cost = 2;
+
+    /*
+
+    0 - Success
+    1 - Batch not found
+
+    */
+
+}
+
+message GetBatchScoreRequest {
+
+    string batch_id = 1;
+
+}
+
+message GetBatchScoreResponse {
+
+    int32 response_code = 1;
+    optional string cost = 2;
+
+    /*
+
+    0 - Success
+    1 - Batch not found
+
+    */
+
+}
+
+message GetBatchUsersReviewRequest {
+
+    string batch_id = 1;
+
+}
+
+message GetBatchUsersReviewResponse {
+
+    int32 response_code = 1;
+    optional int32 n_users_review = 2;
+
+    /*
+
+    0 - Success
+    1 - Batch not found
+
+    */
+
+}
