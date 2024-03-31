@@ -88,3 +88,10 @@ message GetBatchUsersReviewResponse {
     */
 
 }
+
+service InventoryRepository {
+    rpc getBatch (GetBatchRequest) returns (GetBatchResponse);
+    rpc getBatchScore (GetBatchScoreRequest) returns (GetBatchScoreResponse);
+    rpc getBatchCost (GetBatchCostRequest) returns (GetBatchCostResponse);
+    rpc getBatchUsersReview (GetBatchUsersReviewRequest) returns (GetBatchUsersReviewResponse);
+}

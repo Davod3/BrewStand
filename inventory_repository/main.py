@@ -1,5 +1,16 @@
 import load_dataset
 
+from inventory_service_pb2 import (
+    validateItemResponse,
+    getBatchCostResponse,
+    getBatchScoreResponse,
+    getBatchUsersReviewResponse,
+    getBatchResponse,
+    getCompareBatchesResponse,
+    updateScoreResponse,
+    validateOrderResponse
+)
+
 import inventory_repository_pb2
 import psycopg2
 import grpc

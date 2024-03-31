@@ -15,6 +15,7 @@ from inventory_service_pb2 import (
     updateScoreResponse,
     validateOrderResponse
 )
+
 import inventory_repository_pb2
 import inventory_repository_pb2_grpc
 
@@ -23,7 +24,7 @@ class InventoryService(inventory_repository_pb2_grpc.InventoryRepositoryServicer
     def __init__(self):
         pass
 
-    def validateItem(self, request, context):
+    def validateItemService(self, request, context):
         response = inventory_repository_pb2.ValidationResponse()
         try:
             channel = grpc.insecure_channel('localhost:50061')
@@ -34,7 +35,7 @@ class InventoryService(inventory_repository_pb2_grpc.InventoryRepositoryServicer
             response.valid = False
         return response
 
-    def getBatchCost(self, request, context):
+    def getBatchCostService(self, request, context):
         response = inventory_repository_pb2.CostResponse()
         try:
             channel = grpc.insecure_channel('localhost:50061')
@@ -45,7 +46,7 @@ class InventoryService(inventory_repository_pb2_grpc.InventoryRepositoryServicer
             response.cost = 0.0
         return response
 
-    def getBatchScore(self, request, context):
+    def getBatchScoreService(self, request, context):
         response = inventory_repository_pb2.ScoreResponse()
         try:
             channel = grpc.insecure_channel('localhost:50061')
@@ -56,7 +57,7 @@ class InventoryService(inventory_repository_pb2_grpc.InventoryRepositoryServicer
             response.score = 0.0
         return response
 
-    def getBatchUsersReview(self, request, context):
+    def getBatchUsersReviewService(self, request, context):
         response = inventory_repository_pb2.ReviewResponse()
         try:
             channel = grpc.insecure_channel('localhost:50061')
@@ -67,7 +68,7 @@ class InventoryService(inventory_repository_pb2_grpc.InventoryRepositoryServicer
             response.review = "No reviews available"
         return response
 
-    def getBatch(self, request, context):
+    def getBatchService(self, request, context):
         response = inventory_repository_pb2.BatchInfo()
         try:
             channel = grpc.insecure_channel('localhost:50061')
@@ -78,7 +79,7 @@ class InventoryService(inventory_repository_pb2_grpc.InventoryRepositoryServicer
             response = inventory_repository_pb2.BatchInfo()
         return response
 
-    def getCompareBatches(self, request, context):
+    def getCompareBatchesService(self, request, context):
         response = inventory_repository_pb2.ComparisonInfo()
         try:
             channel = grpc.insecure_channel('localhost:50061')
@@ -89,7 +90,7 @@ class InventoryService(inventory_repository_pb2_grpc.InventoryRepositoryServicer
             response = inventory_repository_pb2.ComparisonInfo()
         return response
 
-    def updateScore(self, request, context):
+    def updateScoreService(self, request, context):
         response = inventory_repository_pb2.UpdateScoreResponse()
         try:
             channel = grpc.insecure_channel('localhost:50061')
@@ -100,7 +101,7 @@ class InventoryService(inventory_repository_pb2_grpc.InventoryRepositoryServicer
             response.success = False
         return response
 
-    def validateOrder(self, request, context):
+    def validateOrderService(self, request, context):
         response = inventory_repository_pb2.OrderValidationResponse()
         try:
             channel = grpc.insecure_channel('localhost:50061')

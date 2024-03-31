@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+message GetBatchServiceRequest {
+
+    string batch_id = 1;
+
+}
+
+message GetBatchServiceResponse {
+
+    int32 response_code = 1;
+    optional string brew_date = 2;
+    optional string beer_style = 3;
+    optional string location = 4;
+    optional float ph_level = 5;
+    optional float alcohol_content = 6;
+    optional float volume_produced = 7;
+    optional float quality_score = 8;
+    optional float cost = 9;
+    optional float user_score = 10;
+    optional int32 n_users_review = 11;
+
+    /*
+
+    0 - Success
+    1 - Batch not found
+
+    */
+
+}
+
+message GetBatchCostServiceRequest {
+
+    string batch_id = 1;
+
+}
+
+message GetBatchCostServiceResponse {
+
+    int32 response_code = 1;
+    optional string cost = 2;
+
+    /*
+
+    0 - Success
+    1 - Batch not found
+
+    */
+
+}
+
+message GetBatchScoreServiceRequest {
+
+    string batch_id = 1;
+
+}
+
+message GetBatchScoreServiceResponse {
+
+    int32 response_code = 1;
+    optional string cost = 2;
+
+    /*
+
+    0 - Success
+    1 - Batch not found
+
+    */
+
+}
+
+message GetBatchUsersReviewServiceRequest {
+
+    string batch_id = 1;
+
+}
+
+message GetBatchUsersReviewServiceResponse {
+
+    int32 response_code = 1;
+    optional int32 n_users_review = 2;
+
+    /*
+
+    0 - Success
+    1 - Batch not found
+
+    */
+
+}
+
+message ValidateItemServiceRequest {
+
+    string batch_id = 1;
+
+}
+
+message ValidateItemServiceResponse {
+
+    int32 response_code = 1;
+
+    /*
+
+    0 - Item in database
+    1 - Batch not found
+
+    */
+
+}
+
+message UpdateScoreServiceRequest {
+
+    string batch_id = 1;
+    float new_score = 2;
+
+}
+
+message UpdateScoreServiceResponse {
+
+    int32 response_code = 1;
+
+    /*
+
+    0 - Success
+    1 - Batch not found
+
+    */
+
+}
+
+message ValidateOrderServiceRequest {
+
+    string batch_id = 1;
+    int32 quantity = 2;
+
+}
+
+message ValidateOrderServiceResponse {
+
+    int32 response_code = 1;
+
+    /*
+
+    0 - Enough to order
+    1 - Batch not found
+
+    */
+
+}
+
+service InventoryService {
+    rpc getBatchService (GetBatchServiceRequest) returns (GetBatchServiceResponse);
+    rpc getBatchScoreService (GetBatchScoreServiceRequest) returns (GetBatchScoreServiceResponse);
+    rpc getBatchCostService (GetBatchCostServiceRequest) returns (GetBatchCostServiceResponse);
+    rpc getBatchUsersReviewService (GetBatchUsersReviewServiceRequest) returns (GetBatchUsersReviewServiceResponse);
+    rpc validateItemService (ValidateItemServiceRequest) returns (ValidateItemServiceResponse);
+    rpc updateScoreServiceResponse (UpdateScoreServiceRequest) returns (UpdateScoreServiceResponse);
+    rpc validateOrderServiceResponse (ValidateOrderServiceRequest) returns (ValidateOrderServiceResponse);
+}
