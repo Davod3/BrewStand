@@ -1,53 +1,44 @@
-
 syntax = "proto3";
 
 package payment_repository;
 
-// The PaymentRepositoryService handles data storage and retrieval for payments and invoices.
 service PaymentRepositoryService {
   // Stores invoice details.
-  rpc StoreInvoice (InvoiceData) returns (StoreInvoiceResponse) {}
+  rpc StoreInvoice (StoreInvoiceRequest) returns (StoreInvoiceResponse) {}
 
-  // Retrieves invoice details.
-  rpc RetrieveInvoice (InvoiceQuery) returns (InvoiceData) {}
+  // Retrieves a specific invoice.
+  rpc RetrieveInvoice (RetrieveInvoiceRequest) returns (InvoiceData) {}
 
   // Retrieves all invoices for a specific user.
-  rpc GetUserInvoices (UserInvoicesQuery) returns (UserInvoicesResponse) {}
+  rpc GetUserInvoices (GetUserInvoicesRequest) returns (UserInvoicesResponse) {}
 }
 
-// Data structure for storing payment details.
-message PaymentData {
-  float amount = 2;
-  string currency = 3;
-  int32 items_id = 4;
-  string card_last_four = 6;    // Last four digits of the card number.
+message StoreInvoiceRequest {
+  InvoiceData invoice = 1;
 }
 
-
-// Data structure for storing invoice details.
-message InvoiceData {
-  PaymentData invoice_details = 1;
-  string user_id = 2;
-  int32 order_id = 3;
-}
-
-// Response for storing invoice data.
 message StoreInvoiceResponse {
-  int32 invoice_id = 1;
+  int32 response_code = 1;
+  int64 invoiceId = 2;
 }
 
-// Query structure for retrieving invoice details.
-message InvoiceQuery {
-   int32 order_id = 1;
-   string user_id = 2;
+message RetrieveInvoiceRequest {
+  int64 invoiceId = 1;
 }
 
-// Query structure for retrieving all invoices of a specific user.
-message UserInvoicesQuery {
-  string user_id = 1;  // User ID to query invoices for.
+message InvoiceData {
+  string invoiceId = 1;
+  double price = 2;
+  int64 orderID = 3;
+  int64 userId = 4;
+  string fiscalAddress = 5;
+  string cardLastFour = 6;
 }
 
-// Response structure for getting all invoices of a specific user.
+message GetUserInvoicesRequest {
+  string userId = 1;
+}
+
 message UserInvoicesResponse {
-  repeated InvoiceData invoices = 1;  // List of all invoices for the user.
+  repeated InvoiceData invoices = 1;
 }
