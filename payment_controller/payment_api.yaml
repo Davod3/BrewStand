@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: BrewStand_PaymentAPI
+  description: |-
+    This is the definition of the REST API for the BrewStand Payment Service. Here, it is processed the payment of users and they receive their invoices.
+  version: 1.0.0
+servers:
+  - url: /
+tags:
+  - name: Payment
+    description: Supports operations related with the payment and invoice of orders. 
+paths:
+  /payment/{invoiceId}:
+    get: 
+      tags:
+        - Payment
+      summary: Gets the details of a specific invoice.
+      description: Gets the details of a specific invoice.
+      security:
+        - ApiKeyAuth: []
+      operationId: payment.getInvoice
+      parameters:
+        - name: invoiceId
+          in: path
+          description: The ID of the invoice whose details we want to view.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref : '#/components/schemas/Invoice'
+        '404':
+          description: Requested invoice was not found
+  /payment:
+    get: 
+      tags:
+        - Payment
+      summary: Gets all invoices related to a user.
+      description: Gets all invoices related to a user.
+      security:
+        - ApiKeyAuth: []
+      operationId: payment.getInvoices
+      parameters:
+        - name: userId
+          in: query
+          description: The ID of the user whose invoices we want to see
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref : '#/components/schemas/Invoice'
+        '404':
+          description: Requested invoice was not found
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+  schemas:
+    Invoice:
+      type: object
+      properties:
+        invoiceID:
+          type: integer
+          format: int64
+          example: 10
+          description:  A unique identifier assigned to each invoice processed.
+        price:
+          type: number
+          format: double
+          example: 335.5
+          description: The total cost for the order.
+        orderID:
+          type: integer
+          format: int64
+          example: 10
+          description: The order id. Used for tracking purposes.
+        customerID:
+          type: integer
+          format: int64
+          example: 10
+          description: The id of the user who initiated the payment process.
+        fiscalAddress:
+          type: string
+          example: Campo Grande 016, 1749-016 Lisboa
+          description: The address used for billing purposes.
+        details:
+          type: string
+          description: Optional details and extra notes about the order.
+
