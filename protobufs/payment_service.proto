@@ -1,35 +1,42 @@
 syntax = "proto3";
+
 package payment_service;
 import "payment_repository.proto";
 
 service PaymentService {
-  rpc ProcessPayment (PaymentRequest) returns (PaymentResponse) {}
+  // Process a payment when a user checks out.
+  rpc ProcessPayment (ProcessPaymentRequest) returns (ProcessPaymentResponse) {}
+
+  // Retrieves a specific invoice by its ID.
   rpc GetInvoice (InvoiceRequest) returns (InvoiceResponse) {}
+
+  // Retrieves all invoices related to a specific user.
   rpc GetAllUserInvoices (UserInvoicesRequest) returns (UserInvoicesResponse) {}
 }
 
-message PaymentRequest {
-  string user_id = 1;
+message ProcessPaymentRequest {
+  string userId = 1;
   float amount = 2;
   string currency = 3;
-  repeated int32 items_id = 4;
-  CardDetails card_details = 5;
+  repeated int32 itemsId = 4;
+  string fiscalAddress = 5;
+  CardDetails cardDetails = 6;
 }
 
 message CardDetails {
-  string card_number = 1;
-  string card_expiry = 2;
-  string card_cvc = 3;
+  string cardNumber = 1;
+  string cardExpiry = 2;
+  string cardCvc = 3;
 }
 
-message PaymentResponse {
+message ProcessPaymentResponse {
   bool success = 1;
-  payment_repository.InvoiceData invoice = 2;
+  string invoiceId = 2; // ID of the stored invoice.
+  payment_repository.InvoiceData invoice = 3;
 }
 
 message InvoiceRequest {
-  int32 order_id = 1;
-  string user_id = 2;
+  int64 invoiceId = 1;
 }
 
 message InvoiceResponse {
@@ -38,7 +45,7 @@ message InvoiceResponse {
 }
 
 message UserInvoicesRequest {
-  string user_id = 1;
+  string userId = 1;
 }
 
 message UserInvoicesResponse {
