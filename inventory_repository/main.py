@@ -1,3 +1,5 @@
+import load_dataset
+
 import inventory_repository_pb2
 import psycopg2
 import grpc
@@ -296,4 +298,5 @@ def serve():
     server.wait_for_termination()
 
 if __name__ == "__main__":
+    load_dataset.load()
     serve()
