@@ -136,7 +136,7 @@ message UpdateScoreServiceResponse {
 message ValidateOrderServiceRequest {
 
     int64 batch_id = 1;
-    int32 quantity = 2;
+    int32 volume_order = 2;
 
 }
 

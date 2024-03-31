@@ -121,6 +121,19 @@ message UpdateUserScoreResponse {
 
 }
 
+message UpdateVolumeRequest {
+
+    int64 batch_id = 1;
+    double volume_order = 2;
+
+}
+
+message UpdateVolumeResponse {
+
+    int32 response_code = 1;
+
+}
+
 message Empty {
 
 }
@@ -132,4 +145,5 @@ service InventoryRepository {
     rpc getBatchCost (GetBatchCostRequest) returns (GetBatchCostResponse);
     rpc getBatchUsersReview (GetBatchUsersReviewRequest) returns (GetBatchUsersReviewResponse);
     rpc updateUserScore (UpdateUserScoreRequest) returns (UpdateUserScoreResponse);
+    rpc updateVolume (UpdateVolumeRequest) returns (UpdateVolumeResponse);
 }

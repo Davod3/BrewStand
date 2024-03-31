@@ -15,7 +15,9 @@ from inventory_service_pb2 import (
     UpdateScoreServiceResponse,
     ValidateOrderServiceResponse,
     BatchDetailsService,
-    GetBatchesServiceResponse
+    GetBatchesServiceResponse,
+    UpdateVolumeResponse,
+    ValidateOrderServiceResponse
 
 )
 
@@ -32,6 +34,8 @@ from inventory_repository_pb2 import (
     GetBatchCostRequest,
     GetBatchUsersReviewRequest,
     UpdateUserScoreRequest,
+    UpdateVolumeRequest,
+    ValidateOrderServiceRequest,
     Empty
 
 )
@@ -239,9 +243,36 @@ class InventoryService(inventory_service_pb2_grpc.InventoryServiceServicer):
 
     def validateOrderService(self, request, context):
         
-        #TODO - Esperar que o repo tenha função para subtrair volume
+        try:
+            repo_request = ValidateOrderServiceRequest(batch_id = request.batch_id, volume_order = request.volume_order)
+            repo_response = client.getBatchVolume(repo_request)
+
+            if(repo_response.response_code == 0):
+
+                #Success
+                
+                update_request = UpdateVolumeRequest(batch_id=request.batch_id, volume_order=request.volume_order)
+                update_response = client.updateVolume(update_request)
+                
+                if update_response.response_code == 0:
+
+                    #Success
+                    return UpdateVolumeResponse(response_code=0)
+                
+                else:
+                    
+                    #Fail
+                    return UpdateVolumeResponse(response_code=1)
         
-        return None
+            else:
+
+                #Fail
+                return ValidateOrderServiceResponse(response_code = 1)
+
+        except grpc.RpcError as e:
+            
+            print("Error calling validateOrder:", e.details())
+            return ValidateOrderServiceResponse(response_code = -1)
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]

@@ -11,7 +11,9 @@ from inventory_repository_pb2 import (
     GetBatchCostResponse,
     GetBatchUsersReviewResponse,
     BatchDetails,
-    UpdateUserScoreResponse
+    UpdateUserScoreResponse,
+    UpdateVolumeResponse,
+    ValidateOrderServiceResponse
 )
 
 import inventory_repository_pb2_grpc
@@ -77,6 +79,40 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
         finally:
             if conn:
                 conn.close()
+
+    def getBatchVolume(self, request, context):
+        try:
+            conn = psycopg2.connect(
+                dbname=os.getenv('INVENTORY_DB_NAME'),
+                user=os.getenv('INVENTORY_DB_USER'),
+                password=os.getenv('INVENTORY_DB_PASSWORD'),
+                host=os.getenv('INVENTORY_DB_HOST'),
+                port=os.getenv('INVENTORY_DB_PORT')
+            )
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT volume_produced FROM inventory WHERE batch_id = %s", [request.batch_id])
+            result = cursor.fetchone()
+
+            if result is not None:
+                volume_produced = float(result[0])
+                if volume_produced >= request.volume_order:
+                    return ValidateOrderServiceResponse(response_code=0, score=volume_produced)
+                else:
+                    return ValidateOrderServiceResponse(response_code=1, score=volume_produced)
+            else:
+                context.set_code(grpc.StatusCode.NOT_FOUND)
+                context.set_details("Batch not found")
+                return ValidateOrderServiceResponse(response_code=1, score=0.0)
+        except psycopg2.Error as e:
+            print("Error retrieving batch score:", e)
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details("Internal server error")
+            return ValidateOrderServiceResponse(response_code=-1, score=0.0)
+        finally:
+            if conn:
+                conn.close()
+
 
     def getBatchUsersReview(self, request, context):
         try:
@@ -239,6 +275,36 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
             return UpdateUserScoreResponse(response_code = -1)
+        finally:
+            if conn:
+                conn.close()
+
+
+    def updateVolume(self, request, context):
+        try:
+            conn = psycopg2.connect(
+                dbname=os.getenv('INVENTORY_DB_NAME'),
+                user=os.getenv('INVENTORY_DB_USER'),
+                password=os.getenv('INVENTORY_DB_PASSWORD'),
+                host=os.getenv('INVENTORY_DB_HOST'),
+                port=os.getenv('INVENTORY_DB_PORT')
+            )
+            cursor = conn.cursor()
+
+            cursor.execute("UPDATE inventory SET volume_produced = %s WHERE batch_id = %s", [request.volume_order, request.batch_id])
+            conn.commit()
+            
+            if cursor.rowcount > 0:
+                return UpdateVolumeResponse(response_code = 0)
+            else:
+                context.set_code(grpc.StatusCode.NOT_FOUND)
+                context.set_details("Batch not found")
+                return UpdateVolumeResponse(response_code = 1)
+        except psycopg2.Error as e:
+            print("Error updating batch score:", e)
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details("Internal server error")
+            return UpdateVolumeResponse(response_code = -1)
         finally:
             if conn:
                 conn.close()
