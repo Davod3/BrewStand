@@ -30,7 +30,7 @@ message CardDetails {
 }
 
 message ProcessPaymentResponse {
-  bool success = 1;
+  int32 response_code = 1;
   string invoiceId = 2; // ID of the stored invoice.
   payment_repository.InvoiceData invoice = 3;
 }
@@ -40,7 +40,7 @@ message InvoiceRequest {
 }
 
 message InvoiceResponse {
-  bool success = 1;
+  int32 response_code = 1;
   payment_repository.InvoiceData invoice = 2;
 }
 

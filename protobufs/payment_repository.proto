@@ -18,7 +18,7 @@ message StoreInvoiceRequest {
 }
 
 message StoreInvoiceResponse {
-  bool success = 1;
+  int32 response_code = 1;
   int64 invoiceId = 2;
 }
 
@@ -27,12 +27,12 @@ message RetrieveInvoiceRequest {
 }
 
 message InvoiceData {
-  int64 invoiceID = 1;
+  string invoiceId = 1;
   double price = 2;
   int64 orderID = 3;
   int64 userId = 4;
   string fiscalAddress = 5;
-  CardDetails cardDetails = 6;
+  string cardLastFour = 6;
 }
 
 message GetUserInvoicesRequest {
