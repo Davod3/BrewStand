@@ -162,57 +162,6 @@ services:
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.14
-  
-  payment_controller:
-    build: 
-      context: ./
-      dockerfile: ./payment_controller/Dockerfile
-    container_name: payment_controller
-    expose:
-      - 3006
-    ports:
-      -'3006:3006'
-    environment:
-      - PAYMENT_SERVICE_HOST=172.100.10.20
-      - PAYMENT_SERVICE_PORT=50054
-    networks:
-      brewstand-net:
-        ipv4_address: 172.100.10.10
-  
-  payment_service:
-    depends_on:
-      - payment_repository
-    build:
-      context: ./
-      dockerfile: ./payment_service/Dockerfile
-    container_name: payment_service
-    expose:
-      - 50054
-    ports:
-      - '50054:50054'
-    environment:
-      - PAYMENT_REPOSITORY_HOST=172.100.10.30
-      - PAYMENT_REPOSITORY_PORT=50064
-    networks:
-      brewstand-net:
-        ipv4_address: 172.100.10.20
-  
-  payment_repository:
-    restart: on-failure:10
-    build:
-      context: ./
-      dockerfile: ./payment_repository/Dockerfile
-    container_name: payment_repository
-    expose:
-      - 50064
-    ports:
-      - '50064:50064'
-    environment:
-      - MONGO_USER=db_access
-      - MONGO_PASSWORD=VerySecureYesYes123
-    networks:
-      brewstand-net:
-        ipv4_address: 172.100.10.30 
 
 networks:
   brewstand-net:
