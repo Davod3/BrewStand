@@ -108,6 +108,19 @@ message GetBatchesResponse {
 
 }
 
+message UpdateUserScoreRequest {
+
+    int64 batch_id = 1;
+    double new_score = 2;
+
+}
+
+message UpdateUserScoreResponse {
+
+    int32 response_code = 1;
+
+}
+
 message Empty {
 
 }
@@ -118,4 +131,5 @@ service InventoryRepository {
     rpc getBatchScore (GetBatchScoreRequest) returns (GetBatchScoreResponse);
     rpc getBatchCost (GetBatchCostRequest) returns (GetBatchCostResponse);
     rpc getBatchUsersReview (GetBatchUsersReviewRequest) returns (GetBatchUsersReviewResponse);
+    rpc updateUserScore (UpdateUserScoreRequest) returns (UpdateUserScoreResponse);
 }

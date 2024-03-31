@@ -10,7 +10,8 @@ from inventory_repository_pb2 import (
     GetBatchScoreResponse,
     GetBatchCostResponse,
     GetBatchUsersReviewResponse,
-    BatchDetails
+    BatchDetails,
+    UpdateUserScoreResponse
 )
 
 import inventory_repository_pb2_grpc
@@ -18,36 +19,6 @@ import inventory_repository_pb2_grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 
 class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServicer):
-
-    '''
-    def validateItem(self, request, context):
-        try:
-            conn = psycopg2.connect(
-                dbname=os.getenv('INVENTORY_DB_NAME'),
-                user=os.getenv('INVENTORY_DB_USER'),
-                password=os.getenv('INVENTORY_DB_PASSWORD'),
-                host=os.getenv('INVENTORY_DB_HOST'),
-                port=os.getenv('INVENTORY_DB_PORT')
-            )
-            cursor = conn.cursor()
-
-            cursor.execute("SELECT COUNT(*) FROM inventory WHERE batch_id = %s", (request.batch_id,))
-            result = cursor.fetchone()
-
-            if result[0] > 0:
-                return inventory_repository_pb2.ValidationResponse(valid=True)
-            else:
-                return inventory_repository_pb2.ValidationResponse(valid=False)
-        except psycopg2.Error as e:
-            print("Error validating item:", e)
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details("Internal server error")
-            return inventory_repository_pb2.ValidationResponse(valid=False)
-        finally:
-            if conn:
-                conn.close()
-
-    '''
 
     def getBatchCost(self, request, context):
         try:
@@ -240,9 +211,7 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             if conn:
                 conn.close()
 
-    '''
-
-    def getCompareBatches(self, request, context):
+    def updateUserScore(self, request, context):
         try:
             conn = psycopg2.connect(
                 dbname=os.getenv('INVENTORY_DB_NAME'),
@@ -253,119 +222,26 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             )
             cursor = conn.cursor()
 
-            cursor.execute("SELECT * FROM inventory WHERE batch_id IN (%s, %s)", (request.batch_id1, request.batch_id2))
-            result = cursor.fetchall()
-
-            if result is not None and len(result) == 2:
-                batch1_info = inventory_repository_pb2.BatchInfo(
-                    batch_id=result[0][0],
-                    brew_date=str(result[0][1]),
-                    beer_style=result[0][2],
-                    location=result[0][3],
-                    ph_level=float(result[0][4]),
-                    alcohol_content=float(result[0][5]),
-                    volume_produced=float(result[0][6]),
-                    quality_score=float(result[0][7]),
-                    cost=float(result[0][8]),
-                    user_score=float(result[0][9]),
-                    n_users_review=float(result[0][10])
-                )
-                batch2_info = inventory_repository_pb2.BatchInfo(
-                    batch_id=result[1][0],
-                    brew_date=str(result[1][1]),
-                    beer_style=result[1][2],
-                    location=result[1][3],
-                    ph_level=float(result[1][4]),
-                    alcohol_content=float(result[1][5]),
-                    volume_produced=float(result[1][6]),
-                    quality_score=float(result[1][7]),
-                    cost=float(result[1][8]),
-                    user_score=float(result[1][9]),
-                    n_users_review=float(result[1][10])
-                )
-                comparison_info = inventory_repository_pb2.ComparisonInfo(
-                    batch1=batch1_info,
-                    batch2=batch2_info
-                )
-                return comparison_info
-            else:
-                context.set_code(grpc.StatusCode.NOT_FOUND)
-                context.set_details("One or both batches not found")
-                return inventory_repository_pb2.ComparisonInfo()
-        except psycopg2.Error as e:
-            print("Error retrieving batch comparison info:", e)
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details("Internal server error")
-            return inventory_repository_pb2.ComparisonInfo()
-        finally:
-            if conn:
-                conn.close()
-
-    '''
-    '''
-    def updateScore(self, request, context):
-        try:
-            conn = psycopg2.connect(
-                dbname=os.getenv('INVENTORY_DB_NAME'),
-                user=os.getenv('INVENTORY_DB_USER'),
-                password=os.getenv('INVENTORY_DB_PASSWORD'),
-                host=os.getenv('INVENTORY_DB_HOST'),
-                port=os.getenv('INVENTORY_DB_PORT')
-            )
-            cursor = conn.cursor()
-
-            cursor.execute("UPDATE inventory SET user_score = %s WHERE batch_id = %s", (request.new_score, request.batch_id))
+            cursor.execute("UPDATE inventory SET user_score = %s WHERE batch_id = %s", [request.new_score, request.batch_id])
             conn.commit()
 
+            cursor.execute("UPDATE INVENTORY SET n_users_review = n_users_review + 1 WHERE batch_id = %s", [request.batch_id])
+            conn.commit()
+            
             if cursor.rowcount > 0:
-                return inventory_repository_pb2.UpdateScoreResponse(success=True)
+                return UpdateUserScoreResponse(response_code = 0)
             else:
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details("Batch not found")
-                return inventory_repository_pb2.UpdateScoreResponse(success=False)
+                return UpdateUserScoreResponse(response_code = 1)
         except psycopg2.Error as e:
             print("Error updating batch score:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return inventory_repository_pb2.UpdateScoreResponse(success=False)
+            return UpdateUserScoreResponse(response_code = -1)
         finally:
             if conn:
                 conn.close()
-    '''
-    '''
-    def validateOrder(self, request, context):
-        try:
-            conn = psycopg2.connect(
-                dbname=os.getenv('INVENTORY_DB_NAME'),
-                user=os.getenv('INVENTORY_DB_USER'),
-                password=os.getenv('INVENTORY_DB_PASSWORD'),
-                host=os.getenv('INVENTORY_DB_HOST'),
-                port=os.getenv('INVENTORY_DB_PORT')
-            )
-            cursor = conn.cursor()
-
-            cursor.execute("SELECT volume_produced FROM inventory WHERE batch_id = %s", (request.batch_id,))
-            result = cursor.fetchone()
-
-            if result is not None:
-                volume_produced = result[0]
-                if volume_produced >= request.quantity:
-                    return inventory_repository_pb2.OrderValidationResponse(valid=True)
-                else:
-                    return inventory_repository_pb2.OrderValidationResponse(valid=False)
-            else:
-                context.set_code(grpc.StatusCode.NOT_FOUND)
-                context.set_details("Batch not found")
-                return inventory_repository_pb2.OrderValidationResponse(valid=False)
-        except psycopg2.Error as e:
-            print("Error validating order:", e)
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details("Internal server error")
-            return inventory_repository_pb2.OrderValidationResponse(valid=False)
-        finally:
-            if conn:
-                conn.close()
-    '''
 
 def serve():
 

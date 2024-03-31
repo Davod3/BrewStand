@@ -45,7 +45,7 @@ def load():
                        quality_score NUMERIC(3,1) NOT NULL,
                        cost NUMERIC(3,1) NOT NULL,
                        user_score NUMERIC(3,1) NOT NULL,
-                       n_users_review NUMERIC(3,1) NOT NULL,
+                       n_users_review INTEGER NOT NULL,
                        PRIMARY KEY (batch_id)
         )""")
 
@@ -76,7 +76,7 @@ def load():
                                  float(row[15]), 
                                  float(__getCost()), 
                                  float(0),
-                                 float(0))
+                                 int(0))
 
                     print(n_rows, clean_row)
                     n_rows += 1
