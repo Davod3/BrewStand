@@ -209,7 +209,7 @@ services:
       - '50064:50064'
     environment:
       - MONGO_USER=db_access
-      - MONGO_PASSWORD=VerySecureYesYes123
+      - MONGO_PASSWORD=SecurePayment123
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.30 

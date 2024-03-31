@@ -18,7 +18,7 @@ message ProcessPaymentRequest {
   string userId = 1;
   float amount = 2;
   string currency = 3;
-  repeated int32 itemsId = 4;
+  repeated string items_name = 4;
   string fiscalAddress = 5;
   CardDetails cardDetails = 6;
 }
@@ -31,12 +31,12 @@ message CardDetails {
 
 message ProcessPaymentResponse {
   int32 response_code = 1;
-  string invoiceId = 2; // ID of the stored invoice.
+  string invoiceId = 2;
   payment_repository.InvoiceData invoice = 3;
 }
 
 message InvoiceRequest {
-  int64 invoiceId = 1;
+  string invoiceId = 1;
 }
 
 message InvoiceResponse {
