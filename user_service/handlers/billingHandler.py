@@ -4,7 +4,7 @@ import grpc
 import handlers.userHandler as UserHandler
 
 from payment_service_pb2 import (
-    PaymentRequest,
+    ProcessPaymentRequest,
     CardDetails
 )
 
@@ -43,13 +43,13 @@ def initiatePayment(user_id, card_number, card_expiry, card_cvc):
             '''
             UNCOMMENT WHEN PAYMENT SERVICE IS READY
 
-            request = PaymentRequest(user_id = user_id,
-                                     amount = cost,
-                                     currency = 'EUR',
-                                     items_id = items,
-                                     card_details = CardDetails(card_number=card_number,
-                                                                card_expiry=card_expiry,
-                                                                card_cvc=card_cvc))
+            request = ProcessPaymentRequest(user_id = user_id,
+                                            amount = cost,
+                                            currency = 'EUR',
+                                            items_id = items,
+                                            card_details = CardDetails(card_number=card_number,
+                                                                        card_expiry=card_expiry,
+                                                                        card_cvc=card_cvc))
             
             response = client.ProcessPayment(request)
 
