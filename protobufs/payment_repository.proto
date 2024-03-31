@@ -27,7 +27,7 @@ message PaymentData {
 // Data structure for storing invoice details.
 message InvoiceData {
   PaymentData invoice_details = 1;
-  int32 user_id = 2;
+  string user_id = 2;
   int32 order_id = 3;
 }
 
@@ -39,12 +39,12 @@ message StoreInvoiceResponse {
 // Query structure for retrieving invoice details.
 message InvoiceQuery {
    int32 order_id = 1;
-   int32 user_id = 2;
+   string user_id = 2;
 }
 
 // Query structure for retrieving all invoices of a specific user.
 message UserInvoicesQuery {
-  int32 user_id = 1;  // User ID to query invoices for.
+  string user_id = 1;  // User ID to query invoices for.
 }
 
 // Response structure for getting all invoices of a specific user.

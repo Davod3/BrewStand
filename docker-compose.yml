@@ -54,6 +54,22 @@ services:
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.30
+  
+  inventory_controller:
+    build:
+      context: ./
+      dockerfile: ./inventory_controller/Dockerfile
+    container_name: inventory_controller
+    expose:
+      - 3001
+    ports:
+      - '3001:3001'
+    environment:
+      - INVENTORY_SERVICE_HOST=172.100.10.21
+      - INVENTORY_SERVICE_PORT=50052
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.11
 
   inventory_repository:
     depends_on:

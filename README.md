@@ -24,6 +24,11 @@ User API:
 http://localhost:3000/ui
 ```
 
+Inventory API:
+```
+http://localhost:3001/ui
+```
+
 Review API:
 ```
 http://localhost:3003/ui

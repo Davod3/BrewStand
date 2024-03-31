@@ -1,0 +1,123 @@
+openapi: 3.0.3
+info:
+  title: BrewStand_InventoryAPI
+  description: |-
+    This is the definition of the REST API for the BrewStand Inventory Service. Here users can get details of specific items in our inventory or the complete list of items available
+  version: 1.0.0
+servers:
+  - url: /
+tags:
+  - name: Item
+    description: Supports operations related with viewing and buying batches of beer
+paths:
+  /items/{itemId}:
+    get:
+      tags:
+        - Item
+      summary: Gets the details of a specific beer batch.
+      description: Gets the details of a specific beer batch.
+      operationId: itemHandler.getBatch
+      parameters:
+        - name: itemId
+          in: path
+          description: The ID of the batch whose details we want to view.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful Operation.
+          content:
+            application/json:
+              schema:
+                $ref : '#/components/schemas/Item'
+        '404':
+          description: Requested item was not found.
+  /items:
+    get:
+      tags:
+        - Item
+      summary: Gets a list with all the beer batches or a comparison between two.
+      description: Gets a list with the details of all the beer batches. Query parameters can be used to compare two different beer batches
+      operationId: itemHandler.getBatches
+      parameters:
+        - name: item1
+          in: query
+          description: The ID of the first batch whose details we want to view.
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: item2
+          in: query
+          description: The ID of the second batch whose details we want to view.
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful Operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref : '#/components/schemas/Item'
+        '404':
+          description: One of the requested items was not found.
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        batchID:
+          type: integer
+          format: int64
+          example: 10
+          description:  A unique identifier assigned to each batch of beer produced.
+        beerStyle:
+          type: string
+          example: Wheat Beer
+          description: The style or type of beer, such as IPA, Stout, Lager, Ale, etc.
+        brewLocation:
+          type: string
+          example: Whitefield
+          description: The city where the beer was originally brewed.
+        userScore:
+          type: number
+          format: double
+          example: 3.5
+          description: A user defined score for the quality of the beer in the batch, rated out of 10.
+        expertScore:
+          type: number
+          format: double
+          example: 7.5
+          description: An expert defined score for the quality of the beer in the batch, rated out of 10. 
+        phLevel:
+          type: number
+          format: double
+          example: 5.3
+          description: The pH level of the beer, indicating its acidity or alkalinity.
+        alchoolContent:
+          type: number
+          format: double
+          example: 4.6
+          description: The percentage of alcohol by volume in the beer.
+        availableVolume:
+          type: number
+          format: double
+          example: 5000
+          description: The volume of beer available in the batch, measured in liters.
+        brewDate:
+          type: string
+          format: date
+          example: 2020-01-01
+          description: The date on which the beer batch was brewed.
+        cost:
+          type: number
+          format: double
+          example: 3.5
+          description: The price in euros per liter for this batch of beer.
+    
