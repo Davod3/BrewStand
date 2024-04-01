@@ -19,5 +19,10 @@ RUN python -m grpc_tools.protoc -I ./protobufs --python_out=. \
 
 RUN python -m grpc_tools.protoc -I ./protobufs --python_out=. \
            --grpc_python_out=. ./protobufs/payment_service.proto
+
+RUN python -m grpc_tools.protoc -I ./protobufs --python_out=. \
+           --grpc_python_out=. ./protobufs/inventory_service.proto
+
+
            
 ENTRYPOINT [ "python", "main.py" ]

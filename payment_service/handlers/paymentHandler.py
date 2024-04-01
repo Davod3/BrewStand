@@ -1,4 +1,19 @@
-# paymentHandler.py
+import os
+import grpc
+import datetime
+import re
+
+# Assuming these are the correct paths for your gRPC generated files
+from payment_repository_pb2 import StoreInvoiceRequest, RetrieveInvoiceRequest, GetUserInvoicesRequest, InvoiceData
+from payment_repository_pb2_grpc import PaymentRepositoryStub
+from payment_service_pb2 import CardDetails
+
+# Corrected environment variable names
+payment_repository_host = os.getenv("PAYMENT_REPOSITORY_HOST", "localhost")
+payment_repository_port = os.getenv("PAYMENT_REPOSITORY_PORT", "50064")
+payment_repository_channel = grpc.insecure_channel(f"{payment_repository_host}:{payment_repository_port}")
+
+client = PaymentRepositoryStub(payment_repository_channel)
 
 class PaymentHandler:
     @staticmethod
@@ -12,8 +27,8 @@ class PaymentHandler:
         if not PaymentHandler.validate_cvc(card_details.card_cvc):
             return False, "Invalid CVC"
 
-        return True
-    
+        return True, ""
+
     @staticmethod
     def validate_card_number(card_number):
         """
@@ -65,18 +80,60 @@ class PaymentHandler:
         return response
 
     @staticmethod
-    def process_payment(user_id, amount, currency, items_id, card_details):
-        if not PaymentHandler.validate_card_details(card_details):
-            raise ValueError("Invalid card details")
+    def validate_payment(user_id, amount, currency, items_id, fiscal_address, card_details):
+        is_valid, error_message = PaymentHandler.validate_card_details(card_details)
+        if not is_valid:
+            return None, error_message
 
         gateway_response = PaymentHandler.contact_payment_gateway(
             user_id, amount, currency, card_details
         )
 
         if not gateway_response['success']:
-            raise Exception(f"Payment Gateway Error: {gateway_response['message']}")
+            return None, gateway_response['message']
 
-        card_token = f"token_{gateway_response['transaction_id']}"
         card_last_four = card_details.card_number[-4:]  
-        return gateway_response['success'], card_token, card_last_four
+        return card_last_four, None
 
+    @staticmethod
+    def process_payment(user_id, amount, currency, items_name, fiscal_address, card_details):
+        card_last_four, error_message = PaymentHandler.validate_payment(
+            user_id=user_id,
+            amount=amount,
+            currency=currency,
+            items_name=items_name,
+            fiscal_address=fiscal_address,
+            card_details=card_details 
+        )
+
+        if not card_last_four:
+            return 2  
+
+        # Assuming order_service_pb2 and order_service_pb2_grpc are imported correctly
+        # order_channel = grpc.insecure_channel('order_service_endpoint') 
+        # order_stub = order_service_pb2_grpc.OrderServiceStub(order_channel)
+        # order_response = order_stub.CreateOrder(...) 
+        # if not order_response.success:
+        #     return 2  # Example error code
+        # order_id = order_response.order_id
+
+        # Placeholder for order ID until order service integration is complete
+        order_id = 1
+
+        invoice_data = InvoiceData(
+            price=amount,
+            orderID=order_id,
+            userID=user_id,
+            fiscalAddress=fiscal_address,
+            cardLastFour=card_last_four
+            items_name = items_name
+        )
+
+        store_invoice_response = client.StoreInvoice(
+            StoreInvoiceRequest(invoice=invoice_data)
+        )
+
+        if store_invoice_response.response_code != 0:
+            return 2  
+
+        return store_invoice_response.invoiceId

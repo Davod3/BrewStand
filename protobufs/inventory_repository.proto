@@ -2,23 +2,28 @@ syntax = "proto3";
 
 message GetBatchRequest {
 
-    string batch_id = 1;
+    int64 batch_id = 1;
 
+}
+
+message BatchDetails {
+    int32 batch_id = 1;
+    string brew_date = 2;
+    string beer_style = 3;
+    string location = 4;
+    float ph_level = 5;
+    float alcohol_content = 6;
+    float volume_produced = 7;
+    float quality_score = 8;
+    float cost = 9;
+    float user_score = 10;
+    int32 n_users_review = 11;
 }
 
 message GetBatchResponse {
 
     int32 response_code = 1;
-    optional string brew_date = 2;
-    optional string beer_style = 3;
-    optional string location = 4;
-    optional float ph_level = 5;
-    optional float alcohol_content = 6;
-    optional float volume_produced = 7;
-    optional float quality_score = 8;
-    optional float cost = 9;
-    optional float user_score = 10;
-    optional int32 n_users_review = 11;
+    optional BatchDetails batch = 2;
 
     /*
 
@@ -31,14 +36,14 @@ message GetBatchResponse {
 
 message GetBatchCostRequest {
 
-    string batch_id = 1;
+    int64 batch_id = 1;
 
 }
 
 message GetBatchCostResponse {
 
     int32 response_code = 1;
-    optional string cost = 2;
+    optional double cost = 2;
 
     /*
 
@@ -51,14 +56,14 @@ message GetBatchCostResponse {
 
 message GetBatchScoreRequest {
 
-    string batch_id = 1;
+    int64 batch_id = 1;
 
 }
 
 message GetBatchScoreResponse {
 
     int32 response_code = 1;
-    optional string cost = 2;
+    optional double score = 2;
 
     /*
 
@@ -71,14 +76,14 @@ message GetBatchScoreResponse {
 
 message GetBatchUsersReviewRequest {
 
-    string batch_id = 1;
+    int64 batch_id = 1;
 
 }
 
 message GetBatchUsersReviewResponse {
 
     int32 response_code = 1;
-    optional int32 n_users_review = 2;
+    optional int64 n_users_review = 2;
 
     /*
 
@@ -89,9 +94,70 @@ message GetBatchUsersReviewResponse {
 
 }
 
+message GetBatchesResponse {
+
+    int32 response_code = 1;
+    repeated BatchDetails batches = 2;
+
+    /*
+
+    0 - Success
+    1 - SQL Error
+
+    */
+
+}
+
+message UpdateUserScoreRequest {
+
+    int64 batch_id = 1;
+    double new_score = 2;
+
+}
+
+message UpdateUserScoreResponse {
+
+    int32 response_code = 1;
+
+}
+
+message UpdateVolumeRequest {
+
+    int64 batch_id = 1;
+    double volume_order = 2;
+
+}
+
+message UpdateVolumeResponse {
+
+    int32 response_code = 1;
+
+}
+
+message Empty {
+
+}
+
+message GetVolumeRequest {
+
+    int64 batch_id = 1;
+
+}
+
+message GetVolumeResponse {
+
+    int32 response_code = 1;
+    optional double volume = 2;
+
+}
+
 service InventoryRepository {
     rpc getBatch (GetBatchRequest) returns (GetBatchResponse);
+    rpc getBatches (Empty) returns (GetBatchesResponse);
     rpc getBatchScore (GetBatchScoreRequest) returns (GetBatchScoreResponse);
     rpc getBatchCost (GetBatchCostRequest) returns (GetBatchCostResponse);
     rpc getBatchUsersReview (GetBatchUsersReviewRequest) returns (GetBatchUsersReviewResponse);
+    rpc updateUserScore (UpdateUserScoreRequest) returns (UpdateUserScoreResponse);
+    rpc updateVolume (UpdateVolumeRequest) returns (UpdateVolumeResponse);
+    rpc getBatchVolume(GetVolumeRequest) returns (GetVolumeResponse);
 }

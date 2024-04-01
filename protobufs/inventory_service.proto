@@ -2,23 +2,28 @@ syntax = "proto3";
 
 message GetBatchServiceRequest {
 
-    string batch_id = 1;
+    int64 batch_id = 1;
 
+}
+
+message BatchDetailsService {
+    int64 batch_id = 1;
+    string brew_date = 2;
+    string beer_style = 3;
+    string location = 4;
+    float ph_level = 5;
+    float alcohol_content = 6;
+    float volume_produced = 7;
+    float quality_score = 8;
+    float cost = 9;
+    float user_score = 10;
+    int32 n_users_review = 11;
 }
 
 message GetBatchServiceResponse {
 
     int32 response_code = 1;
-    optional string brew_date = 2;
-    optional string beer_style = 3;
-    optional string location = 4;
-    optional float ph_level = 5;
-    optional float alcohol_content = 6;
-    optional float volume_produced = 7;
-    optional float quality_score = 8;
-    optional float cost = 9;
-    optional float user_score = 10;
-    optional int32 n_users_review = 11;
+    optional BatchDetailsService batch = 2;
 
     /*
 
@@ -31,14 +36,14 @@ message GetBatchServiceResponse {
 
 message GetBatchCostServiceRequest {
 
-    string batch_id = 1;
+    int64 batch_id = 1;
 
 }
 
 message GetBatchCostServiceResponse {
 
     int32 response_code = 1;
-    optional string cost = 2;
+    optional double cost = 2;
 
     /*
 
@@ -51,14 +56,14 @@ message GetBatchCostServiceResponse {
 
 message GetBatchScoreServiceRequest {
 
-    string batch_id = 1;
+    int64 batch_id = 1;
 
 }
 
 message GetBatchScoreServiceResponse {
 
     int32 response_code = 1;
-    optional string cost = 2;
+    optional double score = 2;
 
     /*
 
@@ -71,7 +76,7 @@ message GetBatchScoreServiceResponse {
 
 message GetBatchUsersReviewServiceRequest {
 
-    string batch_id = 1;
+    int64 batch_id = 1;
 
 }
 
@@ -91,7 +96,7 @@ message GetBatchUsersReviewServiceResponse {
 
 message ValidateItemServiceRequest {
 
-    string batch_id = 1;
+    int64 batch_id = 1;
 
 }
 
@@ -110,7 +115,7 @@ message ValidateItemServiceResponse {
 
 message UpdateScoreServiceRequest {
 
-    string batch_id = 1;
+    int64 batch_id = 1;
     float new_score = 2;
 
 }
@@ -130,8 +135,8 @@ message UpdateScoreServiceResponse {
 
 message ValidateOrderServiceRequest {
 
-    string batch_id = 1;
-    int32 quantity = 2;
+    int64 batch_id = 1;
+    int32 volume_order = 2;
 
 }
 
@@ -148,12 +153,45 @@ message ValidateOrderServiceResponse {
 
 }
 
+message EmptyMessage {
+
+}
+
+message GetBatchesServiceResponse {
+
+    int32 response_code = 1;
+    repeated BatchDetailsService batches = 2;
+
+    /*
+
+    0 - Success
+    1 - SQL Error
+
+    */
+
+}
+
+message UpdateVolumeServiceRequest {
+
+    int64 batch_id = 1;
+    double volume = 2;
+
+}
+
+message UpdateVolumeServiceResponse {
+
+    int32 response_code = 1;
+
+}
+
 service InventoryService {
     rpc getBatchService (GetBatchServiceRequest) returns (GetBatchServiceResponse);
     rpc getBatchScoreService (GetBatchScoreServiceRequest) returns (GetBatchScoreServiceResponse);
     rpc getBatchCostService (GetBatchCostServiceRequest) returns (GetBatchCostServiceResponse);
     rpc getBatchUsersReviewService (GetBatchUsersReviewServiceRequest) returns (GetBatchUsersReviewServiceResponse);
     rpc validateItemService (ValidateItemServiceRequest) returns (ValidateItemServiceResponse);
-    rpc updateScoreServiceResponse (UpdateScoreServiceRequest) returns (UpdateScoreServiceResponse);
-    rpc validateOrderServiceResponse (ValidateOrderServiceRequest) returns (ValidateOrderServiceResponse);
+    rpc updateScoreService (UpdateScoreServiceRequest) returns (UpdateScoreServiceResponse);
+    rpc validateOrderService (ValidateOrderServiceRequest) returns (ValidateOrderServiceResponse);
+    rpc getBatchesService (EmptyMessage) returns (GetBatchesServiceResponse);
+    rpc updateVolumeService (UpdateVolumeServiceRequest) returns (UpdateVolumeServiceResponse);
 }

@@ -34,6 +34,8 @@ services:
     environment:
       - USER_REPOSITORY_HOST=172.100.10.30
       - USER_REPOSITORY_PORT=50061
+      - INVENTORY_SERVICE_HOST=172.100.10.21
+      - INVENTORY_SERVICE_PORT=50052
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.20
@@ -56,6 +58,8 @@ services:
         ipv4_address: 172.100.10.30
   
   inventory_controller:
+    depends_on:
+      - inventory_service
     build:
       context: ./
       dockerfile: ./inventory_controller/Dockerfile
@@ -70,6 +74,24 @@ services:
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.11
+
+  inventory_service:
+    depends_on:
+      - inventory_repository
+    build:
+      context: ./
+      dockerfile: ./inventory_service/Dockerfile
+    container_name: inventory_service
+    expose:
+      - 50052
+    ports:
+      - '50052:50052'
+    environment:
+      - INVENTORY_REPOSITORY_HOST=172.100.10.31
+      - INVENTORY_REPOSITORY_PORT=50062
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.21
 
   inventory_repository:
     depends_on:
@@ -197,6 +219,57 @@ services:
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.34
+        
+  payment_controller:
+    build: 
+      context: ./
+      dockerfile: ./payment_controller/Dockerfile
+    container_name: payment_controller
+    expose:
+      - 3005
+    ports:
+      - '3005:3005'
+    environment:
+      - PAYMENT_SERVICE_HOST=172.100.10.25
+      - PAYMENT_SERVICE_PORT=50055
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.15
+  
+  payment_service:
+    depends_on:
+      - payment_repository
+    build:
+      context: ./
+      dockerfile: ./payment_service/Dockerfile
+    container_name: payment_service
+    expose:
+      - 50055
+    ports:
+      - '50055:50055'
+    environment:
+      - PAYMENT_REPOSITORY_HOST=172.100.10.35
+      - PAYMENT_REPOSITORY_PORT=50065
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.25
+  
+  payment_repository:
+    restart: on-failure:10
+    build:
+      context: ./
+      dockerfile: ./payment_repository/Dockerfile
+    container_name: payment_repository
+    expose:
+      - 50065
+    ports:
+      - '50065:50065'
+    environment:
+      - MONGO_USER=db_access
+      - MONGO_PASSWORD=SecurePayment123
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.35 
 
 networks:
   brewstand-net:
