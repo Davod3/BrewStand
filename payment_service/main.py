@@ -9,7 +9,7 @@ import payment_service_pb2_grpc
 from payment_service_pb2 import (
     ProcessPaymentResponse,
     InvoiceResponse,
-    UserInvoicesResponse
+    InvoicesResponse
 )
 
 import handlers.paymentHandler as PaymentHandler
@@ -17,24 +17,41 @@ import handlers.invoiceHandler as InvoiceHandler
 
 class PaymentService(payment_service_pb2_grpc.PaymentService):
 
-    def ProcessPayment(self, request, context):
+    def ProcessPayment(self, request):
 
         response = PaymentHandler.process_payment(request.user_id, request.amount, request.currency, request.items_id, request.card_details )
 
         return ProcessPaymentResponse(response_code = response.response_code, invoice = response.invoice)
 
-    def GetInvoice(self, request, context):
+    def GetInvoice(self, request):
+        invoice = InvoiceHandler.getInvoice(request.invoiceId)
         
-        response = InvoiceHandler.getInvoice()
+        return InvoiceResponse(
+            invoiceId=invoice.invoiceId,
+            price=invoice.price,
+            orderId=invoice.orderId,
+            customerId=invoice.customerId,
+            fiscalAddress=invoice.fiscalAddress,
+            details=invoice.details
+        )
+    
+    def GetAllUserInvoices(self, request):
         
-        return InvoiceResponse(response_code = response.response_code, invoice=response.invoice)
+        invoices = InvoiceHandler.getUserInvoices(request.userId)
+        
+        return InvoicesResponse(
+            invoices=[
+                InvoiceResponse(
+                    invoiceId=inv.invoiceId,
+                    price=inv.price,
+                    orderId=inv.orderId,
+                    customerId=inv.customerId,
+                    fiscalAddress=inv.fiscalAddress,
+                    details=inv.details
+                ) for inv in invoices
+            ]
+        )
 
-    def GetUserInvoices(self, request, context):
-        
-        response = InvoiceHandler.getUserInvoices(userId = request.userId)
-        
-        return InvoiceResponse(response_code = response.response_code, invoice=response.invoice)
-      
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
     server = grpc.server(
