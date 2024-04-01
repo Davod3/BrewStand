@@ -12,8 +12,8 @@ from inventory_repository_pb2 import (
     GetBatchUsersReviewResponse,
     BatchDetails,
     UpdateUserScoreResponse,
-    UpdateVolumeResponse,
-    ValidateOrderServiceResponse
+    GetVolumeResponse,
+    UpdateVolumeResponse
 )
 
 import inventory_repository_pb2_grpc
@@ -46,7 +46,7 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             print("Error retrieving batch cost:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return GetBatchCostResponse(response_code=-1, cost=0.0)
+            return GetBatchCostResponse(response_code=1, cost=0.0)
         finally:
             if conn:
                 conn.close()
@@ -75,7 +75,7 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             print("Error retrieving batch score:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return GetBatchScoreResponse(response_code=-1, score=0.0)
+            return GetBatchScoreResponse(response_code=1, score=0.0)
         finally:
             if conn:
                 conn.close()
@@ -95,20 +95,19 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             result = cursor.fetchone()
 
             if result is not None:
+                
                 volume_produced = float(result[0])
-                if volume_produced >= request.volume_order:
-                    return ValidateOrderServiceResponse(response_code=0, score=volume_produced)
-                else:
-                    return ValidateOrderServiceResponse(response_code=1, score=volume_produced)
+                return GetVolumeResponse(response_code=0, volume=volume_produced)
+            
             else:
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details("Batch not found")
-                return ValidateOrderServiceResponse(response_code=1, score=0.0)
+                return GetVolumeResponse(response_code=1, volume=0.0)
         except psycopg2.Error as e:
-            print("Error retrieving batch score:", e)
+            print("Error retrieving batch volume:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return ValidateOrderServiceResponse(response_code=-1, score=0.0)
+            return GetVolumeResponse(response_code=1, volume=0.0)
         finally:
             if conn:
                 conn.close()
@@ -138,7 +137,7 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             print("Error retrieving batch user review:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return GetBatchUsersReviewResponse(response_code=-1, review=0)
+            return GetBatchUsersReviewResponse(response_code=1, review=0)
         finally:
             if conn:
                 conn.close()
@@ -187,7 +186,7 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             print("Error retrieving batch info:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return GetBatchResponse(response_code=-1)
+            return GetBatchResponse(response_code=1)
         finally:
             if conn:
                 conn.close()
@@ -242,7 +241,7 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             print("Error retrieving batch info:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return GetBatchesResponse(response_code=-1, batches=[])
+            return GetBatchesResponse(response_code=1, batches=[])
         finally:
             if conn:
                 conn.close()
@@ -274,7 +273,7 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             print("Error updating batch score:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return UpdateUserScoreResponse(response_code = -1)
+            return UpdateUserScoreResponse(response_code = 1)
         finally:
             if conn:
                 conn.close()
@@ -304,7 +303,7 @@ class InventoryRepository(inventory_repository_pb2_grpc.InventoryRepositoryServi
             print("Error updating batch score:", e)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details("Internal server error")
-            return UpdateVolumeResponse(response_code = -1)
+            return UpdateVolumeResponse(response_code = 1)
         finally:
             if conn:
                 conn.close()

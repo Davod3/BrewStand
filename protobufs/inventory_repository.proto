@@ -138,6 +138,19 @@ message Empty {
 
 }
 
+message GetVolumeRequest {
+
+    int64 batch_id = 1;
+
+}
+
+message GetVolumeResponse {
+
+    int32 response_code = 1;
+    optional double volume = 2;
+
+}
+
 service InventoryRepository {
     rpc getBatch (GetBatchRequest) returns (GetBatchResponse);
     rpc getBatches (Empty) returns (GetBatchesResponse);
@@ -146,4 +159,5 @@ service InventoryRepository {
     rpc getBatchUsersReview (GetBatchUsersReviewRequest) returns (GetBatchUsersReviewResponse);
     rpc updateUserScore (UpdateUserScoreRequest) returns (UpdateUserScoreResponse);
     rpc updateVolume (UpdateVolumeRequest) returns (UpdateVolumeResponse);
+    rpc getBatchVolume(GetVolumeRequest) returns (GetVolumeResponse);
 }
