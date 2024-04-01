@@ -1,21 +1,22 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 // Data structure for storing order details
 
 message OrderRepo {
-    int64 id = 1;
+    string user_id = 1;
     repeated ItemRepo items = 2;
-    string user_id = 3;
-    string ship_date = 4;
-    string status = 5;
-    bool complete = 6;
-    string address = 7;    
+    google.protobuf.Timestamp shipDate = 3;
+    string status = 4;
+    bool complete = 5;
+    string destinationAddress = 6;
 }
 
 // Data structure for storing item details
 
 message ItemRepo {
-    int64 item_id = 1;
+    int64 itemID = 1;
     double volume = 2;
 }
 
@@ -24,13 +25,12 @@ message ItemRepo {
 message InsertOrderRequest {
     string user_id = 1;
     repeated ItemRepo items = 2;
-    string address = 3;
+    string destinationAddress = 3;
 }
 
 message InsertOrderResponse {
     int32 response_code = 1;
-    optional int64 order_id = 2;
-
+    optional string order_id = 2;
     /*
 
     0 - Success
@@ -40,12 +40,13 @@ message InsertOrderResponse {
 }
 
 message GetOrderRequest {
-    int64 order_id = 1;
+    string order_id = 1;
 }
 
 message GetOrderResponse {
     int32 response_code = 1;
     optional OrderRepo order = 2;
+    optional string error_msg = 3;
 
     /*
 
@@ -71,57 +72,8 @@ message GetOrdersResponse {
     */
 }
 
-message AddItemToOrderRequest {
-    int64 order_id = 1;
-    ItemRepo item = 2;
-}
-
-message AddItemToOrderResponse {
-    int32 response_code = 1;
-
-    /*
-
-    0 - Success
-    1 - Order not found
-
-    */
-}
-
-message RemoveItemFromOrderRequest {
-    int64 order_id = 1;
-    int64 item_id = 2;
-}
-
-message RemoveItemFromOrderResponse {
-    int32 response_code = 1;
-
-    /*
-
-    0 - Success
-    1 - Order not found
-    2 - Item not found in the order
-
-    */
-}
-
-message SetAddressForOrderRequest {
-    int64 order_id = 1;
-    string address = 2;
-}
-
-message SetAddressForOrderResponse {
-    int32 response_code = 1;
-
-    /*
-
-    0 - Success
-    1 - Order not found
-
-    */
-}
-
 message MarkOrderAsCompleteRequest {
-    int64 order_id = 1;
+    string order_id = 1;
 }
 
 message MarkOrderAsCompleteResponse {
@@ -138,22 +90,13 @@ message MarkOrderAsCompleteResponse {
 // Order Repository
 service OrderRepository {
     rpc InsertOrder (InsertOrderRequest) returns (InsertOrderResponse);
-    // Endpoint to insert  a new order in the repository
+    // Endpoint to insert a new order in the repository
 
     rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
-    // Endpoint to get  an existing order from the repository
+    // Endpoint to get an existing order from the repository
 
     rpc GetOrders (GetOrdersRequest) returns (GetOrdersResponse);
-    // Endpoint to get  all orders of a specific user from the repository
-
-    rpc AddItemToOrder (AddItemToOrderRequest) returns (AddItemToOrderResponse);
-    // Add an item to the current order
-
-    rpc RemoveItemFromOrder (RemoveItemFromOrderRequest) returns (RemoveItemFromOrderResponse);
-    // Removes an item from the current order
-
-    rpc SetAddressForOrder (SetAddressForOrderRequest) returns (SetAddressForOrderResponse);
-    // Sets the delivery address for the current order
+    // Endpoint to get all orders of a specific user from the repository
 
     rpc MarkOrderAsComplete (MarkOrderAsCompleteRequest) returns (MarkOrderAsCompleteResponse);
     // Marks the current order as completed

@@ -1,36 +1,30 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 // Data structure for storing order details
 
 message OrderService {
-    int64 id = 1;
-    repeated ItemService items = 2;
-    string user_id = 3;
-    string ship_date = 4;
+    string id = 1;
+    string user_id = 2;
+    repeated ItemService items = 3;
+    google.protobuf.Timestamp shipDate = 4;
     string status = 5;
     bool complete = 6;
-    string address = 7;    
+    string destinationAddress = 7;
 }
 
 // Data structure for storing item details
 
 message ItemService {
-    int64 item_id = 1;
+    int64 itemID = 1;
     double volume = 2;
-}
-
-// Messages
-
-message InsertOrderRequest {
-    string user_id = 1;
-    repeated ItemService items = 2;
-    string address = 3;
 }
 
 //Messages
 
 message GetOrderRequest {
-    int64 order_id = 1;
+    string order_id = 1;
 }
 
 message GetOrderResponse {
@@ -65,16 +59,18 @@ message GetOrdersResponse {
 
 message CreateOrderRequest {
     string user_id = 1;
+    repeated ItemService items = 2;
+    string destinationAddress = 3;
 }
 
 message CreateOrderResponse {
     int32 response_code = 1;
-    optional int64 order_id = 2;
+    optional string order_id = 2;
 
     /*
 
     0 - Success
-    1 - User not found
+    1 - Order creation failed
 
     */
 }

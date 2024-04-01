@@ -215,7 +215,7 @@ services:
       - '50064:50064'
     environment:
       - MONGO_USER=db_access
-      - MONGO_PASSWORD=SafeOrders2024
+      - MONGO_PASSWORD=SafestOrders
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.34

@@ -1,4 +1,5 @@
 from concurrent import futures
+from datetime import datetime
 
 import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
@@ -8,12 +9,10 @@ from order_repository_pb2 import (
     InsertOrderResponse,
     GetOrderResponse,
     GetOrdersResponse,
-    AddItemToOrderResponse,
-    RemoveItemFromOrderResponse,
-    SetAddressForOrderResponse,
     MarkOrderAsCompleteResponse
 )
 
+from models.order import OrderRepo, ItemRepo
 import order_repository_pb2_grpc
 from mongoengine import *
 import os
@@ -21,21 +20,46 @@ import os
 class  OrderRepository(order_repository_pb2_grpc.OrderRepositoryServicer):
 
     def InsertOrder(self, request, context):
-        # TO DO
-        response = order_repository_pb2.InsertOrderResponse(response_code=0, order_id=12345)
-        return response
+
+        user_id = request.user_id
+        items = request.items
+        destinationAddress = request.destinationAddress
+        shipDate = datetime.now()
+
+        item_instances = []
+        for item in items:
+            item_instance = ItemRepo(itemID=item.itemID, volume=item.volume)
+            item_instances.append(item_instance)
+
+        new_order = OrderRepo(user_id=user_id, items=item_instances, shipDate=shipDate,
+                            status="placed", complete=False, destinationAddress=destinationAddress)
+
+        try:
+
+            new_order.save()
+
+            # Success
+            return InsertOrderResponse(response_code=0, order_id=str(new_order.pk))
+        except Exception as e:
+            return InsertOrderResponse(response_code=1)
 
     def GetOrder(self, request, context):
-        # TO DO
-        order = order_repository_pb2.OrderRepo(
-            id=123,
-            user_id='12',
-            ship_date='2024-04-01',
-            status='pending',
-            complete=False,
-            address='Amadora'
-        )
-        response = order_repository_pb2.GetOrderResponse(response_code=0, order=order)
+        order_id = request.order_id
+        try:
+            order = OrderRepo.objects.get(id=order_id)
+            orderRepo = order_repository_pb2.OrderRepo(
+                id=str(order.id),
+                user_id=order.user_id,
+                ship_date=str(order.shipDate),
+                status=order.status,
+                complete=order.complete,
+                address=order.destinationAddress
+            )
+            response = GetOrderResponse(response_code=0, order=orderRepo)
+        except DoesNotExist:
+            response = GetOrderResponse(response_code=1)
+        except Exception as e:
+            response = GetOrderResponse(response_code=1, error_msg=str(e))
         return response
 
     def GetOrders(self, request, context):
@@ -59,21 +83,6 @@ class  OrderRepository(order_repository_pb2_grpc.OrderRepositoryServicer):
             )
         ]
         response = order_repository_pb2.GetOrdersResponse(response_code=0, orders=orders)
-        return response
-
-    def AddItemToOrder(self, request, context):
-        # TO DO
-        response = order_repository_pb2.AddItemToOrderResponse(response_code=0)
-        return response
-
-    def RemoveItemFromOrder(self, request, context):
-        # TO DO
-        response = order_repository_pb2.RemoveItemFromOrderResponse(response_code=0)
-        return response
-
-    def SetAddressForOrder(self, request, context):
-        # TO DO
-        response = order_repository_pb2.SetAddressForOrderResponse(response_code=0)
         return response
 
     def MarkOrderAsComplete(self, request, context):
@@ -101,7 +110,7 @@ if __name__ == "__main__":
 
     __USER = os.getenv('MONGO_USER')
     __PASSWORD =  os.getenv('MONGO_PASSWORD')
-    url = f"mongodb+srv://{__USER}:{__PASSWORD}@brewstandorder0.c4ozpqd.mongodb.net/db?retryWrites=true&w=majority&appName=BrewStand0"
+    url = f"mongodb+srv://{__USER}:{__PASSWORD}@orders.rfyzofq.mongodb.net/?retryWrites=true&w=majority&appName=Orders"
     connect(host=url)
 
     serve()
