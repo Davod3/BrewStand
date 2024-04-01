@@ -1,51 +1,52 @@
 import os
 import grpc
 
-'''
 from inventory_service_pb2 import (
-    GetBatchIdRequest,
-    GetBatchScoreRequest,
-    GetBatchNvotosRequest,
-    UpdateScoreRequest,  
+    
+    ValidateItemServiceRequest,
+    GetBatchScoreServiceRequest,
+    GetBatchUsersReviewServiceRequest,
+    UpdateScoreServiceRequest
+
 )
 
-from inventorry_service_pb2_grpc import InventoryserviceStub
-
+from inventory_service_pb2_grpc import InventoryServiceStub
 
 
 inventory_service_host = os.getenv("INVENTORY_SERVICE_HOST", "localhost")
 inventory_service_port = os.getenv("INVENTORY_SERVICE_PORT", "50052")
 inventory_service_channel = grpc.insecure_channel(f"{inventory_service_host}:{inventory_service_port}")
 
-client = InventoryserviceStub(inventory_service_channel)
+client = InventoryServiceStub(inventory_service_channel)
 
-'''
 
 def validateBatch(batch_id):
-    #TODO - vai falar com o inventory_service para ver se o batchID existe
-
-    #request = GetBatchIdRequest(batch_id=batch_id)
     
-    return True
+    request = ValidateItemServiceRequest(batch_id = batch_id)
+    response = client.validateItemService(request)
+
+    if(response.response_code == 0):
+        return True
+    else:
+        return False
 
 def getBatchScore(batch_id):
-    #TODO - vai falar com o inventory_service para ver o score do batch
+    
+    request = GetBatchScoreServiceRequest(batch_id = batch_id)
+    response = client.getBatchScoreService(request)
 
-    #request = GetBatchScoreRequest(batch_id=batch_id)
-    #response = client.GetBatchScore(request)
-
-    return 5.5
+    return response.score
 
 def getNvotos(batch_id):
-    #TODO - vai falar com o inventory_service para ver o numero de votos do batch
+    
+    request = GetBatchUsersReviewServiceRequest(batch_id = batch_id)
+    response = client.getBatchUsersReviewService(request)
 
-    #request = GetBatchNvotosRequest(batch_id=batch_id)
-    #response = client.GetBatchNvotos(request)
-
-    return 30
+    return response.n_users_review
 
 def updateScore(batch_id, score):
-    #request = UpdateScoreRequest(score = newscore)
-    #response = client.UpdateScore(request)
     
-    return 0
+    request = UpdateScoreServiceRequest(batch_id = batch_id, new_score = score)
+    response = client.updateScoreService(request)
+
+    return response.response_code
