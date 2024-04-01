@@ -7,13 +7,12 @@ def getInvoice(invoiceId):
         return None
 
     return InvoiceData(
-        invoiceId=str(invoice.id),
+        invoice_id=invoice.invoice_id,
         price=invoice.price,
-        orderID=invoice.orderID,  
-        userId=invoice.userId,     
-        fiscalAddress=invoice.fiscalAddress,
-        cardLastFour=invoice.cardLastFour,
-        items_name=invoice.items_name  
+        order_id=invoice.order_od,  
+        costumer_id=invoice.costumer_id,     
+        fiscal_address=invoice.fiscal_address,
+        details = invoice.details
     )
 
 def getInvoices(userId):
@@ -22,11 +21,10 @@ def getInvoices(userId):
         return None
 
     return [InvoiceData(
-        invoiceId=str(inv.id),
-        price=inv.price,
-        orderID=str(inv.orderID),
-        userId=str(inv.userId),
-        fiscalAddress=inv.fiscalAddress,
-        cardLastFour=inv.cardLastFour,
-        items_name=inv.items_name
-    ) for inv in invoices]
+        invoice_id=invoice.invoice_id,
+        price=invoice.price,
+        order_id=invoice.order_od,  
+        costumer_id=invoice.costumer_id,     
+        fiscal_address=invoice.fiscal_address,
+        details = invoice.details
+    )for invoice in invoices]

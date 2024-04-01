@@ -18,7 +18,7 @@ paths:
       description: Gets the details of a specific invoice.
       security:
         - ApiKeyAuth: []
-      operationId: billing.getInvoice
+      operationId: paymentHandler.getInvoice
       parameters:
         - name: invoiceId
           in: path
@@ -44,7 +44,7 @@ paths:
       description: Gets all invoices related to a user.
       security:
         - ApiKeyAuth: []
-      operationId: billing.getInvoices
+      operationId: paymentHandler.getInvoices
       parameters:
         - name: userId
           in: query

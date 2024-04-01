@@ -28,13 +28,12 @@ message RetrieveInvoiceRequest {
 }
 
 message InvoiceData {
-  string invoiceId = 1;
+  string invoice_id = 1;
   double price = 2;
-  string orderID = 3;
-  string userId = 4;
-  string fiscalAddress = 5;
-  string cardLastFour = 6;
-  repeated string items_name = 7;
+  string order_id = 3;
+  string customer_id = 4;
+  string fiscal_address = 5;
+  string details = 6;
 }
 
 message GetUserInvoicesRequest {
