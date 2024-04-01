@@ -16,8 +16,7 @@ from inventory_service_pb2 import (
     ValidateOrderServiceResponse,
     BatchDetailsService,
     GetBatchesServiceResponse,
-    UpdateVolumeResponse,
-    ValidateOrderServiceResponse
+    UpdateVolumeServiceResponse
 
 )
 
@@ -35,7 +34,7 @@ from inventory_repository_pb2 import (
     GetBatchUsersReviewRequest,
     UpdateUserScoreRequest,
     UpdateVolumeRequest,
-    ValidateOrderServiceRequest,
+    GetVolumeRequest,
     Empty
 
 )
@@ -69,7 +68,7 @@ class InventoryService(inventory_service_pb2_grpc.InventoryServiceServicer):
         except grpc.RpcError as e:
             
             print("Error calling validateItem:", e.details())
-            return ValidateItemServiceResponse(response_code = -1)
+            return ValidateItemServiceResponse(response_code = 1)
 
 
     def getBatchCostService(self, request, context):
@@ -94,7 +93,7 @@ class InventoryService(inventory_service_pb2_grpc.InventoryServiceServicer):
         
         except grpc.RpcError as e:
             print("Error calling getBatchCost:", e.details())
-            return GetBatchCostServiceResponse(response_code = -1)
+            return GetBatchCostServiceResponse(response_code = 1)
 
     def getBatchScoreService(self, request, context):
         
@@ -117,7 +116,7 @@ class InventoryService(inventory_service_pb2_grpc.InventoryServiceServicer):
         
         except grpc.RpcError as e:
             print("Error calling getBatchScore:", e.details())
-            return GetBatchScoreServiceResponse(response_code = -1)
+            return GetBatchScoreServiceResponse(response_code = 1)
 
     def getBatchUsersReviewService(self, request, context):
         
@@ -140,7 +139,7 @@ class InventoryService(inventory_service_pb2_grpc.InventoryServiceServicer):
         
         except grpc.RpcError as e:
             print("Error calling getBatchUsersReview:", e.details())
-            return GetBatchUsersReviewServiceResponse(response_code = -1)
+            return GetBatchUsersReviewServiceResponse(response_code = 1)
 
     def getBatchService(self, request, context):
         
@@ -175,7 +174,7 @@ class InventoryService(inventory_service_pb2_grpc.InventoryServiceServicer):
         
         except grpc.RpcError as e:
             print("Error calling getBatchService:", e.details())
-            return GetBatchServiceResponse(response_code = -1)
+            return GetBatchServiceResponse(response_code = 1)
         
     def getBatchesService(self, request, context):
 
@@ -216,7 +215,7 @@ class InventoryService(inventory_service_pb2_grpc.InventoryServiceServicer):
         
         except grpc.RpcError as e:
             print("Error calling getBatchesService:", e.details())
-            return GetBatchesServiceResponse(response_code = -1,batches=[])
+            return GetBatchesServiceResponse(response_code = 1,batches=[])
 
 
     def updateScoreService(self, request, context):
@@ -239,30 +238,27 @@ class InventoryService(inventory_service_pb2_grpc.InventoryServiceServicer):
         
         except grpc.RpcError as e:
             print("Error calling updateScoreService:", e.details())
-            return UpdateScoreServiceResponse(response_code = -1)
+            return UpdateScoreServiceResponse(response_code = 1)
 
     def validateOrderService(self, request, context):
         
         try:
-            repo_request = ValidateOrderServiceRequest(batch_id = request.batch_id, volume_order = request.volume_order)
+            repo_request = GetVolumeRequest(batch_id = request.batch_id)
             repo_response = client.getBatchVolume(repo_request)
 
             if(repo_response.response_code == 0):
 
                 #Success
-                
-                update_request = UpdateVolumeRequest(batch_id=request.batch_id, volume_order=request.volume_order)
-                update_response = client.updateVolume(update_request)
-                
-                if update_response.response_code == 0:
 
-                    #Success
-                    return UpdateVolumeResponse(response_code=0)
+                if(request.volume_order > repo_response.volume):
+
+                    #Volume exceeds available, invalid order
+                    return ValidateOrderServiceResponse(response_code = 1)
                 
                 else:
-                    
-                    #Fail
-                    return UpdateVolumeResponse(response_code=1)
+
+                    #Volume is available, confirm it
+                    return ValidateOrderServiceResponse(response_code = 0)
         
             else:
 
@@ -272,7 +268,39 @@ class InventoryService(inventory_service_pb2_grpc.InventoryServiceServicer):
         except grpc.RpcError as e:
             
             print("Error calling validateOrder:", e.details())
-            return ValidateOrderServiceResponse(response_code = -1)
+            return ValidateOrderServiceResponse(response_code = 1)
+        
+    def updateVolumeService(self, request, context):
+        
+        try:
+            repo_request = GetVolumeRequest(batch_id = request.batch_id)
+            repo_response = client.getBatchVolume(repo_request)
+
+            if(repo_response.response_code == 0):
+
+                #Success - Subtract order volume from current inventory
+                repo_update_request = UpdateVolumeRequest(batch_id = request.batch_id,
+                                                          volume_order = repo_response.volume - request.volume)
+
+                repo_update_response = client.updateVolume(repo_update_request)
+
+                if(repo_update_response.response_code == 0):
+
+                    return UpdateVolumeServiceResponse(response_code = 0)
+                
+                else:
+
+                    return UpdateVolumeServiceResponse(response_code = 1)
+        
+            else:
+
+                #Fail
+                return UpdateVolumeServiceResponse(response_code = 1)
+
+        except grpc.RpcError as e:
+            
+            print("Error calling validateOrder:", e.details())
+            return UpdateVolumeServiceResponse(response_code = 1)
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]

@@ -171,6 +171,19 @@ message GetBatchesServiceResponse {
 
 }
 
+message UpdateVolumeServiceRequest {
+
+    int64 batch_id = 1;
+    double volume = 2;
+
+}
+
+message UpdateVolumeServiceResponse {
+
+    int32 response_code = 1;
+
+}
+
 service InventoryService {
     rpc getBatchService (GetBatchServiceRequest) returns (GetBatchServiceResponse);
     rpc getBatchScoreService (GetBatchScoreServiceRequest) returns (GetBatchScoreServiceResponse);
@@ -180,4 +193,5 @@ service InventoryService {
     rpc updateScoreService (UpdateScoreServiceRequest) returns (UpdateScoreServiceResponse);
     rpc validateOrderService (ValidateOrderServiceRequest) returns (ValidateOrderServiceResponse);
     rpc getBatchesService (EmptyMessage) returns (GetBatchesServiceResponse);
+    rpc updateVolumeService (UpdateVolumeServiceRequest) returns (UpdateVolumeServiceResponse);
 }
