@@ -1,10 +1,10 @@
 import connexion
+import six
 
-import os
-import grpc
+from models.invoice import Invoice 
+from utils import util
 
 from payment_service_pb2 import (
-    ProcessPaymentRequest,
     InvoiceRequest,
     UserInvoicesRequest
 )
@@ -17,41 +17,9 @@ payment_service_channel = grpc.insecure_channel(f"{payment_service_host}:{paymen
 
 client = PaymentStub(payment_service_channel)
 
-def process_payment():
-    if not connexion.request.is_json:
-        return jsonify({"error": "Invalid request format"}), 400
-
-    data = connexion.request.get_json()
-
+def billing_get_invoice(invoice_id):
     try:
-        # Prepare the gRPC request
-        grpc_request = ProcessPaymentRequest(
-            userId=data['userId'],
-            amount=data['amount'],
-            currency=data['currency'],
-            itemsName=data['itemsName'],
-            fiscalAddress=data['fiscalAddress'],
-            cardDetails=data['cardDetails']
-        )
-
-        # Call the gRPC service
-        response = client.ProcessPayment(grpc_request)
-
-        if(response.response_code==0):
-            return '',200
-        elif(response.response_code==1):
-            return '',404
-        elif(response.response_code==2 or response.response_code==3):
-            return '', 400
-        else:
-            return '', 500
-        
-    except grpc.RpcError as e:
-        return 'Invalid request body', 400
-
-def get_invoice(userId, invoiceId):
-    try:
-        grpc_request = InvoiceRequest(userId=userId, invoiceId=invoiceId)
+        grpc_request = InvoiceRequest(invoiceId=invoice_id)
         response = client.GetInvoice(grpc_request)
         if(response.response_code == 0):
             return jsonify({"success": response.success, "invoice": response.invoice})
@@ -63,9 +31,9 @@ def get_invoice(userId, invoiceId):
     except grpc.RpcError as e:
         return jsonify({"error": str(e)}), 500
 
-def get_user_invoices(userId):
+def billing_get_invoices(): 
     try:
-        grpc_request = UserInvoicesRequest(userId=userId)
+        grpc_request = UserInvoicesRequest()
         response = client.GetUserInvoices(grpc_request)
         if(response.response_code == 0):
             return jsonify({"invoices": response.invoices})

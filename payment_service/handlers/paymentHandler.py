@@ -5,7 +5,7 @@ import re
 
 # Assuming these are the correct paths for your gRPC generated files
 from payment_repository_pb2 import StoreInvoiceRequest, RetrieveInvoiceRequest, GetUserInvoicesRequest, InvoiceData
-from payment_repository_pb2_grpc import PaymentRepositoryStub
+from payment_repository_pb2_grpc import PaymentRepositoryServiceStub
 from payment_service_pb2 import CardDetails
 
 # Corrected environment variable names
@@ -13,7 +13,7 @@ payment_repository_host = os.getenv("PAYMENT_REPOSITORY_HOST", "localhost")
 payment_repository_port = os.getenv("PAYMENT_REPOSITORY_PORT", "50064")
 payment_repository_channel = grpc.insecure_channel(f"{payment_repository_host}:{payment_repository_port}")
 
-client = PaymentRepositoryStub(payment_repository_channel)
+client = PaymentRepositoryServiceStub(payment_repository_channel)
 
 class PaymentHandler:
     @staticmethod
@@ -125,7 +125,7 @@ class PaymentHandler:
             orderID=order_id,
             userID=user_id,
             fiscalAddress=fiscal_address,
-            cardLastFour=card_last_four
+            cardLastFour=card_last_four,
             items_name = items_name
         )
 
