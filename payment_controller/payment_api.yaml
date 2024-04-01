@@ -16,8 +16,6 @@ paths:
         - Billing
       summary: Gets the details of a specific invoice.
       description: Gets the details of a specific invoice.
-      security:
-        - ApiKeyAuth: []
       operationId: paymentHandler.getInvoice
       parameters:
         - name: invoiceId
@@ -42,8 +40,6 @@ paths:
         - Billing
       summary: Gets all invoices related to a user.
       description: Gets all invoices related to a user.
-      security:
-        - ApiKeyAuth: []
       operationId: paymentHandler.getInvoices
       parameters:
         - name: userId
@@ -64,11 +60,6 @@ paths:
         '404':
           description: Requested invoice was not found
 components:
-  securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: X-API-KEY
   schemas:
     Invoice:
       type: object
