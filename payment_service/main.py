@@ -1,3 +1,4 @@
+from concurrent import futures
 import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
@@ -14,7 +15,7 @@ from payment_service_pb2 import (
 import handlers.paymentHandler as PaymentHandler
 import handlers.invoiceHandler as InvoiceHandler
 
-class PaymentService(payment_service_pb2_grpc.PaymentServicer):
+class PaymentService(payment_service_pb2_grpc.PaymentService):
 
     def ProcessPayment(self, request, context):
 
@@ -40,7 +41,7 @@ def serve():
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
 
-    payment_service_pb2_grpc.add_PaymentServicer_to_server(
+    payment_service_pb2_grpc.add_PaymentServiceServicer_to_server(
         PaymentService(), server
     )
 

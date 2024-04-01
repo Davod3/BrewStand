@@ -7,18 +7,18 @@ info:
 servers:
   - url: /
 tags:
-  - name: Payment
+  - name: Billing
     description: Supports operations related with the payment and invoice of orders. 
 paths:
-  /payment/{invoiceId}:
+  /billing/{invoiceId}:
     get: 
       tags:
-        - Payment
+        - Billing
       summary: Gets the details of a specific invoice.
       description: Gets the details of a specific invoice.
       security:
         - ApiKeyAuth: []
-      operationId: payment.getInvoice
+      operationId: paymentHandler.getInvoice
       parameters:
         - name: invoiceId
           in: path
@@ -36,15 +36,15 @@ paths:
                 $ref : '#/components/schemas/Invoice'
         '404':
           description: Requested invoice was not found
-  /payment:
+  /billing:
     get: 
       tags:
-        - Payment
+        - Billing
       summary: Gets all invoices related to a user.
       description: Gets all invoices related to a user.
       security:
         - ApiKeyAuth: []
-      operationId: payment.getInvoices
+      operationId: paymentHandler.getInvoices
       parameters:
         - name: userId
           in: query
