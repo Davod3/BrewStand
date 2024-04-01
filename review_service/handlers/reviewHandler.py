@@ -17,7 +17,7 @@ def review(batch_id,score):
 
             oldScore = itemHandlerReview.getBatchScore(batch_id)
             numero_pessoas= itemHandlerReview.getNvotos(batch_id)
-            newscore = (oldScore * numero_pessoas + score)/numero_pessoas + 1
+            newscore = ((oldScore * numero_pessoas) + score) / (numero_pessoas + 1)
 
             result = itemHandlerReview.updateScore(batch_id, newscore)
 

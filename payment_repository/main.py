@@ -25,11 +25,11 @@ class PaymentRepositoryService(payment_repository_pb2_grpc.PaymentRepositoryServ
                 items_name=request.invoice.items_name
             )
             invoice.save()
-            invoiceId = str(invoice.pk)
+            invoice_id = str(invoice.pk)
             return payment_repository_pb2.StoreInvoiceResponse(
                 response_code=0,
-                invoiceId=invoiceId,
-                invoice=paymentHandler.getInvoice(invoiceId)
+                invoiceId=invoice_id,
+                invoice=paymentHandler.getInvoice(invoice_id)
             )
         except NotUniqueError:
             context.set_code(grpc.StatusCode.ALREADY_EXISTS)
@@ -41,7 +41,7 @@ class PaymentRepositoryService(payment_repository_pb2_grpc.PaymentRepositoryServ
         if invoice:
             return payment_repository_pb2.StoreInvoiceResponse(
                 response_code=0,
-                invoiceId=invoice.invoiceId,
+                invoiceId=invoice.invoice_id,
                 invoice=invoice
             )
         else:
