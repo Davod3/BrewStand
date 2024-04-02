@@ -36,6 +36,8 @@ services:
       - USER_REPOSITORY_PORT=50061
       - INVENTORY_SERVICE_HOST=172.100.10.21
       - INVENTORY_SERVICE_PORT=50052
+      - PAYMENT_SERVICE_HOST=172.100.10.25
+      - PAYMENT_SERVICE_PORT=50055
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.20

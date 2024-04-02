@@ -24,7 +24,7 @@ message ProcessPaymentRequest {
 }
 
 message Items {
-  string batch_id = 1;
+  int64 batch_id = 1;
   double volume = 2;
 }
 

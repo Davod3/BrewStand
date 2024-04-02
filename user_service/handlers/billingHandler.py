@@ -5,23 +5,25 @@ import handlers.userHandler as UserHandler
 
 from payment_service_pb2 import (
     ProcessPaymentRequest,
-    CardDetails
+    CardDetails, 
+    Items
 )
 
 from payment_service_pb2_grpc import PaymentServiceStub
 
-#payment_service_host = os.getenv("PAYMENT_SERVICE_HOST", "localhost")
-#payment_service_port = os.getenv("PAYMENT_SERVICE_PORT", "50052")
-#user_repository_channel = grpc.insecure_channel(f"{payment_service_host}:{payment_service_port}")
+payment_service_host = os.getenv("PAYMENT_SERVICE_HOST", "localhost")
+payment_service_port = os.getenv("PAYMENT_SERVICE_PORT", "50055")
+payment_service_channel = grpc.insecure_channel(f"{payment_service_host}:{payment_service_port}")
 
-#client = PaymentServiceStub(user_repository_channel)
+client = PaymentServiceStub(payment_service_channel)
 
 def initiatePayment(user_id, card_number, card_expiry, card_cvc):
 
+    #Default values
     response_code = 0
-    invoice_id = 0
+    invoice_id = ''
     price = 0
-    order_id = 0
+    order_id = ''
     customer_id = ''
     fiscal_address = ''
     details = ''
@@ -33,41 +35,41 @@ def initiatePayment(user_id, card_number, card_expiry, card_cvc):
 
         user = UserHandler.getUserByID(user_id)
 
-        if(len(cart_contents) > 0):
+        if cart_contents.__len__() > 0:
 
             items = list()
 
             for cart_item in cart_contents:
-                items.append(cart_item.batch_id)
 
-            '''
-            UNCOMMENT WHEN PAYMENT SERVICE IS READY
+                item = Items(batch_id = cart_item.batch_id, volume = cart_item.volume)
 
-            request = ProcessPaymentRequest(user_id = user_id,
+                items.append(item)
+
+            request = ProcessPaymentRequest(userId = user_id,
                                             amount = cost,
                                             currency = 'EUR',
-                                            items_id = items,
-                                            card_details = CardDetails(card_number=card_number,
-                                                                        card_expiry=card_expiry,
-                                                                        card_cvc=card_cvc))
+                                            fiscalAddress = user.address,
+                                            items = items,
+                                            cardDetails = CardDetails(cardNumber=card_number,
+                                                                        cardExpiry=card_expiry,
+                                                                        cardCvc=card_cvc)
+                                            )
             
             response = client.ProcessPayment(request)
 
-            if(response.success):
+            if(response.response_code == 0):
                 #Prepare response
 
-                invoice_id = 0
-                price = response.invoice.invoice_details.amount
+                invoice_id = response.invoiceId
+                price = response.invoice.invoice_details.price
                 order_id = response.invoice.order_id
-                customer_id = response.invoice.user_id
-                fiscal_address = user.address
-                details = f"{response.invoice.invoice_details.currency}:{response.invoice.invoice_details.card_last_four}"
+                customer_id = response.invoice.customer_id
+                fiscal_address = response.invoice.fiscal_address
+                details = response.invoice.details
 
             else:
                 # Invalid Order
                 response_code = 3
-
-                '''
 
         else:
             # Cart is empty
@@ -78,9 +80,9 @@ def initiatePayment(user_id, card_number, card_expiry, card_cvc):
         response_code = 1
 
     return (response_code,
-            invoice_id,
-            price,
-            order_id,
-            customer_id,
-            fiscal_address,
-            details)
+                invoice_id,
+                price,
+                order_id,
+                customer_id,
+                fiscal_address,
+                details)
