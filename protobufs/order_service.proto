@@ -7,7 +7,7 @@ message OrderDetails {
     string user_id = 2;
     repeated ItemDetails items = 3;
     string shipDate = 4;
-    string status = 5;
+    string status = 5    ;
     bool complete = 6;
     string destinationAddress = 7;
 }

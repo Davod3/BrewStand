@@ -24,10 +24,12 @@ from order_repository_pb2_grpc import OrderRepositoryStub
 
 class OrderService(order_service_pb2_grpc.OrderServicer):
 
+
     def __init__(self):
         self.order_repository_host = os.getenv("ORDER_REPOSITORY_HOST", "localhost")
         self.order_repository_port = os.getenv("ORDER_REPOSITORY_PORT", "50064")
         self.order_repo_stub = OrderRepositoryStub(grpc.insecure_channel(f"{self.order_repository_host}:{self.order_repository_port}"))
+
 
     def convertOrderToDetails(self, order):
         items = []
@@ -43,6 +45,7 @@ class OrderService(order_service_pb2_grpc.OrderServicer):
             complete=order.complete,
             destinationAddress=order.destinationAddress
         )
+
 
     def GetOrder(self, request, context):
         try:
@@ -69,10 +72,38 @@ class OrderService(order_service_pb2_grpc.OrderServicer):
             context.set_details(f"Failed to get orders: {e}")
             return GetOrdersServiceResponse(response_code=1)
 
+
     def CreateOrder(self, request, context):
-        # TO DO
-        user_id = request.user_id
-        return CreateOrderServiceResponse(response_code=0)
+        try:
+            
+            # FALTA VALIDAR A ORDER, ligar com o inventory
+
+            user_id = request.user_id
+            items = request.items
+            destination_address = request.destinationAddress
+            
+            item_repo_list = []
+            for item in items:
+                item_repo = order_repository_pb2.ItemRepo(itemID=item.itemID, volume=item.volume)
+                item_repo_list.append(item_repo)
+
+            order_repo_response = self.order_repo_stub.InsertOrder(order_repository_pb2.InsertOrderRequest(
+                user_id=user_id,
+                items=item_repo_list,
+                destinationAddress=destination_address
+            ))
+            
+            if order_repo_response.response_code == 0:
+                return CreateOrderServiceResponse(response_code=0, order_id=order_repo_response.order_id)
+            else:
+                context.set_code(grpc.StatusCode.INTERNAL)
+                context.set_details("Falha ao criar pedido")
+                return CreateOrderServiceResponse(response_code=1)
+        except grpc.RpcError as e:
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(f"Falha ao criar pedido: {e}")
+            return CreateOrderServiceResponse(response_code=1)
+
 
 def serve():
 
