@@ -255,6 +255,8 @@ services:
     environment:
       - PAYMENT_REPOSITORY_HOST=172.100.10.35
       - PAYMENT_REPOSITORY_PORT=50065
+      - ORDER_SERVICE_HOST=172.100.10.24
+      - ORDER_SERVICE_PORT=50054
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.25
