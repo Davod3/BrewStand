@@ -4,6 +4,9 @@ import datetime
 import re
 
 from payment_service_pb2 import ProcessPaymentResponse
+from order_service_pb2 import CreateOrderServiceRequest
+from order_service_pb2_grpc import OrderStub
+
 # Assuming these are the correct paths for your gRPC generated files
 from payment_repository_pb2  import StoreInvoiceRequest, InvoiceData
 from payment_repository_pb2_grpc import PaymentRepositoryServiceStub
@@ -12,6 +15,11 @@ from payment_repository_pb2_grpc import PaymentRepositoryServiceStub
 payment_repository_host = os.getenv("PAYMENT_REPOSITORY_HOST", "localhost")
 payment_repository_port = os.getenv("PAYMENT_REPOSITORY_PORT", "50065")
 payment_repository_channel = grpc.insecure_channel(f"{payment_repository_host}:{payment_repository_port}")
+
+order_service_host = os.getenv("ORDER_SERVICE_HOST", "localhost")
+order_service_port = os.getenv("ORDER_SERVICE_PORT", "50054")
+order_channel = grpc.insecure_channel(f"{order_service_host}:{order_service_port}")
+order_stub = OrderStub(order_channel)
 
 client = PaymentRepositoryServiceStub(payment_repository_channel)
 
@@ -96,7 +104,7 @@ class PaymentHandler:
         return card_last_four, None
 
     @staticmethod
-    def process_payment(user_id, amount, currency, items_name, fiscal_address, card_details):
+    def process_payment(user_id, amount, currency, fiscal_address, items, card_details):
         
         # Validar o pagamento e obter os últimos quatro dígitos do cartão
         card_last_four, error_message = PaymentHandler.validate_payment(
@@ -111,18 +119,17 @@ class PaymentHandler:
         # Se houver um erro na validação do pagamento, retornar um código de erro
         if not card_last_four:
             return ProcessPaymentResponse(response_code = 2, invoiceId = -1, invoice = None)
+        
+        request = CreateOrderServiceRequest(
+            user_id=user_id,
+            items=items,
+            destinationAddress=fiscal_address
+        )
 
-
-        # Assuming order_service_pb2 and order_service_pb2_grpc are imported correctly
-        # order_channel = grpc.insecure_channel('order_service_endpoint') 
-        # order_stub = order_service_pb2_grpc.OrderServiceStub(order_channel)
-        # order_response = order_stub.CreateOrder(...) 
-        # if not order_response.success:
-        #     return 2  # Example error code
-        # order_id = order_response.order_id
-
-        # Placeholder para o ID do pedido até que a integração com o serviço de pedidos esteja completa
-        order_id = 1
+        order_response = order_stub.CreateOrder(request) 
+        if not order_response.success:
+            return ProcessPaymentResponse(response_code = 2, invoiceId = -1, invoice = None)
+        order_id = order_response.order_id
 
         # Criar uma string para os itens do pedido
         items_list = []

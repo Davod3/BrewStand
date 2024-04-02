@@ -1,5 +1,6 @@
 from models.invoice import Invoice
-from payment_repository_pb2 import InvoiceData, UserInvoicesResponse 
+
+from payment_repository_pb2 import UserInvoicesResponse 
 
 def getInvoice(invoiceId):
     invoice = Invoice.objects.with_id(invoiceId)
