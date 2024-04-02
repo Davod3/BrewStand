@@ -58,9 +58,16 @@ class OrderService(order_service_pb2_grpc.OrderServicer):
 
 
     def GetOrders(self, request, context):
-        # TO DO
-        user_id = request.user_id
-        return GetOrdersServiceResponse(response_code=0)
+        try:
+            user_id = request.user_id
+            
+            response = self.order_repo_stub.GetOrders(order_repository_pb2.GetOrdersRequest(user_id=user_id))
+            order_details_list = [self.convertOrderToDetails(order) for order in response.orders]
+            return GetOrdersServiceResponse(response_code=response.response_code, orders=order_details_list)
+        except grpc.RpcError as e:
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(f"Failed to get orders: {e}")
+            return GetOrdersServiceResponse(response_code=1)
 
     def CreateOrder(self, request, context):
         # TO DO
