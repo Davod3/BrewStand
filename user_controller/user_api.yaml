@@ -101,6 +101,22 @@ paths:
       summary: Initiates the payment process for the items in a user's cart.
       description: Initiates the payment process for the items in a user's cart. If the payment succeeds the cart is cleared and an invoice containing tracking information for the order is returned.
       operationId: userHandler.checkoutCart
+      requestBody:
+        description: Card details to complete the payment
+        content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cardNumber:
+                    type: string
+                    example: '123456'
+                  cardExpiry:
+                    type: string
+                    example: '05/24'
+                  cardCvc:
+                    type: string
+                    example: '007'
       parameters:
         - name: userId
           in: path
@@ -174,9 +190,8 @@ components:
       type: object
       properties:
         invoiceID:
-          type: integer
-          format: int64
-          example: 10
+          type: string
+          example: 'ab10ef'
           description:  A unique identifier assigned to each invoice processed.
         price:
           type: number
@@ -184,14 +199,12 @@ components:
           example: 335.5
           description: The total cost for the order.
         orderID:
-          type: integer
-          format: int64
-          example: 10
+          type: string
+          example: '4h7f'
           description: The order id. Used for tracking purposes.
         customerID:
-          type: integer
-          format: int64
-          example: 10
+          type: string
+          example: '823hr'
           description: The id of the user who initiated the payment process.
         fiscalAddress:
           type: string

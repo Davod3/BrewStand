@@ -1,6 +1,8 @@
 import connexion
 from models.user_id_cart_body import UserIdCartBody
 from models.user import User
+from models.cart_payment_body import CartPaymentBody
+from models.invoice import Invoice
 
 import os
 import grpc
@@ -10,7 +12,7 @@ from user_service_pb2 import (
     PayCartRequest,
     AddItemCartRequest,
     DeleteItemCartRequest,
-    GetCartContentRequest,
+    GetCartContentRequest
 )
 
 from user_service_pb2_grpc import UserStub
@@ -70,7 +72,42 @@ def removeFromCart(userId, itemId=0):
         return '', 500
 
 def checkoutCart(userId):
-    return 'TESTING'
+
+    if connexion.request.is_json:
+        card_details = CartPaymentBody.from_dict(connexion.request.get_json())  # noqa: E501
+
+        request = PayCartRequest(user_id = userId,
+                                 card_number = card_details.card_number,
+                                 card_expiry = card_details.card_expiry,
+                                 card_cvc = card_details.card_cvc)
+        
+        response = client.PayCart(request)
+
+        if(response.response_code == 0):
+
+            return Invoice.from_dict({
+                'invoiceID' : response.invoice.invoice_id,
+                'price' : response.invoice.price,
+                'orderID' : response.invoice.order_id,
+                'customerID' : response.invoice.customer_id,
+                'fiscalAddress' : response.invoice.fiscal_address,
+                'details' : response.invoice.details
+            })
+
+
+        elif(response.response_code == 1):
+            return 'User not found', 404
+        elif(response.response_code == 2):
+            return 'Cart is empty', 500
+        elif(response.response_code == 3):
+            return 'Invalid Order', 500
+        else:
+            return 'Service Unavailable', 500
+
+
+        
+
+    return 'do some magic!'
 
 def createUser():
 
