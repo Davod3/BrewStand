@@ -20,7 +20,7 @@ paths:
       parameters:
         - name: itemId
           in: path
-          description: The ID of the batch whose details we want to view.
+          description: The ID of the batch we want to review
           required: true
           schema:
             type: integer
