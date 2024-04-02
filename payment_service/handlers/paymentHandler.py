@@ -3,8 +3,9 @@ import grpc
 import datetime
 import re
 
+from payment_service_pb2 import ProcessPaymentResponse
 # Assuming these are the correct paths for your gRPC generated files
-from payment_repository_pb2  import StoreInvoiceRequest, InvoiceData, ProcessPaymentResponse
+from payment_repository_pb2  import StoreInvoiceRequest, InvoiceData
 from payment_repository_pb2_grpc import PaymentRepositoryServiceStub
 
 # Corrected environment variable names
