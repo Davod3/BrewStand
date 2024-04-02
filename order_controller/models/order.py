@@ -15,11 +15,11 @@ class Order(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: int=None, user_id: str=None, items: List[OrderItems]=None, ship_date: datetime=None, status: str=None, complete: bool=None, destination_address: str=None):  # noqa: E501
+    def __init__(self, id: str=None, user_id: str=None, items: List[OrderItems]=None, ship_date: datetime=None, status: str=None, complete: bool=None, destination_address: str=None):  # noqa: E501
         """Order - a model defined in Swagger
 
         :param id: The id of this Order.  # noqa: E501
-        :type id: int
+        :type id: str
         :param user_id: The user_id of this Order.  # noqa: E501
         :type user_id: str
         :param items: The items of this Order.  # noqa: E501
@@ -34,7 +34,7 @@ class Order(Model):
         :type destination_address: str
         """
         self.swagger_types = {
-            'id': int,
+            'id': str,
             'user_id': str,
             'items': List[OrderItems],
             'ship_date': datetime,
@@ -72,24 +72,24 @@ class Order(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id(self) -> int:
+    def id(self) -> str:
         """Gets the id of this Order.
 
         The order id  # noqa: E501
 
         :return: The id of this Order.
-        :rtype: int
+        :rtype: str
         """
         return self._id
 
     @id.setter
-    def id(self, id: int):
+    def id(self, id: str):
         """Sets the id of this Order.
 
         The order id  # noqa: E501
 
         :param id: The id of this Order.
-        :type id: int
+        :type id: str
         """
 
         self._id = id
