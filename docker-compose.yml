@@ -198,7 +198,7 @@ services:
       - '50054:50054'
     environment:
       - ORDER_REPOSITORY_HOST=172.100.10.34
-      - ORDER_REPOSITORY_PORT=50061
+      - ORDER_REPOSITORY_PORT=50064
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.24

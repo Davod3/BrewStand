@@ -1,14 +1,12 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
-
 // Data structure for storing order details
 
-message OrderService {
-    string id = 1;
+message OrderDetails {
+    string order_id = 1;
     string user_id = 2;
-    repeated ItemService items = 3;
-    google.protobuf.Timestamp shipDate = 4;
+    repeated ItemDetails items = 3;
+    string shipDate = 4;
     string status = 5;
     bool complete = 6;
     string destinationAddress = 7;
@@ -16,21 +14,20 @@ message OrderService {
 
 // Data structure for storing item details
 
-message ItemService {
+message ItemDetails {
     int64 itemID = 1;
     double volume = 2;
 }
 
 //Messages
 
-message GetOrderRequest {
+message GetOrderServiceRequest {
     string order_id = 1;
 }
 
-message GetOrderResponse {
+message GetOrderServiceResponse {
     int32 response_code = 1;
-    optional OrderService order = 2;
-
+    optional OrderDetails order = 2;
     /*
 
     0 - Success
@@ -40,13 +37,13 @@ message GetOrderResponse {
 }
 
 
-message GetOrdersRequest {
+message GetOrdersServiceRequest {
     string user_id = 1;
 }
 
-message GetOrdersResponse {
+message GetOrdersServiceResponse {
     int32 response_code = 1;
-    repeated OrderService orders = 2;
+    repeated OrderDetails orders = 2;
 
     /*
 
@@ -57,13 +54,13 @@ message GetOrdersResponse {
 }
 
 
-message CreateOrderRequest {
+message CreateOrderServiceRequest {
     string user_id = 1;
-    repeated ItemService items = 2;
+    repeated ItemDetails items = 2;
     string destinationAddress = 3;
 }
 
-message CreateOrderResponse {
+message CreateOrderServiceResponse {
     int32 response_code = 1;
     optional string order_id = 2;
 
@@ -77,12 +74,12 @@ message CreateOrderResponse {
 
 // Order service
 service Order {
-    rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
+    rpc GetOrder (GetOrderServiceRequest) returns (GetOrderServiceResponse);
     // Returns the details of a specific order by its ID
 
-    rpc GetOrders(GetOrdersRequest) returns (stream GetOrdersResponse);
-    // Retunrs all orders for a given user
+    rpc GetOrders (GetOrdersServiceRequest) returns (GetOrdersServiceResponse);
+    // Returns all orders for a given user
 
-    rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+    rpc CreateOrder (CreateOrderServiceRequest) returns (CreateOrderServiceResponse);
     // Creates a new empty order with no items and sets it as the current order for the user
 }
