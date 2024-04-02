@@ -1,4 +1,3 @@
-import connexion
 import os
 
 from models.invoice import Invoice 
@@ -19,38 +18,28 @@ payment_service_channel = grpc.insecure_channel(f"{payment_service_host}:{paymen
 client = PaymentServiceStub(payment_service_channel)
 
 def getInvoice(invoice_id):
-    if connexion.request.is_json:
-        invoice = Invoice.from_dict(connexion.request.get_json())
+    request = InvoiceRequest(invoice_id=invoice_id)
+    response = client.GetInvoice(request)
 
-        request = InvoiceRequest(invoice_id = invoice.invoice_id)
-        response = client.GetInvoice(request)
-
-        if(response.response_code==0):
-            return '',200
-        elif(response.response_code==1):
-            return '',404
-        elif(response.response_code==2 or response.response_code==3):
-            return '', 400
-        else:
-            return '', 500
-
+    if response.response_code == 0:
+        return '', 200
+    elif response.response_code == 1:
+        return '', 404
+    elif response.response_code in [2, 3]:
+        return '', 400
     else:
-        return 'Invalid request body', 400
-   
-def getInvoices(): 
-    if connexion.request.is_json:
+        return '', 500
 
-        request = UserInvoicesRequest(user_id = user_id)
-        response = client.GetAllInvoices(request)
+def getInvoices(userId): 
+    request = UserInvoicesRequest(userId=userId)
+    response = client.GetAllUserInvoices(request)
 
-        if(response.response_code==0):
-            return '',200
-        elif(response.response_code==1):
-            return '',404
-        elif(response.response_code==2 or response.response_code==3):
-            return '', 400
-        else:
-            return '', 500
-
+    if response.response_code == 0:
+        return response.invoices, 200
+    elif response.response_code == 1:
+        return {"error": "No invoices found for the provided user ID"}, 404
+    elif response.response_code in [2, 3]:
+        return {"error": "Invalid request or server error"}, 400
     else:
-        return 'Invalid request body', 400
+        return {"error": "Internal server error"}, 500
+
