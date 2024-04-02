@@ -3,6 +3,7 @@ import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 
+
 import payment_service_pb2
 import payment_service_pb2_grpc
 
@@ -17,28 +18,25 @@ import handlers.invoiceHandler as InvoiceHandler
 
 class PaymentService(payment_service_pb2_grpc.PaymentService):
 
-    def ProcessPayment(self, request):
+    def ProcessPayment(self, request, context):
 
         response = PaymentHandler.process_payment(request.user_id, request.amount, request.currency, request.items_id, request.card_details )
 
         return ProcessPaymentResponse(response_code = response.response_code, invoice = response.invoice)
 
-    def GetInvoice(self, request):
+    def GetInvoice(self, request, context):
         invoice = InvoiceHandler.getInvoice(request.invoiceId)
         
+        if invoice is None:
+            return InvoiceResponse(response_code = 1, invoice=None)
+        
         return InvoiceResponse(
-            invoiceId=invoice.invoiceId,
-            price=invoice.price,
-            orderId=invoice.orderId,
-            customerId=invoice.customerId,
-            fiscalAddress=invoice.fiscalAddress,
-            details=invoice.details
+            response_code=0,
+            invoice=invoice
         )
     
-    def GetAllUserInvoices(self, request):
-        
-        invoices = InvoiceHandler.getUserInvoices(request.userId)
-        
+    def GetAllUserInvoices(self, request, context):
+        invoices = InvoiceHandler.getUserInvoices(request.userId)  
         return InvoicesResponse(
             invoices=[
                 InvoiceResponse(
@@ -51,6 +49,7 @@ class PaymentService(payment_service_pb2_grpc.PaymentService):
                 ) for inv in invoices
             ]
         )
+
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]

@@ -1,3 +1,5 @@
+# handlers/invoiceHandler.py
+
 import os
 import grpc
 
@@ -10,25 +12,23 @@ payment_repository_channel = grpc.insecure_channel(f"{payment_repository_host}:{
 
 client = PaymentRepositoryServiceStub(payment_repository_channel)
 
-class InvoiceHandler:
+def getInvoice(invoiceId):
+    try:
+        retrieve_response = client.RetrieveInvoice(
+            RetrieveInvoiceRequest(invoiceId=invoiceId)
+        )
+        return retrieve_response
+        
+    except grpc.RpcError as e:
+        return None
 
-    def getInvoice(self, invoiceId):
-        try:
-            retrieve_response = client.RetrieveInvoice(
-                RetrieveInvoiceRequest(invoice_id=invoiceId)
-            )
-            return retrieve_response
-            
-        except grpc.RpcError as e:
-            return 2
+def getUserInvoices(userId):
+    try:
+        user_invoices_response = client.GetUserInvoices(
+            GetUserInvoicesRequest(userId=userId)
+        )
 
-    def getUserInvoices(self, userId):
-        try:
-            user_invoices_response = client.GetUserInvoices(
-                GetUserInvoicesRequest(customer_id=userId)
-            )
+        return user_invoices_response
 
-            return user_invoices_response
-
-        except grpc.RpcError as e:
-            return 2
+    except grpc.RpcError as e:
+        return []

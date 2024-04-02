@@ -1,30 +1,29 @@
 from models.invoice import Invoice
-from payment_repository_pb2 import InvoiceData  # Import the InvoiceData protobuf
+from payment_repository_pb2 import InvoiceData, UserInvoicesResponse 
 
 def getInvoice(invoiceId):
     invoice = Invoice.objects.with_id(invoiceId)
     if invoice is None:
         return None
 
-    return InvoiceData(
+    return Invoice(
         invoice_id=invoice.invoice_id,
         price=invoice.price,
-        order_id=invoice.order_od,  
-        costumer_id=invoice.costumer_id,     
+        order_id=invoice.order_id,  
+        customer_id=invoice.customer_id,     
         fiscal_address=invoice.fiscal_address,
-        details = invoice.details
+        details=invoice.details
     )
 
 def getInvoices(userId):
-    invoices = Invoice.objects(userId=userId)
-    if not invoices:
-        return None
+    try:
+        invoices = Invoice.objects(userId=userId)
 
-    return [InvoiceData(
-        invoice_id=invoice.invoice_id,
-        price=invoice.price,
-        order_id=invoice.order_od,  
-        costumer_id=invoice.costumer_id,     
-        fiscal_address=invoice.fiscal_address,
-        details = invoice.details
-    )for invoice in invoices]
+        if invoices is None:
+             return UserInvoicesResponse(content=None)
+        else:
+            converted_invoices = [convertToRPC(invoice) for invoice in invoices]
+            return UserInvoicesResponse(content=converted_invoices)
+        
+    except Exception as e:
+        return UserInvoicesResponse(content=None)
