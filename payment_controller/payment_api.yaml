@@ -23,8 +23,7 @@ paths:
           description: The ID of the invoice whose details we want to view.
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: Successful Operation
@@ -65,9 +64,8 @@ components:
       type: object
       properties:
         invoiceID:
-          type: integer
-          format: int64
-          example: 10
+          type: string
+          example: 'ab10ef'
           description:  A unique identifier assigned to each invoice processed.
         price:
           type: number
@@ -75,14 +73,12 @@ components:
           example: 335.5
           description: The total cost for the order.
         orderID:
-          type: integer
-          format: int64
-          example: 10
+          type: string
+          example: '4h7f'
           description: The order id. Used for tracking purposes.
         customerID:
-          type: integer
-          format: int64
-          example: 10
+          type: string
+          example: '823hr'
           description: The id of the user who initiated the payment process.
         fiscalAddress:
           type: string

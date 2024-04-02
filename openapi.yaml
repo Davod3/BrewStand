@@ -48,8 +48,7 @@ paths:
           description: The ID of the user whose cart we want to access
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:    
         '200':
           description: Successful operation. Item was added to the cart
@@ -71,8 +70,7 @@ paths:
           description: The ID of the user whose cart we want to access
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:    
         '200':
           description: Successful operation.
@@ -97,8 +95,7 @@ paths:
           description: The ID of the user whose cart we want to access
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
         - name: itemId
           in: query
           description: The id of the specific item we want to delete from the cart
@@ -120,14 +117,29 @@ paths:
       security:
         - ApiKeyAuth: []
       operationId: user.checkoutCart
+      requestBody:
+        description: Card details to complete the payment
+        content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cardNumber:
+                    type: string
+                    example: '123456'
+                  cardExpiry:
+                    type: string
+                    example: '05/24'
+                  cardCvc:
+                    type: string
+                    example: '007'
       parameters:
         - name: userId
           in: path
           description: The ID of the user whose cart we want to access.
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200': 
           description: Successful operation. Items in the cart are paid and an order created.
@@ -274,8 +286,7 @@ paths:
           description: The ID of the order whose details we want to view.
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: Successful Operation
@@ -328,8 +339,7 @@ paths:
           description: The ID of the invoice whose details we want to view.
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: Successful Operation
@@ -372,8 +382,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
           example: 10
           description: The order id
         userId:
@@ -489,9 +498,8 @@ components:
       type: object
       properties:
         invoiceID:
-          type: integer
-          format: int64
-          example: 10
+          type: string
+          example: 'ab10ef'
           description:  A unique identifier assigned to each invoice processed.
         price:
           type: number
@@ -499,14 +507,12 @@ components:
           example: 335.5
           description: The total cost for the order.
         orderID:
-          type: integer
-          format: int64
-          example: 10
+          type: string
+          example: '4h7f'
           description: The order id. Used for tracking purposes.
         customerID:
-          type: integer
-          format: int64
-          example: 10
+          type: string
+          example: '823hr'
           description: The id of the user who initiated the payment process.
         fiscalAddress:
           type: string
@@ -520,7 +526,7 @@ components:
       properties:
         username:
           type: string
-          example: José123
+          example: Jose123
           description: The username used to refer to the user. Must be unique
         password:
           type: string
