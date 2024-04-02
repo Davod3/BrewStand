@@ -18,9 +18,14 @@ message ProcessPaymentRequest {
   string userId = 1;
   float amount = 2;
   string currency = 3;
-  repeated string items_name = 4;
   string fiscalAddress = 5;
   CardDetails cardDetails = 6;
+  Items items = 7; 
+}
+
+message Items {
+  string batch_id = 1;
+  double volume = 2;
 }
 
 message CardDetails {

@@ -15,20 +15,21 @@ class PaymentRepositoryService(payment_repository_pb2_grpc.PaymentRepositoryServ
 
     def StoreInvoice(self, request, context):
         try:
-            invoice = Invoice(
+            invoice = Invoice.objects.create(
                 price=request.invoice.price,
-                orderID=request.invoice.orderID,
-                userId=request.invoice.userId,
-                fiscalAddress=request.invoice.fiscalAddress,
-                cardLastFour=request.invoice.cardLastFour,
-                items_name=request.invoice.items_name
+                order_id=request.invoice.orderID,
+                customer_id=request.invoice.userId,
+                fiscal_address=request.invoice.fiscalAddress,
+                details=request.invoice.details
             )
-            invoice.save()
+
             invoice_id = str(invoice.pk)
+            invoice_data = paymentHandler.getInvoice(invoice_id)
+
             return payment_repository_pb2.StoreInvoiceResponse(
                 response_code=0,
                 invoiceId=invoice_id,
-                invoice=paymentHandler.getInvoice(invoice_id)
+                invoice=invoice_data
             )
         except NotUniqueError:
             context.set_code(grpc.StatusCode.ALREADY_EXISTS)

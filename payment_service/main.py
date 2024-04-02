@@ -19,20 +19,34 @@ import handlers.invoiceHandler as InvoiceHandler
 class PaymentService(payment_service_pb2_grpc.PaymentService):
 
     def ProcessPayment(self, request, context):
+        user_id = request.userId
+        amount = request.amount
+        currency = request.currency
+        fiscal_address = request.fiscalAddress
+        card_details = request.cardDetails
 
-        response = PaymentHandler.process_payment(request.user_id, request.amount, request.currency, request.items_id, request.card_details )
+        # Extrair os itens do pedido
+        items = []
+        for item in request.items:
+            items.append({
+                'batch_id': item.batch_id,
+                'volume': item.volume
+            })
+
+        # Chamar a função de processamento de pagamento
+        response = PaymentHandler.process_payment(user_id, amount, currency, fiscal_address, items, card_details)
 
         return ProcessPaymentResponse(response_code = response.response_code, invoice = response.invoice)
 
     def GetInvoice(self, request, context):
         invoice = InvoiceHandler.getInvoice(request.invoiceId)
         
-        if invoice is None:
-            return InvoiceResponse(response_code = 1, invoice=None)
+        if invoice.response_code == 2:
+            return InvoiceResponse(response_code = 2, invoice=None)
         
         return InvoiceResponse(
             response_code=0,
-            invoice=invoice
+            invoice=invoice.invoice
         )
     
     def GetAllUserInvoices(self, request, context):
