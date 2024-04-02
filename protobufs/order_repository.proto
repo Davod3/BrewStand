@@ -42,6 +42,7 @@ message InsertOrderRequest {
 message InsertOrderResponse {
     int32 response_code = 1;
     optional string order_id = 2;
+    optional string error_msg = 3;
     /*
 
     0 - Success
@@ -79,25 +80,12 @@ message GetOrdersResponse {
     /*
 
     0 - Success
-    1 - User not found
-
+    1 - No orders for this user were found
+    2 - Error retrieving orders for the specified user
+    
     */
 }
 
-message MarkOrderAsCompleteRequest {
-    string order_id = 1;
-}
-
-message MarkOrderAsCompleteResponse {
-    int32 response_code = 1;
-
-    /*
-
-    0 - Success
-    1 - Order not found
-
-    */
-}
 
 // Order Repository
 service OrderRepository {
@@ -109,8 +97,5 @@ service OrderRepository {
 
     rpc GetOrders (GetOrdersRequest) returns (GetOrdersResponse);
     // Endpoint to get all orders of a specific user from the repository
-
-    rpc MarkOrderAsComplete (MarkOrderAsCompleteRequest) returns (MarkOrderAsCompleteResponse);
-    // Marks the current order as completed
 
 }

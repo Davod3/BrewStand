@@ -1,6 +1,8 @@
 from concurrent import futures
 from datetime import datetime
 
+import threading
+import time
 import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
@@ -9,7 +11,6 @@ from order_repository_pb2 import (
     InsertOrderResponse,
     GetOrderResponse,
     GetOrdersResponse,
-    MarkOrderAsCompleteResponse,
     OrderRepo,
     OrderRepoID,
     ItemRepo
@@ -20,8 +21,26 @@ from models.order import OrderRepoMongo, ItemRepoMongo
 import order_repository_pb2_grpc
 from mongoengine import *
 import os
+import functools
 
 class  OrderRepository(order_repository_pb2_grpc.OrderRepositoryServicer):
+
+    @staticmethod
+    def run_updateOrderStatus(order_id):
+        OrderRepository.updateOrderStatus(order_id)
+
+    @staticmethod
+    def updateOrderStatus(order_id):
+        time.sleep(100)
+
+        try:
+            order = OrderRepoMongo.objects.with_id(order_id)
+            if order:
+                order.status = "delivered"
+                order.complete = True
+                order.save()
+        except DoesNotExist:
+            pass
 
     def InsertOrder(self, request, context):
 
@@ -41,11 +60,13 @@ class  OrderRepository(order_repository_pb2_grpc.OrderRepositoryServicer):
         try:
 
             new_order.save()
-
+            
+            threading.Thread(target=lambda: OrderRepository.run_updateOrderStatus(str(new_order.pk))).start()
             # Success
             return InsertOrderResponse(response_code=0, order_id=str(new_order.pk))
         except Exception as e:
-            return InsertOrderResponse(response_code=1)
+            error_msg = str(e)
+            return InsertOrderResponse(response_code=1, error_msg=error_msg)
 
     def GetOrder(self, request, context):
         order_id = request.order_id
@@ -81,6 +102,9 @@ class  OrderRepository(order_repository_pb2_grpc.OrderRepositoryServicer):
             user_id = request.user_id
             orders = OrderRepoMongo.objects(user_id=user_id)
 
+            if not orders:
+                return GetOrdersResponse(response_code=1)
+
             converted_orders = []
             for order in orders:
                 
@@ -101,16 +125,9 @@ class  OrderRepository(order_repository_pb2_grpc.OrderRepositoryServicer):
                 converted_orders.append(converted_order)
 
             return GetOrdersResponse(response_code=0, orders=converted_orders)
-        except DoesNotExist:
-            return GetOrdersResponse(response_code=1)
         except Exception as e:
             error_msg = str(e)
             return GetOrdersResponse(response_code=2, error_msg=error_msg)
-
-    def MarkOrderAsComplete(self, request, context):
-        # TO DO
-        response = order_repository_pb2.MarkOrderAsCompleteResponse(response_code=0)
-        return response
 
 def serve():
 
