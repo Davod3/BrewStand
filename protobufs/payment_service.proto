@@ -20,7 +20,7 @@ message ProcessPaymentRequest {
   string currency = 3;
   string fiscalAddress = 5;
   CardDetails cardDetails = 6;
-  Items items = 7; 
+  repeated Items items = 7; 
 }
 
 message Items {

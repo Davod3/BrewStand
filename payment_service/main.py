@@ -41,7 +41,7 @@ class PaymentService(payment_service_pb2_grpc.PaymentService):
     def GetInvoice(self, request, context):
         invoice = InvoiceHandler.getInvoice(request.invoiceId)
         
-        if invoice.response_code == 2:
+        if invoice is None:
             return InvoiceResponse(response_code = 2, invoice=None)
         
         return InvoiceResponse(
