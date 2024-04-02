@@ -20,7 +20,7 @@ def getInvoice(invoiceId):
         return retrieve_response
         
     except grpc.RpcError as e:
-        return []
+        return None
 
 def getUserInvoices(userId):
     try:

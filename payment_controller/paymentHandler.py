@@ -15,14 +15,17 @@ payment_service_channel = grpc.insecure_channel(f"{payment_service_host}:{paymen
 
 client = PaymentServiceStub(payment_service_channel)
 
-def getInvoice(invoice_id):
-    request = payment_service_pb2.InvoiceRequest(invoice_id=invoice_id)
+def getInvoice(invoiceId):
+    invoiceId_str = str(invoiceId)
+    
+    request = payment_service_pb2.InvoiceRequest(invoiceId=invoiceId_str)
     response = client.GetInvoice(request)
 
+
     if response.response_code == 0:
-        return '', 200
+            return response.invoices, 200
     elif response.response_code == 1:
-        return '', 404
+            return {"message": "No invoice found for the provided invoice ID"}, 404
     elif response.response_code in [2, 3]:
         return '', 400
     else:

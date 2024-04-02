@@ -6,14 +6,13 @@ def getInvoice(invoiceId):
     if invoice is None:
         return None
 
-    return InvoiceData(
+    return Invoice(
         invoice_id=invoice.invoice_id,
         price=invoice.price,
-        order_id=invoice.order_od,  
-        costumer_id=invoice.costumer_id,     
+        order_id=invoice.order_id,  
+        customer_id=invoice.customer_id,     
         fiscal_address=invoice.fiscal_address,
-        address=invoice.fiscal_address,
-        details = invoice.details
+        details=invoice.details
     )
 
 def getInvoices(userId):
