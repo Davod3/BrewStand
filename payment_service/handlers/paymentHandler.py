@@ -155,9 +155,9 @@ def process_payment(user_id, amount, currency, fiscal_address, items, card_detai
     # Criar um objeto InvoiceData
     invoice_data = InvoiceData(
         price=amount,
-        orderId=order_id,
-        userId=user_id,
-        fiscalAddress=fiscal_address,
+        order_id=order_id,
+        customer_id=user_id,
+        fiscal_address=fiscal_address,
         details=details_string,
     )
 

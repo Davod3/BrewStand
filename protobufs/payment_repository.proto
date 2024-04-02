@@ -19,8 +19,8 @@ message StoreInvoiceRequest {
 
 message StoreInvoiceResponse {
   int32 response_code = 1;
-  string invoiceId = 2;
-  InvoiceData invoice = 3;
+  optional string invoiceId = 2;
+  optional InvoiceData invoice = 3;
 }
 
 message RetrieveInvoiceRequest {
@@ -28,7 +28,7 @@ message RetrieveInvoiceRequest {
 }
 
 message InvoiceData {
-  string invoice_id = 1;
+  optional string invoice_id = 1;
   double price = 2;
   string order_id = 3;
   string customer_id = 4;
