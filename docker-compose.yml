@@ -185,6 +185,41 @@ services:
       brewstand-net:
         ipv4_address: 172.100.10.14
 
+  order_service:
+    depends_on:
+      - order_repository
+    build:
+      context: ./
+      dockerfile: ./order_service/Dockerfile
+    container_name: order_service
+    expose:
+      - 50054
+    ports:
+      - '50054:50054'
+    environment:
+      - ORDER_REPOSITORY_HOST=172.100.10.34
+      - ORDER_REPOSITORY_PORT=50064
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.24
+
+  order_repository:
+    restart: on-failure:10
+    build:
+      context: ./
+      dockerfile: ./order_repository/Dockerfile
+    container_name: order_repository
+    expose:
+      - 50064
+    ports:
+      - '50064:50064'
+    environment:
+      - MONGO_USER=db_access
+      - MONGO_PASSWORD=SafestOrders
+    networks:
+      brewstand-net:
+        ipv4_address: 172.100.10.34
+        
   payment_controller:
     build: 
       context: ./

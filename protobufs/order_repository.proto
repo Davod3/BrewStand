@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+// Data structure for storing order details
+
+message OrderRepo {
+    string id = 1;
+    string user_id = 2;
+    repeated ItemRepo items = 3;
+    string shipDate = 4;
+    string status = 5;
+    bool complete = 6;
+    string destinationAddress = 7;
+}
+
+message OrderRepoID {
+    string order_id = 1;
+    string user_id = 2;
+    repeated ItemRepo items = 3;
+    string shipDate = 4;
+    string status = 5;
+    bool complete = 6;
+    string destinationAddress = 7;
+}
+
+// Data structure for storing item details
+
+message ItemRepo {
+    int64 itemID = 1;
+    double volume = 2;
+}
+
+// Messages
+
+message InsertOrderRequest {
+    string user_id = 1;
+    repeated ItemRepo items = 2;
+    string destinationAddress = 3;
+}
+
+message InsertOrderResponse {
+    int32 response_code = 1;
+    optional string order_id = 2;
+    optional string error_msg = 3;
+    /*
+
+    0 - Success
+    1 - User not found
+
+    */
+}
+
+message GetOrderRequest {
+    string order_id = 1;
+}
+
+message GetOrderResponse {
+    int32 response_code = 1;
+    optional OrderRepoID order = 2;
+    optional string error_msg = 3;
+
+    /*
+
+    0 - Success
+    1 - Order not found
+    2 - Unable to retrieve order
+
+    */
+}
+
+message GetOrdersRequest {
+    string user_id = 1;
+}
+
+message GetOrdersResponse {
+    int32 response_code = 1;
+    repeated OrderRepoID orders = 2;
+    optional string error_msg = 3;
+    /*
+
+    0 - Success
+    1 - No orders for this user were found
+    2 - Error retrieving orders for the specified user
+    
+    */
+}
+
+
+// Order Repository
+service OrderRepository {
+    rpc InsertOrder (InsertOrderRequest) returns (InsertOrderResponse);
+    // Endpoint to insert a new order in the repository
+
+    rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
+    // Endpoint to get an existing order from the repository
+
+    rpc GetOrders (GetOrdersRequest) returns (GetOrdersResponse);
+    // Endpoint to get all orders of a specific user from the repository
+
+}
