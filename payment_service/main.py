@@ -3,6 +3,7 @@ import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 
+
 import payment_service_pb2
 import payment_service_pb2_grpc
 
@@ -35,10 +36,8 @@ class PaymentService(payment_service_pb2_grpc.PaymentService):
             details=invoice.details
         )
     
-    def GetAllUserInvoices(self, request):
-        
-        invoices = InvoiceHandler.getUserInvoices(request.userId)
-        
+    def GetAllUserInvoices(self, request, context):
+        invoices = InvoiceHandler.getUserInvoices(request.userId)  
         return InvoicesResponse(
             invoices=[
                 InvoiceResponse(
@@ -51,6 +50,7 @@ class PaymentService(payment_service_pb2_grpc.PaymentService):
                 ) for inv in invoices
             ]
         )
+
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]

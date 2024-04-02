@@ -11,7 +11,7 @@ service PaymentService {
   rpc GetInvoice (InvoiceRequest) returns (InvoiceResponse) {}
 
   // Retrieves all invoices related to a specific user.
-  rpc GetAllUserInvoices (UserInvoicesRequest) returns (UserInvoicesResponse) {}
+  rpc GetAllUserInvoices (UserInvoicesRequest) returns (InvoicesResponse) {}
 }
 
 message ProcessPaymentRequest {
@@ -48,6 +48,6 @@ message UserInvoicesRequest {
   string userId = 1;
 }
 
-message UserInvoicesResponse {
+message InvoicesResponse {
   repeated payment_repository.InvoiceData invoices = 1;
 }
