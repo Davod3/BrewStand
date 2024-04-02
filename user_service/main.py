@@ -23,9 +23,9 @@ class UserService(user_service_pb2_grpc.UserServicer):
     
     def CreateUser(self, request, context):
 
-        response = UserHandler.registerUser(request.username, request.password, request.address)
+        (response_code, user_id) = UserHandler.registerUser(request.username, request.password, request.address)
 
-        return CreateUserResponse(response_code = response.response_code, user_id=response.user_id)
+        return CreateUserResponse(response_code = response_code, user_id = user_id)
     
     def GetUser(self, request, context):
 

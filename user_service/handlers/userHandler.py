@@ -1,6 +1,7 @@
 import os
 import grpc
 import handlers.itemHandler as ItemHandler
+import re
 
 from user_repository_pb2 import (
     InsertUserRequest,
@@ -22,31 +23,29 @@ client = UserRepositoryStub(user_repository_channel)
 
 
 def __validateUsername(username):
-    #TODO
-    return True
+    
+    pattern = re.compile("^[a-zA-Z0-9_]*$")
+
+    return len(username) > 3 and pattern.match(username) is not None
 
 def __validatePassword(password):
-    #TODO
-    return True
 
-def __validateAddress(address):
-    #TODO
-    return True
+    return len(password) > 3
 
 def registerUser(username, password, address):
 
-    if(__validateUsername(username) and __validatePassword(password) and __validateAddress(address)):
+    if(__validateUsername(username) and __validatePassword(password)):
 
         #User has valid credentials
         request = InsertUserRequest(username=username, password=password, address=address)
         response = client.InsertUser(request)
 
-        return response
+        return (response.response_code, response.user_id)
 
     else:
 
         #Credentials don't have a valid format
-        return 2
+        return (2, '')
     
 def getUserByID(user_id):
 

@@ -218,8 +218,8 @@ components:
       properties:
         username:
           type: string
-          example: José123
-          description: The username used to refer to the user. Must be unique
+          example: Jose123
+          description: The username used to refer to the user. Must be unique and contain only alfanumeric characters. No accented characters
         password:
           type: string
           example: $ThisIsAPassword
