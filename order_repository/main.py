@@ -77,27 +77,35 @@ class  OrderRepository(order_repository_pb2_grpc.OrderRepositoryServicer):
             return GetOrderResponse(response_code=2, error_msg=error_msg)
 
     def GetOrders(self, request, context):
-        # TO DO
-        orders = [
-            order_repository_pb2.OrderRepo(
-                id=123,
-                user_id='23',
-                ship_date='2024-04-01',
-                status='pending',
-                complete=False,
-                address='Amadora'
-            ),
-            order_repository_pb2.OrderRepo(
-                id=456,
-                user_id='user123',
-                ship_date='2024-04-02',
-                status='shipped',
-                complete=True,
-                address='Alges'
-            )
-        ]
-        response = order_repository_pb2.GetOrdersResponse(response_code=0, orders=orders)
-        return response
+        try:
+            user_id = request.user_id
+            orders = OrderRepoMongo.objects(user_id=user_id)
+
+            converted_orders = []
+            for order in orders:
+                
+                items = []
+                for item in order.items:
+                    item_instance = ItemRepo(itemID=item.itemID, volume=item.volume)
+                    items.append(item_instance)
+
+                converted_order = OrderRepoID(
+                    order_id=str(order.id),
+                    user_id=order.user_id,
+                    items=items,
+                    shipDate=str(order.shipDate),
+                    status=order.status,
+                    complete=order.complete,
+                    destinationAddress=order.destinationAddress
+                )
+                converted_orders.append(converted_order)
+
+            return GetOrdersResponse(response_code=0, orders=converted_orders)
+        except DoesNotExist:
+            return GetOrdersResponse(response_code=1)
+        except Exception as e:
+            error_msg = str(e)
+            return GetOrdersResponse(response_code=2, error_msg=error_msg)
 
     def MarkOrderAsComplete(self, request, context):
         # TO DO

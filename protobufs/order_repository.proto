@@ -74,8 +74,8 @@ message GetOrdersRequest {
 
 message GetOrdersResponse {
     int32 response_code = 1;
-    repeated OrderRepo orders = 2;
-
+    repeated OrderRepoID orders = 2;
+    optional string error_msg = 3;
     /*
 
     0 - Success
