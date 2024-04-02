@@ -9,10 +9,14 @@ from order_repository_pb2 import (
     InsertOrderResponse,
     GetOrderResponse,
     GetOrdersResponse,
-    MarkOrderAsCompleteResponse
+    MarkOrderAsCompleteResponse,
+    OrderRepo,
+    OrderRepoID,
+    ItemRepo
 )
 
-from models.order import OrderRepo, ItemRepo
+from models.order import OrderRepoMongo, ItemRepoMongo
+
 import order_repository_pb2_grpc
 from mongoengine import *
 import os
@@ -24,14 +28,14 @@ class  OrderRepository(order_repository_pb2_grpc.OrderRepositoryServicer):
         user_id = request.user_id
         items = request.items
         destinationAddress = request.destinationAddress
-        shipDate = datetime.now()
+        shipDate = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         item_instances = []
         for item in items:
-            item_instance = ItemRepo(itemID=item.itemID, volume=item.volume)
+            item_instance = ItemRepoMongo(itemID=item.itemID, volume=item.volume)
             item_instances.append(item_instance)
 
-        new_order = OrderRepo(user_id=user_id, items=item_instances, shipDate=shipDate,
+        new_order = OrderRepoMongo(user_id=user_id, items=item_instances, shipDate=shipDate,
                             status="placed", complete=False, destinationAddress=destinationAddress)
 
         try:
@@ -46,21 +50,31 @@ class  OrderRepository(order_repository_pb2_grpc.OrderRepositoryServicer):
     def GetOrder(self, request, context):
         order_id = request.order_id
         try:
-            order = OrderRepo.objects.get(id=order_id)
-            orderRepo = order_repository_pb2.OrderRepo(
-                id=str(order.id),
+            order = OrderRepoMongo.objects.with_id(request.order_id)
+
+            # convert to ItemRepo
+            items = []
+            for item in order.items:
+                item_instance = ItemRepo(itemID=item.itemID, volume=item.volume)
+                items.append(item_instance)
+
+
+            orderRepoID = OrderRepoID(
+                order_id=str(order_id),
                 user_id=order.user_id,
-                ship_date=str(order.shipDate),
+                items=items,
+                shipDate=str(order.shipDate),
                 status=order.status,
                 complete=order.complete,
-                address=order.destinationAddress
+                destinationAddress=order.destinationAddress
             )
-            response = GetOrderResponse(response_code=0, order=orderRepo)
+
+            return GetOrderResponse(response_code=0, order=orderRepoID)
         except DoesNotExist:
-            response = GetOrderResponse(response_code=1)
+            return GetOrderResponse(response_code=1)
         except Exception as e:
-            response = GetOrderResponse(response_code=1, error_msg=str(e))
-        return response
+            error_msg = str(e)
+            return GetOrderResponse(response_code=2, error_msg=error_msg)
 
     def GetOrders(self, request, context):
         # TO DO
