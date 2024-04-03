@@ -34,9 +34,7 @@ class PaymentService(payment_service_pb2_grpc.PaymentService):
             })
 
         # Chamar a função de processamento de pagamento
-        response = PaymentHandler.process_payment(user_id, amount, currency, fiscal_address, items, card_details)
-
-        return ProcessPaymentResponse(response_code = response.response_code, invoice = response.invoice)
+        return PaymentHandler.process_payment(user_id, amount, currency, fiscal_address, items, card_details)
 
     def GetInvoice(self, request, context):
         invoice = InvoiceHandler.getInvoice(request.invoiceId)
