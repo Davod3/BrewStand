@@ -28,7 +28,7 @@ def getUserInvoices(userId):
             GetUserInvoicesRequest(userId=userId)
         )
 
-        return user_invoices_response
+        return user_invoices_response.invoices
 
     except grpc.RpcError as e:
         return []

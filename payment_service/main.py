@@ -50,16 +50,7 @@ class PaymentService(payment_service_pb2_grpc.PaymentService):
     def GetAllUserInvoices(self, request, context):
         invoices = InvoiceHandler.getUserInvoices(request.userId)  
         return InvoicesResponse(
-            invoices=[
-                InvoiceResponse(
-                    invoiceId=inv.invoiceId,
-                    price=inv.price,
-                    orderId=inv.orderId,
-                    customerId=inv.customerId,
-                    fiscalAddress=inv.fiscalAddress,
-                    details=inv.details
-                ) for inv in invoices
-            ]
+            invoices = invoices
         )
 
 
