@@ -14,27 +14,27 @@ class Invoice(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, invoice_id: int=None, price: float=None, order_id: int=None, customer_id: int=None, fiscal_address: str=None, details: str=None):  # noqa: E501
+    def __init__(self, invoice_id: str=None, price: float=None, order_id: str=None, customer_id: str=None, fiscal_address: str=None, details: str=None):  # noqa: E501
         """Invoice - a model defined in Swagger
 
         :param invoice_id: The invoice_id of this Invoice.  # noqa: E501
-        :type invoice_id: int
+        :type invoice_id: str
         :param price: The price of this Invoice.  # noqa: E501
         :type price: float
         :param order_id: The order_id of this Invoice.  # noqa: E501
-        :type order_id: int
+        :type order_id: str
         :param customer_id: The customer_id of this Invoice.  # noqa: E501
-        :type customer_id: int
+        :type customer_id: str
         :param fiscal_address: The fiscal_address of this Invoice.  # noqa: E501
         :type fiscal_address: str
         :param details: The details of this Invoice.  # noqa: E501
         :type details: str
         """
         self.swagger_types = {
-            'invoice_id': int,
+            'invoice_id': str,
             'price': float,
-            'order_id': int,
-            'customer_id': int,
+            'order_id': str,
+            'customer_id': str,
             'fiscal_address': str,
             'details': str
         }
@@ -66,24 +66,24 @@ class Invoice(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def invoice_id(self) -> int:
+    def invoice_id(self) -> str:
         """Gets the invoice_id of this Invoice.
 
         A unique identifier assigned to each invoice processed.  # noqa: E501
 
         :return: The invoice_id of this Invoice.
-        :rtype: int
+        :rtype: str
         """
         return self._invoice_id
 
     @invoice_id.setter
-    def invoice_id(self, invoice_id: int):
+    def invoice_id(self, invoice_id: str):
         """Sets the invoice_id of this Invoice.
 
         A unique identifier assigned to each invoice processed.  # noqa: E501
 
         :param invoice_id: The invoice_id of this Invoice.
-        :type invoice_id: int
+        :type invoice_id: str
         """
 
         self._invoice_id = invoice_id
@@ -112,47 +112,47 @@ class Invoice(Model):
         self._price = price
 
     @property
-    def order_id(self) -> int:
+    def order_id(self) -> str:
         """Gets the order_id of this Invoice.
 
         The order id. Used for tracking purposes.  # noqa: E501
 
         :return: The order_id of this Invoice.
-        :rtype: int
+        :rtype: str
         """
         return self._order_id
 
     @order_id.setter
-    def order_id(self, order_id: int):
+    def order_id(self, order_id: str):
         """Sets the order_id of this Invoice.
 
         The order id. Used for tracking purposes.  # noqa: E501
 
         :param order_id: The order_id of this Invoice.
-        :type order_id: int
+        :type order_id: str
         """
 
         self._order_id = order_id
 
     @property
-    def customer_id(self) -> int:
+    def customer_id(self) -> str:
         """Gets the customer_id of this Invoice.
 
         The id of the user who initiated the payment process.  # noqa: E501
 
         :return: The customer_id of this Invoice.
-        :rtype: int
+        :rtype: str
         """
         return self._customer_id
 
     @customer_id.setter
-    def customer_id(self, customer_id: int):
+    def customer_id(self, customer_id: str):
         """Sets the customer_id of this Invoice.
 
         The id of the user who initiated the payment process.  # noqa: E501
 
         :param customer_id: The customer_id of this Invoice.
-        :type customer_id: int
+        :type customer_id: str
         """
 
         self._customer_id = customer_id

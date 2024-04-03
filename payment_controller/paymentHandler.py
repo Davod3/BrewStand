@@ -4,7 +4,10 @@ from models.invoice import Invoice
 import grpc
 
 
-import payment_service_pb2
+from payment_service_pb2 import (
+     InvoiceRequest,
+     UserInvoicesRequest
+)
 
 
 from payment_service_pb2_grpc import PaymentServiceStub
@@ -15,30 +18,47 @@ payment_service_channel = grpc.insecure_channel(f"{payment_service_host}:{paymen
 
 client = PaymentServiceStub(payment_service_channel)
 
+def __fromRPC(invoice):
+
+    return Invoice.from_dict({
+         'invoiceID' : invoice.invoice_id,
+         'price' : invoice.price,
+         'orderID' : invoice.order_id,
+         'customerID' : invoice.customer_id,
+         'fiscalAddress' : invoice.fiscal_address,
+         'details' : invoice.details
+    })
+
+
 def getInvoice(invoiceId):
-    invoiceId_str = str(invoiceId)
     
-    request = payment_service_pb2.InvoiceRequest(invoiceId=invoiceId_str)
+    request = InvoiceRequest(invoiceId=invoiceId)
     response = client.GetInvoice(request)
 
-
     if response.response_code == 0:
-            return response.invoices, 200
-    elif response.response_code == 1:
-            return {"message": "No invoice found for the provided invoice ID"}, 404
-    elif response.response_code in [2, 3]:
-        return '', 400
+            
+            parsed_invoice = __fromRPC(response.invoice)
+
+            return parsed_invoice, 200
+    elif response.response_code in [1,2,3]:
+            return "No invoice found for the provided invoice ID", 404
     else:
-        return '', 500
+        return 'Service is Unavailable', 500
 
 def getInvoices(userId): 
-    request = payment_service_pb2.UserInvoicesRequest(userId=userId) 
+
+    request = UserInvoicesRequest(userId=userId) 
     response = client.GetAllUserInvoices(request)  
-    
-    if response:
-        if response.invoices:
-            return response.invoices, 200
-        else:
-            return {"message": "No invoices found for the provided user ID"}, 404
+
+    if response:    
+        
+        invoices = list()
+
+        for invoice in response.invoices:
+             
+             parsed_invoice = __fromRPC(invoice)
+             invoices.append(parsed_invoice)
+
+        return invoices, 200
     else:
-        return {"error": "No response from server"}, 500
+        return "Service is Unavailable", 500
