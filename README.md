@@ -17,6 +17,12 @@ To install this application simply clone this repository in your desired locatio
 Once you're done with that, simply create a folder called dataset in the root directory of the cloned repository and move .csv file there, 
 such that its path will be /dataset/datset.csv
 
+Alternatively, you can create the /dataset folder and download the dataset into there from google cloud storage with the following command:
+
+```
+wget https://storage.googleapis.com/brewstand-datset/dataset.csv
+```
+
 ## Usage
 To run all the services locally, please execute the following from the root directory:
 
@@ -28,14 +34,14 @@ Keep in mind that the first time you run the application data might not be immed
 
 If all the micro services started successfully, their APIs should be accessible as follows:
 
-User API:
-```
-http://localhost:3000/ui
-```
-
 Inventory API:
 ```
 http://localhost:3001/ui
+```
+
+User API:
+```
+http://localhost:3002/ui
 ```
 
 Review API:
@@ -51,6 +57,12 @@ http://localhost:3004/ui
 Payment API:
 ```
 http://localhost:3005/ui
+```
+
+If the application is being run on a google cloud vm, please replace localhost with the web preview url for the desired port followed by /ui, such as this example for port 3006:
+
+```
+https://3006-cs-866602736120-default.cs-europe-west1-iuzs.cloudshell.dev/ui/
 ```
 
 To stop the execution run the following from the root directory:
