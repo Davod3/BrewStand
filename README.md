@@ -12,9 +12,15 @@ Docker Compose
 
 ## Installation
 
-To install this application simply clone this repository in your desired location. Afterwards, download the Brewery Operations and Market Analysis Dataset (https://www.kaggle.com/datasets/ankurnapa/brewery-operations-and-market-analysis-dataset) and rename it to dataset.csv.
+To install this application simply clone this repository in your desired location. To clone the latest release use the following command, filling in your credentials as required:
 
-Once you're done with that, simply create a folder called dataset in the root directory of the cloned repository and move .csv file there, 
+```
+git clone https://github.com/Davod3/BrewStand-CloudComputing-14.git --branch phase3
+```
+
+Afterwards, download the Brewery Operations and Market Analysis Dataset (https://www.kaggle.com/datasets/ankurnapa/brewery-operations-and-market-analysis-dataset) and rename it to dataset.csv.
+
+Once you're done with that, simply create a folder called dataset in the root directory of the cloned repository and move the .csv file there, 
 such that its path will be /dataset/datset.csv
 
 Alternatively, you can create the /dataset folder and download the dataset into there from google cloud storage with the following command:
@@ -31,6 +37,8 @@ To run all the services locally, please execute the following from the root dire
 ```
 
 Keep in mind that the first time you run the application data might not be immediately available, as the dataset is still being loaded.
+
+During this time, inventory_repository will stop and restart multiple times as it attempts to connect to the postgres db which takes a little longer to start up. This is completely normal.
 
 If all the micro services started successfully, their APIs should be accessible as follows:
 
