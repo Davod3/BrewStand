@@ -61,11 +61,15 @@ def initiatePayment(user_id, card_number, card_expiry, card_cvc):
                 #Prepare response
 
                 invoice_id = response.invoiceId
-                price = response.invoice.invoice_details.price
+                price = response.invoice.price
                 order_id = response.invoice.order_id
                 customer_id = response.invoice.customer_id
                 fiscal_address = response.invoice.fiscal_address
                 details = response.invoice.details
+
+                #Delete items from cart
+                UserHandler.deleteFromCart(user_id=user_id)
+
 
             else:
                 # Invalid Order
