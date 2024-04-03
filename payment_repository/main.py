@@ -65,7 +65,7 @@ class PaymentRepositoryService(payment_repository_pb2_grpc.PaymentRepositoryServ
 def serve():
     __USER = os.getenv('MONGO_USER')
     __PASSWORD = os.getenv('MONGO_PASSWORD')
-    url = f"mongodb+srv://{__USER}:{__PASSWORD}@cluster0.nlg5lji.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    url = f"mongodb+srv://{__USER}:{__PASSWORD}@payment.tme3dal.mongodb.net/?retryWrites=true&w=majority&appName=Payment"
     connect(host=url)
 
     interceptors = [ExceptionToStatusInterceptor()]

@@ -25,6 +25,7 @@ def __parseBatch(batch):
     parsed_batch = Item.from_dict({
                     "batchID" : batch.batch_id,
                     "brewLocation" : batch.location,
+                    "beerStyle" : batch.beer_style,
                     "userScore" : batch.user_score,
                     "expertScore" : batch.quality_score,
                     "phLevel" : batch.ph_level,

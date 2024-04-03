@@ -272,8 +272,8 @@ services:
     ports:
       - '50065:50065'
     environment:
-      - MONGO_USER=cloudcomputing024
-      - MONGO_PASSWORD=lcvR2NRv4wgkQlqt
+      - MONGO_USER=payment
+      - MONGO_PASSWORD=payment124
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.35 
