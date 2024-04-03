@@ -8,7 +8,7 @@ def getInvoice(invoiceId):
         return None
 
     return InvoiceData(
-        invoice_id=invoice.invoice_id,
+        invoice_id=str(invoice.pk),
         price=invoice.price,
         order_id=invoice.order_id,  
         customer_id=invoice.customer_id,     
@@ -18,7 +18,7 @@ def getInvoice(invoiceId):
 
 def __convertToRPC(invoice_mongo):
     return InvoiceData(
-        invoice_id=invoice_mongo.invoice_id,
+        invoice_id=str(invoice_mongo.pk),
         price=invoice_mongo.price,
         order_id=invoice_mongo.order_id,  
         customer_id=invoice_mongo.customer_id,     
@@ -27,14 +27,14 @@ def __convertToRPC(invoice_mongo):
     )
 
 def getInvoices(userId):
-    try:
-        invoices = Invoice.objects(userId=userId)
+    #try:
+        invoices = Invoice.objects(customer_id=userId)
 
         if invoices is None:
-             return UserInvoicesResponse(content=None)
+             return []
         else:
             converted_invoices = [__convertToRPC(invoice) for invoice in invoices]
-            return UserInvoicesResponse(content=converted_invoices)
+            return converted_invoices
         
-    except Exception as e:
-        return UserInvoicesResponse(content=None)
+    #except Exception as e:
+        #return []

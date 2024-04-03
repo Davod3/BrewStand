@@ -56,13 +56,11 @@ class PaymentRepositoryService(payment_repository_pb2_grpc.PaymentRepositoryServ
             return StoreInvoiceResponse(response_code=1)
 
     def GetUserInvoices(self, request, context):
-        invoices = paymentHandler.getUserInvoices(request.userId)
+        invoices = paymentHandler.getInvoices(request.userId)
         if invoices:
             return UserInvoicesResponse(invoices=invoices)
         else:
-            context.set_code(grpc.StatusCode.NOT_FOUND)
-            context.set_details('No invoices found for user')
-            return UserInvoicesResponse(content = [])
+            return UserInvoicesResponse(invoices = [])
     
 def serve():
     __USER = os.getenv('MONGO_USER')

@@ -1,7 +1,7 @@
 from mongoengine import *
 
 class Invoice(Document):
-    invoice_id = StringField()  # Unique identifier for the invoice
+    # Unique identifier for the invoice
     price = FloatField(required=True)  # Total price of the invoice
     order_id = StringField(required=True)  # Associated order ID
     customer_id = StringField(required=True)  # ID of the user who made the payment
