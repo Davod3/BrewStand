@@ -84,8 +84,6 @@ services:
       context: ./
       dockerfile: ./inventory_service/Dockerfile
     container_name: inventory_service
-    expose:
-      - 50052
     ports:
       - '50052:50052'
     environment:
