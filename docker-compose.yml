@@ -103,8 +103,6 @@ services:
       context: ./
       dockerfile: ./inventory_repository/Dockerfile
     container_name: inventory_repository
-    expose:
-      - 50062
     ports:
       - '50062:50062'
     volumes:
