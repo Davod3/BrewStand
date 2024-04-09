@@ -5,3 +5,7 @@ docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brew
 #Inventory Service
 docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_service:latest -f inventory_service/Dockerfile .
 docker push  europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_service:latest
+
+#Inventory Controller
+docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_controller:latest -f inventory_controller/Dockerfile .
+docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_controller:latest

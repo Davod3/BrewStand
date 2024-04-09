@@ -120,7 +120,7 @@ spec:
         app: inventory-service
     spec:
       containers:
-        - name: inventory-repository
+        - name: inventory-service
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_service:latest'
           imagePullPolicy: IfNotPresent
           ports:
@@ -156,3 +156,55 @@ spec:
     - port: 50052
   selector:
     app: inventory-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-controller
+  template:
+    metadata:
+      labels:
+        app: inventory-controller
+    spec:
+      containers:
+        - name: inventory-controller
+          image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_controller:latest'
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3001
+          env:
+            - name: INVENTORY_SERVICE_HOST
+              value: "inventory-service"
+            - name: INVENTORY_SERVICE_PORT
+              value: "50052"
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: inventory-controller-hpa
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: inventory-controller
+ minReplicas: 1
+ maxReplicas: 5
+ targetCPUUtilizationPercentage: 50
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-controller
+  labels:
+    app: inventory-controller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3001
+  selector:
+    app: inventory-controller
