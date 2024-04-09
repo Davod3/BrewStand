@@ -46,6 +46,8 @@ spec:
     metadata:
       labels:
         app: inventory-repository
+      annotations:
+        gke-gcsfuse/volumes: "true"
     spec:
       containers:
         - name: inventory-repository
@@ -65,7 +67,7 @@ spec:
             - name: INVENTORY_DB_PORT
               value: "5432"
             - name: DATASET_URL
-              value: "/data/brewstand-datset/dataset.csv"
+              value: "/data/dataset.csv"
           volumeMounts:
             - name: brewstand-dataset
               mountPath: /data
