@@ -247,3 +247,204 @@ spec:
     - port: 3001
   selector:
     app: inventory-controller
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-controller
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: user-controller
+    spec:
+      containers:
+        - name: user-controller
+          image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/user_controller:latest'
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "50m"
+            limits:
+              memory: "100Mi"
+              cpu: "50m"
+          ports:
+            - containerPort: 3002
+          env:
+            - name: USER_SERVICE_HOST
+              value: "user-service"
+            - name: USER_SERVICE_PORT
+              value: "50051"
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: user-controller-hpa
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: user-controller
+ minReplicas: 2
+ maxReplicas: 4
+ targetCPUUtilizationPercentage: 50
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-controller
+  labels:
+    app: user-controller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3002
+  selector:
+    app: user-controller
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/user_service:latest'
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "50m"
+            limits:
+              memory: "100Mi"
+              cpu: "50m"
+          ports:
+            - containerPort: 50051
+          env:
+            - name: USER_REPOSITORY_HOST
+              value: "user-repository"
+            - name: USER_REPOSITORY_PORT
+              value: "50061"
+            - name: INVENTORY_SERVICE_HOST
+              value: "inventory-service"
+            - name: INVENTORY_SERVICE_PORT
+              value: "50052"
+            - name: PAYMENT_SERVICE_HOST
+              value: "50055"
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: user-service-hpa
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: user-service
+ minReplicas: 2
+ maxReplicas: 4
+ targetCPUUtilizationPercentage: 50
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 50051
+  selector:
+    app: user-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-repository
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-repository
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: user-repository
+    spec:
+      containers:
+        - name: user-repository
+          image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/user_repository:latest'
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "50m"
+            limits:
+              memory: "100Mi"
+              cpu: "50m"
+          ports:
+            - containerPort: 50061
+          env:
+            - name: MONGO_USER
+              value: "db_access"
+            - name: MONGO_PASSWORD
+              value: "VerySecureYesYes123"
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: user-repository-hpa
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: user-repository
+ minReplicas: 2
+ maxReplicas: 4
+ targetCPUUtilizationPercentage: 50
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-repository
+  labels:
+    app: user-repository
+spec:
+  type: ClusterIP
+  ports:
+    - port: 50061
+  selector:
+    app: user-repository
