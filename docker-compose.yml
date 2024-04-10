@@ -9,8 +9,6 @@ services:
       context: ./
       dockerfile: ./user_controller/Dockerfile
     container_name: user_controller
-    expose:
-      - 3002
     ports:
       - '3002:3002'
     environment:
@@ -27,8 +25,6 @@ services:
       context: ./
       dockerfile: ./user_service/Dockerfile
     container_name: user_service
-    expose:
-      - 50051
     ports:
       - '50051:50051'
     environment:
@@ -48,8 +44,6 @@ services:
       context: ./
       dockerfile: ./user_repository/Dockerfile
     container_name: user_repository
-    expose:
-      - 50061
     ports:
       - '50061:50061'
     environment:
@@ -136,8 +130,6 @@ services:
       context: ./
       dockerfile: ./review_controller/Dockerfile
     container_name: review_controller
-    expose:
-      - 3003
     ports:
       - '3003:3003'
     environment:
@@ -154,8 +146,6 @@ services:
       context: ./
       dockerfile: ./review_service/Dockerfile
     container_name: review_service
-    expose:
-      - 50053
     ports:
       - '50053:50053'
     environment:
@@ -170,8 +160,6 @@ services:
       context: ./
       dockerfile: ./order_controller/Dockerfile
     container_name: order_controller
-    expose:
-      - 3004
     ports:
       - '3004:3004'
     environment:
@@ -189,8 +177,6 @@ services:
       context: ./
       dockerfile: ./order_service/Dockerfile
     container_name: order_service
-    expose:
-      - 50054
     ports:
       - '50054:50054'
     environment:
@@ -208,8 +194,6 @@ services:
       context: ./
       dockerfile: ./order_repository/Dockerfile
     container_name: order_repository
-    expose:
-      - 50064
     ports:
       - '50064:50064'
     environment:
@@ -224,8 +208,6 @@ services:
       context: ./
       dockerfile: ./payment_controller/Dockerfile
     container_name: payment_controller
-    expose:
-      - 3005
     ports:
       - '3005:3005'
     environment:
@@ -242,8 +224,6 @@ services:
       context: ./
       dockerfile: ./payment_service/Dockerfile
     container_name: payment_service
-    expose:
-      - 50055
     ports:
       - '50055:50055'
     environment:
@@ -261,8 +241,6 @@ services:
       context: ./
       dockerfile: ./payment_repository/Dockerfile
     container_name: payment_repository
-    expose:
-      - 50065
     ports:
       - '50065:50065'
     environment:
