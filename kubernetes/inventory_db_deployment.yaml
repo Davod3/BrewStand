@@ -17,12 +17,12 @@ metadata:
   labels:
     app: postgres
 spec:
-  storageClassName: standard-rwx
+  storageClassName: standard-rwo
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: 5Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
