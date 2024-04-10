@@ -42,6 +42,12 @@ spec:
   selector:
     matchLabels:
       app: inventory-repository
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   template:
     metadata:
       labels:
@@ -121,6 +127,12 @@ spec:
   selector:
     matchLabels:
       app: inventory-service
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   template:
     metadata:
       labels:
@@ -180,6 +192,12 @@ spec:
   selector:
     matchLabels:
       app: inventory-controller
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   template:
     metadata:
       labels:
