@@ -16,5 +16,7 @@ RUN python -m grpc_tools.protoc -I ./protobufs --python_out=. \
            
 RUN python -m grpc_tools.protoc -I ./protobufs --python_out=. \
            --grpc_python_out=. ./protobufs/inventory_service.proto
-           
+
+EXPOSE 50054
+
 ENTRYPOINT [ "python", "main.py" ]

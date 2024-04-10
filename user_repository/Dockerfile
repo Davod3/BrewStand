@@ -9,5 +9,7 @@ WORKDIR /service/
 RUN pip install -r requirements.txt
 RUN python -m grpc_tools.protoc -I ./protobufs --python_out=. \
            --grpc_python_out=. ./protobufs/user_repository.proto
-           
+
+EXPOSE 50061
+
 ENTRYPOINT [ "python", "main.py" ]
