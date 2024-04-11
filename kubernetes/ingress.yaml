@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: main-ingress
+spec:
+  rules:
+    http:
+      paths:
+      - path: /inventory/*
+        pathType: Prefix
+        backend:
+          service:
+            name: inventory-controller
+            port:
+              number: 3001
+      - path: /user/*
+        pathType: Prefix
+        backend:
+          service:
+            name: user-controller
+            port:
+              number: 3002

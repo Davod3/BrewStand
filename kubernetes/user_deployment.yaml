@@ -57,7 +57,7 @@ metadata:
   labels:
     app: user-controller
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
     - port: 3002
   selector:
