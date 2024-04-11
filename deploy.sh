@@ -10,6 +10,9 @@ docker push  europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/bre
 docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_controller:latest -f inventory_controller/Dockerfile .
 docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_controller:latest
 
+#Configuration
+kubectl apply -f kubernetes/inventory_deployment.yaml
+
 #Order Controller
 docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/order_controller:latest -f order_controller/Dockerfile .
 docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/order_controller:latest
@@ -21,6 +24,9 @@ docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brew
 #Order Repository
 docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/order_repository:latest -f order_repository/Dockerfile .
 docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/order_repository:latest
+
+#Configuration
+kubectl apply -f kubernetes/order_deployment.yaml
 
 #Payment Controller
 docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/payment_controller:latest -f payment_controller/Dockerfile .
@@ -34,6 +40,9 @@ docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brew
 docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/payment_repository:latest -f payment_repository/Dockerfile .
 docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/payment_repository:latest
 
+#Configuration
+kubectl apply -f kubernetes/payment_deployment.yaml
+
 #Review Controller
 docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/review_controller:latest -f review_controller/Dockerfile .
 docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/review_controller:latest
@@ -41,6 +50,9 @@ docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brew
 #Review Service
 docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/review_service:latest -f review_service/Dockerfile .
 docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/review_service:latest
+
+#Configuration
+kubectl apply -f kubernetes/review_deployment.yaml
 
 #User Controller
 docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/user_controller:latest -f user_controller/Dockerfile .
@@ -53,3 +65,6 @@ docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brew
 #User Repository
 docker build --tag europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/user_repository:latest -f user_repository/Dockerfile .
 docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/user_repository:latest
+
+#Configuration
+kubectl apply -f kubernetes/user_deployment.yaml
