@@ -5,7 +5,7 @@ info:
     This is the definition of the REST API for the BrewStand Review Service. With this API users will be able to give a review score to a given beer batch.
   version: 1.0.0
 servers:
-  - url: /
+  - url: /review-api
 tags:
   - name: Item
     description: Supports operations related with viewing and buying batches of beer

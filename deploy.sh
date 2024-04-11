@@ -68,3 +68,6 @@ docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brew
 
 #Configuration
 kubectl apply -f kubernetes/user_deployment.yaml
+
+#Ingress
+kubectl apply -f kubernetes/ingress.yaml

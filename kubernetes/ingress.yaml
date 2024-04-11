@@ -3,24 +3,44 @@ kind: Ingress
 metadata:
   name: main-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: "/$1"
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
-  rules:
   ingressClassName: nginx
+  rules:
   - http:
       paths:
-      - path: /inventory/(/ui$)
+      - path: /inventory-api/.*
         pathType: ImplementationSpecific
         backend:
           service:
             name: inventory-controller
             port:
               number: 3001
-      - path: /user/(/ui$)
+      - path: /user-api/.*
         pathType: ImplementationSpecific
         backend:
           service:
             name: user-controller
             port:
               number: 3002
+      - path: /review-api/.*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: review-controller
+            port:
+              number: 3003
+      - path: /order-api/.*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: order-controller
+            port:
+              number: 3004
+      - path: /payment-api/.*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: payment-controller
+            port:
+              number: 3005

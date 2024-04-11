@@ -5,7 +5,7 @@ info:
     This is the definition of the REST API for the BrewStand Payment Service. Here, it is processed the payment of users and they receive their invoices.
   version: 1.0.0
 servers:
-  - url: /
+  - url: /payment-api
 tags:
   - name: Billing
     description: Supports operations related with the payment and invoice of orders. 

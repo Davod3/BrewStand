@@ -5,7 +5,7 @@ info:
     This is the definition of the REST API for the BrewStand Inventory Service. Here users can get details of specific items in our inventory or the complete list of items available
   version: 1.0.0
 servers:
-  - url: /
+  - url: /inventory-api
 tags:
   - name: Item
     description: Supports operations related with viewing and buying batches of beer

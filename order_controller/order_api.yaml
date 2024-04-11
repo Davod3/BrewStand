@@ -5,7 +5,7 @@ info:
     This is the definition of the REST API for the BrewStand Order Service. Here, users can view their orders and check their status
   version: 1.0.0
 servers:
-  - url: /
+  - url: /order-api
 tags:
   - name: Order
     description: Supports operations related with the tracking of orders.

@@ -5,7 +5,7 @@ info:
     This is the definition of the REST API for the BrewStand User Service. With this API users will be able to register in the system, authenticate themselves and manage their cart.
   version: 1.0.0
 servers:
-  - url: /
+  - url: /user-api
 tags:
   - name: User
     description: Supports operations related with account creation, authentication as well as cart and billing management
