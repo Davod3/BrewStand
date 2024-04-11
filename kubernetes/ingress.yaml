@@ -4,7 +4,7 @@ metadata:
   name: main-ingress
 spec:
   rules:
-    http:
+  - http:
       paths:
       - path: /inventory/*
         pathType: Prefix
