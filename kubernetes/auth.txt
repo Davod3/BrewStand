@@ -1,11 +1,15 @@
-#1 - Setup connection from local kubectl to cluster
+#1 - gcloud container clusters create-auto brewstand-prod --region=europe-southwest1
 
-#2 - kubectl create serviceaccount brewstand-sa
+#2 - gcloud container clusters get-credentials brewstand-prod --region=europe-southwest1
 
-#3 - gcloud iam service-accounts create brewstand-dataset-sa --project=cloud-computing-project-416422
+#3 - kubectl config current-context
 
-#4 - gcloud storage buckets add-iam-policy-binding gs://brewstand-datset --member "serviceAccount:brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com" --role "roles/storage.objectViewer"
+#4 - kubectl create serviceaccount brewstand-sa
 
-#5 - gcloud iam service-accounts add-iam-policy-binding brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:cloud-computing-project-416422.svc.id.goog[default/brewstand-sa]"
+#5 - gcloud iam service-accounts create brewstand-dataset-sa --project=cloud-computing-project-416422
 
-#6 - kubectl annotate serviceaccount brewstand-sa --namespace default iam.gke.io/gcp-service-account=brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com
+#6 - gcloud storage buckets add-iam-policy-binding gs://brewstand-datset --member "serviceAccount:brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com" --role "roles/storage.objectViewer"
+
+#7 - gcloud iam service-accounts add-iam-policy-binding brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:cloud-computing-project-416422.svc.id.goog[default/brewstand-sa]"
+
+#8 - kubectl annotate serviceaccount brewstand-sa --namespace default iam.gke.io/gcp-service-account=brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com
