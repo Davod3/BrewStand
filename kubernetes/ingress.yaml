@@ -7,14 +7,14 @@ spec:
   - http:
       paths:
       - path: /inventory/*
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: inventory-controller
             port:
               number: 3001
       - path: /user/*
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: user-controller
