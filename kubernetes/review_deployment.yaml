@@ -21,7 +21,7 @@ spec:
       containers:
         - name: review-controller
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/review_controller:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"
@@ -86,7 +86,7 @@ spec:
       containers:
         - name: review-service
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/review_service:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"

@@ -141,7 +141,7 @@ spec:
       containers:
         - name: inventory-repository
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_repository:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"
@@ -224,7 +224,7 @@ spec:
       containers:
         - name: inventory-service
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_service:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"
@@ -289,7 +289,7 @@ spec:
       containers:
         - name: inventory-controller
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_controller:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"

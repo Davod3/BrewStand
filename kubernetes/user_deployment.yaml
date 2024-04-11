@@ -21,7 +21,7 @@ spec:
       containers:
         - name: user-controller
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/user_controller:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"
@@ -86,7 +86,7 @@ spec:
       containers:
         - name: user-service
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/user_service:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"
@@ -159,7 +159,7 @@ spec:
       containers:
         - name: user-repository
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/user_repository:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"

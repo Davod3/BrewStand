@@ -21,7 +21,7 @@ spec:
       containers:
         - name: payment-controller
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/payment_controller:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"
@@ -86,7 +86,7 @@ spec:
       containers:
         - name: payment-service
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/payment_service:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"
@@ -155,7 +155,7 @@ spec:
       containers:
         - name: payment-repository
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/payment_repository:latest'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "100Mi"
