@@ -2,18 +2,22 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: main-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: "/$1"
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
+  ingressClassName: nginx
   - http:
       paths:
-      - path: /inventory/*
+      - path: /inventory/(/ui$)
         pathType: ImplementationSpecific
         backend:
           service:
             name: inventory-controller
             port:
               number: 3001
-      - path: /user/*
+      - path: /user/(/ui$)
         pathType: ImplementationSpecific
         backend:
           service:
