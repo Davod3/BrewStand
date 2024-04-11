@@ -1,0 +1,198 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-controller
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: payment-controller
+    spec:
+      containers:
+        - name: payment-controller
+          image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/payment_controller:latest'
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "50m"
+            limits:
+              memory: "100Mi"
+              cpu: "50m"
+          ports:
+            - containerPort: 3005
+          env:
+            - name: PAYMENT_SERVICE_HOST
+              value: "payment-service"
+            - name: PAYMENT_SERVICE_PORT
+              value: "50055"
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: payment-controller-hpa
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: payment-controller
+ minReplicas: 2
+ maxReplicas: 4
+ targetCPUUtilizationPercentage: 50
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-controller
+  labels:
+    app: payment-controller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3005
+  selector:
+    app: payment-controller
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: payment-service
+    spec:
+      containers:
+        - name: payment-service
+          image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/payment_service:latest'
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "50m"
+            limits:
+              memory: "100Mi"
+              cpu: "50m"
+          ports:
+            - containerPort: 50055
+          env:
+            - name: PAYMENT_REPOSITORY_HOST
+              value: "payment-repository"
+            - name: PAYMENT_REPOSITORY_PORT
+              value: "50065"
+            - name: ORDER_SERVICE_HOST
+              value: "order-service"
+            - name: ORDER_SERVICE_PORT
+              value: "50054"
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: payment-service-hpa
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: payment-service
+ minReplicas: 2
+ maxReplicas: 4
+ targetCPUUtilizationPercentage: 50
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  labels:
+    app: payment-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 50055
+  selector:
+    app: payment-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-repository
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-repository
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: payment-repository
+    spec:
+      containers:
+        - name: payment-repository
+          image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/payment_repository:latest'
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "50m"
+            limits:
+              memory: "100Mi"
+              cpu: "50m"
+          ports:
+            - containerPort: 50065
+          env:
+            - name: MONGO_USER
+              value: "payment"
+            - name: MONGO_PASSWORD
+              value: "payment124"
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: payment-repository-hpa
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: payment-repository
+ minReplicas: 2
+ maxReplicas: 4
+ targetCPUUtilizationPercentage: 50
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-repository
+  labels:
+    app: payment-repository
+spec:
+  type: ClusterIP
+  ports:
+    - port: 50065
+  selector:
+    app: payment-repository
