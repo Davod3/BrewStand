@@ -4,6 +4,7 @@ metadata:
   name: main-ingress
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
+    kubernetes.io/ingress.global-static-ip-name: brewstand-ip
 spec:
   ingressClassName: nginx
   rules:
