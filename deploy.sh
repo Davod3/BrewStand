@@ -69,5 +69,8 @@ docker push europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brew
 #Configuration
 kubectl apply -f kubernetes/user_deployment.yaml
 
+#NGINX ingress controller
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/cloud/deploy.yaml
+
 #Ingress
 kubectl apply -f kubernetes/ingress.yaml

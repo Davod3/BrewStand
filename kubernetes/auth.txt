@@ -11,8 +11,6 @@
 
 #4 - kubectl create serviceaccount brewstand-sa
 
-#5 - kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/cloud/deploy.yaml
-
 #6 - gcloud iam service-accounts create brewstand-dataset-sa --project=cloud-computing-project-416422
 
 #7 - gcloud storage buckets add-iam-policy-binding gs://brewstand-datset --member "serviceAccount:brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com" --role "roles/storage.objectViewer"
