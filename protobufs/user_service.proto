@@ -3,8 +3,7 @@ syntax = "proto3";
 message CreateUserRequest {
 
     string username = 1;
-    string password = 2;
-    string address = 3;
+    string address = 2;
 
 }
 
@@ -17,7 +16,7 @@ message CreateUserResponse {
     0 - Success
     1 - Username already exists
     2 - Invalid user parameters
-
+    3 - Error with auth provider
     */
 }
 

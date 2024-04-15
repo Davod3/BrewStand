@@ -2,6 +2,8 @@ import os
 import grpc
 import handlers.itemHandler as ItemHandler
 import re
+import http.client
+import json
 
 from user_repository_pb2 import (
     InsertUserRequest,
@@ -28,20 +30,25 @@ def __validateUsername(username):
 
     return len(username) > 3 and pattern.match(username) is not None
 
-def __validatePassword(password):
+def registerUser(username, address):
 
-    return len(password) > 3
-
-def registerUser(username, password, address):
-
-    if(__validateUsername(username) and __validatePassword(password)):
+    if(__validateUsername(username)):
 
         #User has valid credentials
-        request = InsertUserRequest(username=username, password=password, address=address)
-        response = client.InsertUser(request)
 
-        return (response.response_code, response.user_id)
+        #Get token from Auth0
+        token = __getToken()
 
+        if(token):
+
+            #Save User
+            request = InsertUserRequest(username=username, password=token, address=address)
+            response = client.InsertUser(request)
+
+            return (response.response_code, token)
+    
+        else:
+            return (3, '')
     else:
 
         #Credentials don't have a valid format
@@ -105,6 +112,26 @@ def deleteFromCart(user_id, batch_id=0):
     response = client.UserCartDelete(request)
 
     return response.response_code
+
+def __getToken():
+
+    #Code taken and adapted from Auth0 test example
+
+    conn = http.client.HTTPSConnection("dev-gcr7j33oe3lkm2f4.us.auth0.com")
+    payload = "{\"client_id\":\"Bxyu0zRaHLs5XMFt6xuSVXRZ1br5S9Hv\",\"client_secret\":\"YfOytuaiv8iYVThvmgDTflaSx7E-ze_WrSrJxbW6-cJLN7sYbjWK38UFqaD8aGL0\",\"audience\":\"http://brewstand-api/\",\"grant_type\":\"client_credentials\"}"
+    headers = { 'content-type': "application/json" }
+
+    conn.request("POST", "/oauth/token", payload, headers)
+
+    res = conn.getresponse()
+    
+    if(res.status == 200):
+        jsonString = res.read()
+        data = json.loads(jsonString)
+        return data['access_token']
+    else:
+        return None
+
 
 
         
