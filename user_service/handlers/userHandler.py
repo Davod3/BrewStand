@@ -61,6 +61,13 @@ def getUserByID(user_id):
 
     return response
 
+def tradeToken(token):
+
+    #TODO
+
+    return None
+
+
 def addToCart(user_id, batch_id, volume):
 
     if(volume <= 0):

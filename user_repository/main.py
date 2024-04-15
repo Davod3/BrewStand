@@ -70,6 +70,18 @@ class UserRepositoryService(user_repository_pb2_grpc.UserRepositoryServicer):
             return GetUserResponse(response_code=0, username=user.username, address=user.address, user_id=str(user.pk))
         except DoesNotExist:
             return GetUserResponse(response_code=1) # User not found
+    
+    def GetUserByToken(self, request, context):
+
+        # Kept things the same to not change too much code, but the password in the db
+        # is the token. The user_id in the request is also supposed to be the token
+
+        try:
+            user = User.objects.get(password=request.token)
+            return GetUserResponse(response_code=0, username=user.username, address=user.address, user_id=str(user.pk))
+        except DoesNotExist:
+            return GetUserResponse(response_code=1) # User with given token not found
+
 
     
 def serve():
