@@ -126,6 +126,20 @@ spec:
               value: "payment-service"
             - name: PAYMENT_SERVICE_PORT
               value: "50055"
+          livenessProbe:
+            tcpSocket:
+              port: 50051
+            periodSeconds: 12
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 50051
+            periodSeconds: 11
+          startupProbe:
+            tcpSocket:
+              port: 50051
+            failureThreshold: 30
+            periodSeconds: 10
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -191,6 +205,20 @@ spec:
               value: "db_access"
             - name: MONGO_PASSWORD
               value: "VerySecureYesYes123"
+          livenessProbe:
+            tcpSocket:
+              port: 50061
+            periodSeconds: 12
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 50061
+            periodSeconds: 11
+          startupProbe:
+            tcpSocket:
+              port: 50061
+            failureThreshold: 30
+            periodSeconds: 10
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

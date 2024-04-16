@@ -168,6 +168,20 @@ spec:
             - name: brewstand-dataset
               mountPath: /data
               readOnly: true
+          livenessProbe:
+            tcpSocket:
+              port: 50062
+            periodSeconds: 12
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 50062
+            periodSeconds: 11
+          startupProbe:
+            tcpSocket:
+              port: 50062
+            failureThreshold: 30
+            periodSeconds: 10
       serviceAccountName: brewstand-sa
       volumes:
         - name: brewstand-dataset
@@ -239,6 +253,20 @@ spec:
               value: "inventory-repository"
             - name: INVENTORY_REPOSITORY_PORT
               value: "50062"
+          livenessProbe:
+            tcpSocket:
+              port: 50052
+            periodSeconds: 12
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 50052
+            periodSeconds: 11
+          startupProbe:
+            tcpSocket:
+              port: 50052
+            failureThreshold: 30
+            periodSeconds: 10
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

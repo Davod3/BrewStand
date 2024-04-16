@@ -126,6 +126,20 @@ spec:
               value: "order-service"
             - name: ORDER_SERVICE_PORT
               value: "50054"
+          livenessProbe:
+            tcpSocket:
+              port: 50055
+            periodSeconds: 12
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 50055
+            periodSeconds: 11
+          startupProbe:
+            tcpSocket:
+              port: 50055
+            failureThreshold: 30
+            periodSeconds: 10
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -191,6 +205,20 @@ spec:
               value: "payment"
             - name: MONGO_PASSWORD
               value: "payment124"
+          livenessProbe:
+            tcpSocket:
+              port: 50065
+            periodSeconds: 12
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 50065
+            periodSeconds: 11
+          startupProbe:
+            tcpSocket:
+              port: 50065
+            failureThreshold: 30
+            periodSeconds: 10
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

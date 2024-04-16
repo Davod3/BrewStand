@@ -118,6 +118,20 @@ spec:
               value: "inventory-service"
             - name: INVENTORY_SERVICE_PORT
               value: "50052"
+          livenessProbe:
+            tcpSocket:
+              port: 50053
+            periodSeconds: 12
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 50053
+            periodSeconds: 11
+          startupProbe:
+            tcpSocket:
+              port: 50053
+            failureThreshold: 30
+            periodSeconds: 10
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
