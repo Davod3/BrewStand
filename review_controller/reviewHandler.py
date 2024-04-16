@@ -36,3 +36,7 @@ def updateReview(itemId, body=None):  # noqa: E501
 
     else:
         return 'Invalid request body', 400
+    
+def tradeToken(token):
+    #Does nothing
+    return {}

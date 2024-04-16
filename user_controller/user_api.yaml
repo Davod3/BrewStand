@@ -145,7 +145,7 @@ paths:
             description: Username already exists. Please try again with a new username.
 components:
   securitySchemes:
-    bearerAuth:            # arbitrary name for the security scheme
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT

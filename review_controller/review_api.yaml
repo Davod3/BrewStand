@@ -12,6 +12,8 @@ tags:
 paths:
   /items/{itemId}/review:
     put:
+      security:
+          - bearerAuth: []
       tags:
         - Item
       summary: Add a review to a specific beer batch.
@@ -44,4 +46,11 @@ paths:
           description: Invalid review score value. Must be between 0 and 10.
         '404':
           description: Requested item was not found.
+components:
+  securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+        x-bearerInfoFunc: reviewHandler.tradeToken
     
