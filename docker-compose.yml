@@ -215,6 +215,8 @@ services:
     environment:
       - PAYMENT_SERVICE_HOST=172.100.10.25
       - PAYMENT_SERVICE_PORT=50055
+      - USER_SERVICE_HOST=172.100.10.20
+      - USER_SERVICE_PORT=50051
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.15

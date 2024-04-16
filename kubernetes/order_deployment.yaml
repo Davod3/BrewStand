@@ -36,6 +36,10 @@ spec:
               value: "order-service"
             - name: ORDER_SERVICE_PORT
               value: "50054"
+            - name: USER_SERVICE_HOST
+              value: "user-service"
+            - name: USER_SERVICE_PORT
+              value: "50051"
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

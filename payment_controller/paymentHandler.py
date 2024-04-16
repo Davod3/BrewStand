@@ -30,12 +30,17 @@ def __fromRPC(invoice):
     })
 
 
-def getInvoice(invoiceId):
+def getInvoice(invoiceId, token_info=None):
+
+    if(token_info):
+            userId = token_info['user_id']
+    else:
+        return 'Invalid user token', 403
     
     request = InvoiceRequest(invoiceId=invoiceId)
     response = client.GetInvoice(request)
 
-    if response.response_code == 0:
+    if (response.response_code == 0 and response.invoice.customer_id):
             
             parsed_invoice = __fromRPC(response.invoice)
 
@@ -45,7 +50,12 @@ def getInvoice(invoiceId):
     else:
         return 'Service is Unavailable', 500
 
-def getInvoices(userId): 
+def getInvoices(token_info=None):
+
+    if(token_info):
+            userId = token_info['user_id']
+    else:
+        return 'Invalid user token', 403
 
     request = UserInvoicesRequest(userId=userId) 
     response = client.GetAllUserInvoices(request)  

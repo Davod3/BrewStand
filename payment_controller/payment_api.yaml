@@ -11,7 +11,9 @@ tags:
     description: Supports operations related with the payment and invoice of orders. 
 paths:
   /billing/{invoiceId}:
-    get: 
+    get:
+      security:
+        - bearerAuth: []
       tags:
         - Billing
       summary: Gets the details of a specific invoice.
@@ -34,19 +36,14 @@ paths:
         '404':
           description: Requested invoice was not found
   /billing:
-    get: 
+    get:
+      security:
+        - bearerAuth: []
       tags:
         - Billing
       summary: Gets all invoices related to a user.
       description: Gets all invoices related to a user.
       operationId: paymentHandler.getInvoices
-      parameters:
-        - name: userId
-          in: query
-          description: The ID of the user whose invoices we want to see
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Successful Operation
@@ -59,6 +56,12 @@ paths:
         '404':
           description: Requested invoice was not found
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: authHandler.tradeToken
   schemas:
     Invoice:
       type: object
