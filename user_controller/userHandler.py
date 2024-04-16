@@ -7,6 +7,22 @@ from models.invoice import Invoice
 import os
 import grpc
 
+from prometheus_client import Counter, Summary
+
+total_received_requests_metric = Counter('user_total_received_requests', 'Total number of requests received by the User API')
+
+duration_add_cart = Summary('duration_add_cart_seconds', 'Average time in seconds it takes for a user to add an item to the cart')
+duration_get_cart = Summary('duration_get_cart_seconds', 'Average time in seconds it takes for a user to get the items in the cart')
+duration_remove_cart = Summary('duration_remove_cart_seconds', 'Average time in seconds it takes for a user to remove an item from the cart')
+duration_checkout_cart = Summary('duration_checkout_cart_seconds', 'Average time in seconds it takes for a user to checkout items in the cart')
+duration_user_create = Summary('duration_user_create_seconds', 'Average time in seconds it takes for a new user to be created')
+
+failures_add_cart = Counter('failures_add_cart', 'Number of failures when a user adds an item to the cart')
+failures_get_cart = Counter('failures_get_cart', 'Number of failures when a user gets the items in the cart')
+failures_remove_cart = Counter('failures_remove_cart', 'Number of failures when a user removes the items in the cart')
+failures_checkout_cart = Counter('failures_checkout_cart', 'Number of failures when a user checksout out the cart')
+failures_user_create = Counter('failures_user_create', 'Number of failures when creating a new user')
+
 from user_service_pb2 import (
     CreateUserRequest,
     PayCartRequest,
@@ -24,7 +40,11 @@ user_service_channel = grpc.insecure_channel(f"{user_service_host}:{user_service
 
 client = UserStub(user_service_channel)
 
+@duration_add_cart.time()
+@failures_add_cart.count_exceptions()
 def addToCart(token_info=None):
+
+    total_received_requests_metric.inc()
 
     if connexion.request.is_json:
 
@@ -50,7 +70,11 @@ def addToCart(token_info=None):
     else:
         return 'Invalid request body', 400
 
+@duration_get_cart.time()
+@failures_get_cart.count_exceptions()
 def getCart(token_info=None):
+
+    total_received_requests_metric.inc()
 
     if(token_info):
         userId = token_info['user_id']
@@ -71,7 +95,11 @@ def getCart(token_info=None):
     else:
         return '', 500
 
+@duration_remove_cart.time()
+@failures_remove_cart.count_exceptions()
 def removeFromCart(itemId=0, token_info=None):
+
+    total_received_requests_metric.inc()
 
     if(token_info):
         userId = token_info['user_id']
@@ -88,7 +116,11 @@ def removeFromCart(itemId=0, token_info=None):
     else:
         return '', 500
 
+@duration_checkout_cart.time()
+@failures_checkout_cart.count_exceptions()
 def checkoutCart(token_info=None):
+
+    total_received_requests_metric.inc()
 
     if connexion.request.is_json:
 
@@ -127,8 +159,11 @@ def checkoutCart(token_info=None):
         else:
             return 'Service Unavailable', 500
 
-
+@duration_user_create.time()
+@failures_user_create.count_exceptions()
 def createUser():
+
+    total_received_requests_metric.inc()
 
     if connexion.request.is_json:
         user = User.from_dict(connexion.request.get_json())
