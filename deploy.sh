@@ -74,3 +74,9 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 
 #Ingress
 kubectl apply -f kubernetes/ingress.yaml
+
+#Prometheus CM
+kubectl create configmap prometheus-cm --from-file kubernetes/prometheus-cm.yaml
+
+#Prometheus
+kubectl apply -f kubernetes/prometheus.yaml
