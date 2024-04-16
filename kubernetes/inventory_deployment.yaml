@@ -304,6 +304,23 @@ spec:
               value: "inventory-service"
             - name: INVENTORY_SERVICE_PORT
               value: "50052"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3001
+            periodSeconds: 12
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3001
+            periodSeconds: 11
+          startupProbe:
+            httpGet:
+              path: /
+              port: 3001
+          failureThreshold: 30
+          periodSeconds: 10
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

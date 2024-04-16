@@ -36,6 +36,23 @@ spec:
               value: "review-service"
             - name: REVIEW_SERVICE_PORT
               value: "50053"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3005
+            periodSeconds: 12
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3005
+            periodSeconds: 11
+          startupProbe:
+            httpGet:
+              path: /
+              port: 3005
+          failureThreshold: 30
+          periodSeconds: 10
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
