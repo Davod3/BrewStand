@@ -44,12 +44,17 @@ def __protoOrderToOrder(order):
             'userId' : order.user_id
         })
 
-def getOrder(orderId):
+def getOrder(orderId, token_info=None):
+
+    if(token_info):
+            userId = token_info['user_id']
+    else:
+        return 'Invalid user token', 403
 
     request = GetOrderServiceRequest(order_id = orderId)
     response = client.GetOrder(request)
 
-    if(response.response_code == 0):
+    if(response.response_code == 0 and response.order.user_id == userId):
 
         return __protoOrderToOrder(response.order), 200
 
@@ -58,7 +63,12 @@ def getOrder(orderId):
         return 'Order not found', 404
 
 
-def getOrders(userId):
+def getOrders(token_info=None):
+
+    if(token_info):
+            userId = token_info['user_id']
+    else:
+        return 'Invalid user token', 403
 
     request = GetOrdersServiceRequest(user_id = userId)
     response = client.GetOrders(request)

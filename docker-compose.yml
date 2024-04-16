@@ -165,6 +165,8 @@ services:
     environment:
       - ORDER_SERVICE_HOST=172.100.10.24
       - ORDER_SERVICE_PORT=50054
+      - USER_SERVICE_HOST=172.100.10.20
+      - USER_SERVICE_PORT=50051
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.14

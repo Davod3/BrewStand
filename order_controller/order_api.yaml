@@ -12,6 +12,8 @@ tags:
 paths:
   /order/{orderId}:
     get:
+      security:
+          - bearerAuth: []
       tags:
         - Order
       summary: Gets the details related to a specific order.
@@ -35,18 +37,13 @@ paths:
           description: Requested order was not found.
   /order:
     get:
+      security:
+          - bearerAuth: []
       tags:
         - Order
       summary: Gets all orders related to a user.
       description: Gets all orders related to a user.
       operationId: orderHandler.getOrders
-      parameters:
-        - name: userId
-          in: query
-          description: The id of the user whose orders we want to view
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Successful Operation
@@ -60,6 +57,12 @@ paths:
         '404':
           description: Requested order was not found.
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: authHandler.tradeToken
   schemas:
     Order:
       type: object
