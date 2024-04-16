@@ -8,6 +8,16 @@ from utils import util
 import os
 import grpc
 
+from prometheus_client import Counter, Summary
+
+total_received_requests_metric = Counter('user_total_received_requests', 'Total number of requests received by the User API')
+
+duration_get_order = Summary('duration_get_order_seconds', 'Average time in seconds it takes for a user to get an order')
+duration_get_orders = Summary('duration_get_orders_seconds', 'Average time in seconds it takes for a user to get all orders')
+
+failures_get_order = Counter('failures_get_order', 'Number of failures when a user gets an order')
+failures_get_orders = Counter('failures_get_orders', 'Number of failures when a user gets the orders')
+
 from order_service_pb2 import (
     GetOrderServiceRequest,
     GetOrdersServiceRequest
@@ -44,7 +54,11 @@ def __protoOrderToOrder(order):
             'userId' : order.user_id
         })
 
+@duration_get_order.time()
+@failures_get_order.count_exceptions()
 def getOrder(orderId, token_info=None):
+
+    total_received_requests_metric.inc()
 
     if(token_info):
             userId = token_info['user_id']
@@ -63,7 +77,11 @@ def getOrder(orderId, token_info=None):
         return 'Order not found', 404
 
 
+@duration_get_orders.time()
+@failures_get_orders.count_exceptions()
 def getOrders(token_info=None):
+
+    total_received_requests_metric.inc()
 
     if(token_info):
             userId = token_info['user_id']

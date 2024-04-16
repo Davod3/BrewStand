@@ -13,4 +13,9 @@ scrape_configs:
       scrape_interval: 5s
       static_configs:
         - targets: ['user-controller:3002']
+    
+    - job_name: order-controller
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['order-controller:3004']
 

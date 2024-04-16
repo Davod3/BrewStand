@@ -52,6 +52,8 @@ def __parseBatch(batch):
 @failures_get_batch.count_exceptions()
 def getBatch(itemId):
 
+    total_received_requests_metric.inc()
+
     request = GetBatchServiceRequest(batch_id = itemId)
     response = client.getBatchService(request)
 
@@ -66,6 +68,8 @@ def getBatch(itemId):
 @duration_get_batches.time()
 @failures_get_batches.count_exceptions()
 def getBatches(item1=None, item2=None):
+
+    total_received_requests_metric.inc()
 
     if(item1 is not None and item2 is not None):
 
