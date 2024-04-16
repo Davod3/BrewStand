@@ -10,7 +10,7 @@ import grpc
 
 from prometheus_client import Counter, Summary
 
-total_received_requests_metric = Counter('user_total_received_requests', 'Total number of requests received by the User API')
+total_received_requests_metric = Counter('order_total_received_requests', 'Total number of requests received by the Order API')
 
 duration_get_order = Summary('duration_get_order_seconds', 'Average time in seconds it takes for a user to get an order')
 duration_get_orders = Summary('duration_get_orders_seconds', 'Average time in seconds it takes for a user to get all orders')

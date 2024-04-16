@@ -19,3 +19,8 @@ scrape_configs:
       static_configs:
         - targets: ['order-controller:3004']
 
+    - job_name: payment-controller
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['payment-controller:3005']
+

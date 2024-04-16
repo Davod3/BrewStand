@@ -12,6 +12,16 @@ from payment_service_pb2 import (
 
 from payment_service_pb2_grpc import PaymentServiceStub
 
+from prometheus_client import Counter, Summary
+
+total_received_requests_metric = Counter('payment_total_received_requests', 'Total number of requests received by the Payment API')
+
+duration_get_invoice = Summary('duration_get_invoice_seconds', 'Average time in seconds it takes for a user to get an invoice')
+duration_get_invoices = Summary('duration_get_invoices_seconds', 'Average time in seconds it takes for a user to get invoices')
+
+failures_get_invoice = Summary('failures_get_invoice_seconds', 'Number of failures when a user gets an invoice')
+failures_get_invoices = Summary('failures_get_invoices_seconds', 'Number of failures when a user gets invoices')
+
 payment_service_host = os.getenv("PAYMENT_SERVICE_HOST", "localhost")
 payment_service_port = os.getenv("PAYMENT_SERVICE_PORT", "50055")
 payment_service_channel = grpc.insecure_channel(f"{payment_service_host}:{payment_service_port}")
@@ -30,7 +40,11 @@ def __fromRPC(invoice):
     })
 
 
+@duration_get_invoice.time()
+@failures_get_invoice.time()
 def getInvoice(invoiceId, token_info=None):
+
+    total_received_requests_metric.inc()
 
     if(token_info):
             userId = token_info['user_id']
@@ -40,7 +54,7 @@ def getInvoice(invoiceId, token_info=None):
     request = InvoiceRequest(invoiceId=invoiceId)
     response = client.GetInvoice(request)
 
-    if (response.response_code == 0 and response.invoice.customer_id):
+    if (response.response_code == 0 and response.invoice.customer_id == userId):
             
             parsed_invoice = __fromRPC(response.invoice)
 
@@ -50,7 +64,11 @@ def getInvoice(invoiceId, token_info=None):
     else:
         return 'Service is Unavailable', 500
 
+@duration_get_invoices.time()
+@failures_get_invoices.time()
 def getInvoices(token_info=None):
+
+    total_received_requests_metric.inc()
 
     if(token_info):
             userId = token_info['user_id']
