@@ -35,7 +35,6 @@ message GetUserResponse {
 
     0 - Success
     1 - User not found
-    2 - Incorrect password
 
     */
 

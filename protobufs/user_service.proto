@@ -136,6 +136,22 @@ message GetCartContentResponse {
 
 }
 
+message TradeTokenRequest {
+    string token = 1;
+}
+
+message TradeTokenResponse {
+    int32 response_code = 1;
+    string user_id = 2;
+
+    /*
+
+    0 - Success
+    1 - User was not found
+    
+    */
+}
+
 service User {
     rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
     rpc GetUser (GetUserDetailsRequest) returns (GetUserDetailsResponse);
@@ -143,4 +159,5 @@ service User {
     rpc AddItemCart (AddItemCartRequest) returns (AddItemCartResponse);
     rpc DeleteItemCart (DeleteItemCartRequest) returns (DeleteItemCartResponse);
     rpc GetCartContent (GetCartContentRequest) returns (GetCartContentResponse);
+    rpc TradeToken (TradeTokenRequest) returns (TradeTokenResponse);
 }

@@ -10,7 +10,8 @@ from user_repository_pb2 import (
     GetUserRequest,
     UserCartAddRequest,
     UserCartDeleteRequest,
-    UserCartGetRequest
+    UserCartGetRequest,
+    GetUserByTokenRequest
 )
 
 from user_repository_pb2_grpc import UserRepositoryStub
@@ -63,9 +64,13 @@ def getUserByID(user_id):
 
 def tradeToken(token):
 
-    #TODO
+    request = GetUserByTokenRequest(token=token)
+    response = client.GetUserByToken(request)
 
-    return None
+    if(response.response_code == 0):
+        return (0, response.user_id)
+
+    return (response.response_code , '')
 
 
 def addToCart(user_id, batch_id, volume):

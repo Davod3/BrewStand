@@ -11,7 +11,8 @@ from user_service_pb2 import (
     AddItemCartResponse,
     DeleteItemCartResponse,
     GetCartContentResponse,
-    Invoice
+    Invoice,
+    TradeTokenResponse
 
 )
 
@@ -56,6 +57,13 @@ class UserService(user_service_pb2_grpc.UserServicer):
         (response_code, cart_content, total_cost) = UserHandler.getCartContent(request.user_id)
 
         return GetCartContentResponse(response_code=response_code, content=cart_content, total_price=total_cost)
+    
+    def TradeToken(self, request, context):
+
+        (response_code, user_id) = UserHandler.tradeToken(request.token)
+
+        return TradeTokenResponse(response_code = response_code, user_id = user_id)
+
     
 def serve():
 
