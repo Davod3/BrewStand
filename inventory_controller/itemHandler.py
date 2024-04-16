@@ -7,6 +7,17 @@ from utils import util
 import os
 import grpc
 
+from prometheus_client import Counter, Summary
+
+total_received_requests_metric = Counter('inventory_total_received_requests', 'Total number of requests received by the Inventory API')
+
+duration_get_batch = Summary('duration_get_batch_seconds', 'Average time in seconds it takes for a user to receive a batch')
+duration_get_batches = Summary('duration_get_batches_seconds', 'Average time in seconds it takes for a user to receive the full catalog')
+
+failures_get_batch = Counter('failures_get_batch', 'Number of failures when a user gets a batch')
+failures_get_batches = Counter('failures_get_batches', 'Number of failures when a user gets the full catalog')
+
+
 from inventory_service_pb2 import (
     GetBatchServiceRequest,
     EmptyMessage
@@ -37,7 +48,8 @@ def __parseBatch(batch):
     
     return parsed_batch
 
-
+@duration_get_batch.time()
+@failures_get_batch.count_exceptions()
 def getBatch(itemId):
 
     request = GetBatchServiceRequest(batch_id = itemId)
@@ -51,7 +63,8 @@ def getBatch(itemId):
         #Not found
         return '', 404
 
-
+@duration_get_batches.time()
+@failures_get_batches.count_exceptions()
 def getBatches(item1=None, item2=None):
 
     if(item1 is not None and item2 is not None):

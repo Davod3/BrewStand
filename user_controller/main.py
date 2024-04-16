@@ -21,10 +21,10 @@ def getCPU():
 def getMemUsage():
     return psutil.virtual_memory().percent
 
-cpu_usage_metric = Gauge('cpu_usage', 'Shows the current the pecentage of cpu being used by the process')
+cpu_usage_metric = Gauge('user_cpu_usage', 'Shows the current the pecentage of cpu being used by the process')
 cpu_usage_metric.set_function(getCPU)
 
-memory_usage_metric = Gauge('mem_usage', 'Shows current percentage of memory used')
+memory_usage_metric = Gauge('user_mem_usage', 'Shows current percentage of memory used')
 memory_usage_metric.set_function(getMemUsage)
 
 if __name__ == '__main__':
