@@ -92,7 +92,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /user-api/user.*
+      - path: /user-api/user/.*
         pathType: ImplementationSpecific
         backend:
           service:
