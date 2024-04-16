@@ -39,18 +39,18 @@ spec:
           livenessProbe:
             httpGet:
               path: /
-              port: 3005
+              port: 3003
             periodSeconds: 12
             failureThreshold: 5
           readinessProbe:
             httpGet:
               path: /
-              port: 3005
+              port: 3003
             periodSeconds: 11
           startupProbe:
             httpGet:
               path: /
-              port: 3005
+              port: 3003
             failureThreshold: 30
             periodSeconds: 10
 ---
