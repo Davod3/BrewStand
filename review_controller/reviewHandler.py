@@ -10,13 +10,25 @@ from review_service_pb2 import (
 
 from review_service_pb2_grpc import ReviewStub
 
+from prometheus_client import Counter, Summary
+
+total_received_requests_metric = Counter('review_total_received_requests', 'Total number of requests received by the Review API')
+
+duration_update_review = Summary('duration_update_review_seconds', 'Average time in seconds it takes for a user to make an updated review')
+failures_update_review = Counter('failures_update_review', 'Number of failures when a user creates an updated review')
+
+
 review_service_host = os.getenv("REVIEW_SERVICE_HOST", "localhost")
 review_service_port = os.getenv("REVIEW_SERVICE_PORT", "50053")
 review_service_channel = grpc.insecure_channel(f"{review_service_host}:{review_service_port}")
 
 client = ReviewStub(review_service_channel)
 
+@duration_update_review.time()
+@failures_update_review.count_exceptions()
 def updateReview(itemId, body=None):  # noqa: E501
+
+    total_received_requests_metric.inc()
   
     if connexion.request.is_json:
         

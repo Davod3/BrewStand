@@ -19,8 +19,8 @@ total_received_requests_metric = Counter('payment_total_received_requests', 'Tot
 duration_get_invoice = Summary('duration_get_invoice_seconds', 'Average time in seconds it takes for a user to get an invoice')
 duration_get_invoices = Summary('duration_get_invoices_seconds', 'Average time in seconds it takes for a user to get invoices')
 
-failures_get_invoice = Summary('failures_get_invoice_seconds', 'Number of failures when a user gets an invoice')
-failures_get_invoices = Summary('failures_get_invoices_seconds', 'Number of failures when a user gets invoices')
+failures_get_invoice = Counter('failures_get_invoice', 'Number of failures when a user gets an invoice')
+failures_get_invoices = Counter('failures_get_invoices', 'Number of failures when a user gets invoices')
 
 payment_service_host = os.getenv("PAYMENT_SERVICE_HOST", "localhost")
 payment_service_port = os.getenv("PAYMENT_SERVICE_PORT", "50055")
@@ -41,7 +41,7 @@ def __fromRPC(invoice):
 
 
 @duration_get_invoice.time()
-@failures_get_invoice.time()
+@failures_get_invoice.count_exceptions()
 def getInvoice(invoiceId, token_info=None):
 
     total_received_requests_metric.inc()
@@ -65,7 +65,7 @@ def getInvoice(invoiceId, token_info=None):
         return 'Service is Unavailable', 500
 
 @duration_get_invoices.time()
-@failures_get_invoices.time()
+@failures_get_invoices.count_exceptions()
 def getInvoices(token_info=None):
 
     total_received_requests_metric.inc()
