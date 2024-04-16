@@ -12,7 +12,8 @@ from user_service_pb2 import (
     PayCartRequest,
     AddItemCartRequest,
     DeleteItemCartRequest,
-    GetCartContentRequest
+    GetCartContentRequest,
+    TradeTokenRequest
 )
 
 from user_service_pb2_grpc import UserStub
@@ -23,9 +24,15 @@ user_service_channel = grpc.insecure_channel(f"{user_service_host}:{user_service
 
 client = UserStub(user_service_channel)
 
-def addToCart(userId):
+def addToCart(token_info=None):
 
     if connexion.request.is_json:
+
+        if(token_info):
+            userId = token_info['user_id']
+        else:
+            return 'Invalid user token', 403
+
         cartBody = UserIdCartBody.from_dict(connexion.request.get_json())
 
         request = AddItemCartRequest(user_id = userId, batch_id=cartBody.batch_id, volume=cartBody.volume)
@@ -43,7 +50,12 @@ def addToCart(userId):
     else:
         return 'Invalid request body', 400
 
-def getCart(userId):
+def getCart(token_info=None):
+
+    if(token_info):
+        userId = token_info['user_id']
+    else:
+        return 'Invalid user token', 403
 
     request = GetCartContentRequest(user_id=userId)
     response = client.GetCartContent(request)
@@ -59,7 +71,12 @@ def getCart(userId):
     else:
         return '', 500
 
-def removeFromCart(userId, itemId=0):
+def removeFromCart(itemId=0, token_info=None):
+
+    if(token_info):
+        userId = token_info['user_id']
+    else:
+        return 'Invalid user token', 403
 
     request = DeleteItemCartRequest(user_id = userId, batch_id = itemId)
     response = client.DeleteItemCart(request)
@@ -71,9 +88,15 @@ def removeFromCart(userId, itemId=0):
     else:
         return '', 500
 
-def checkoutCart(userId):
+def checkoutCart(token_info=None):
 
     if connexion.request.is_json:
+
+        if(token_info):
+            userId = token_info['user_id']
+        else:
+            return 'Invalid user token', 403
+
         card_details = CartPaymentBody.from_dict(connexion.request.get_json())  # noqa: E501
 
         request = PayCartRequest(user_id = userId,
@@ -105,20 +128,16 @@ def checkoutCart(userId):
             return 'Service Unavailable', 500
 
 
-        
-
-    return 'do some magic!'
-
 def createUser():
 
     if connexion.request.is_json:
         user = User.from_dict(connexion.request.get_json())
 
-        request = CreateUserRequest(username=user.username, password=user.password, address=user.address)
+        request = CreateUserRequest(username=user.username, address=user.address)
         response = client.CreateUser(request)
 
         if(response.response_code == 0):
-            return {'id' : response.user_id}, 200
+            return {'token' : response.user_id}, 200
         elif(response.response_code == 1):
             return '', 403
         elif(response.response_code == 2):
@@ -128,6 +147,19 @@ def createUser():
 
     else:
         return 'Invalid request body', 400
+
+
+def tradeToken(token):
+
+    request = TradeTokenRequest(token = token)
+    response = client.TradeToken(request)
+
+
+    if(response.response_code == 0):
+        return {'user_id' : response.user_id}
+    else:
+        return None
+
 
 def __getCartContent(item_list):
 

@@ -142,7 +142,7 @@ message TradeTokenRequest {
 
 message TradeTokenResponse {
     int32 response_code = 1;
-    string user_id = 2;
+    optional string user_id = 2;
 
     /*
 

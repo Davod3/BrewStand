@@ -10,8 +10,10 @@ tags:
   - name: User
     description: Supports operations related with account creation, authentication as well as cart and billing management
 paths:
-  /user/{userId}/cart:
+  /user/cart:
       put:
+        security:
+          - bearerAuth: []
         tags:
           - User
         summary: Adds an item to the user's cart.
@@ -32,33 +34,21 @@ paths:
                     type: number
                     format: double
                     example: 38.5
-        parameters:
-          - name: userId
-            in: path
-            description: The ID of the user whose cart we want to access
-            required: true
-            schema:
-              type: string
         responses:    
           '200':
             description: Successful operation. Item was added to the cart
           '400': 
             description: Invalid request body. Must include valid batch ID and volume
           '404': 
-            description: User with the given userId was not found.
+            description: User with the given token was not found.
       get:
+        security:
+          - bearerAuth: []
         tags:
           - User
         summary: Gets the items in the user's cart.
         description: Gets the contents of the cart belonging to the user with the given userId
         operationId: userHandler.getCart
-        parameters:
-          - name: userId
-            in: path
-            description: The ID of the user whose cart we want to access
-            required: true
-            schema:
-              type: string
         responses:    
           '200':
             description: Successful operation.
@@ -67,21 +57,17 @@ paths:
                 schema:
                   $ref: '#/components/schemas/UserCart'
           '404': 
-            description: User with the given userId was not found.
+            description: User with the given token was not found.
             
       delete:
+        security:
+          - bearerAuth: []
         tags:
           - User
         summary: Deletes items from the user's cart.
         description: Deletes all items or a specific one if the id is specified.
         operationId: userHandler.removeFromCart
         parameters:
-          - name: userId
-            in: path
-            description: The ID of the user whose cart we want to access
-            required: true
-            schema:
-              type: string
           - name: itemId
             in: query
             description: The id of the specific item we want to delete from the cart
@@ -93,9 +79,11 @@ paths:
           '200':
             description: Successful operation.
           '404': 
-            description: User with the given userId was not found.
-  /user/{userId}/cart/payment:
+            description: User with the given token was not found.
+  /user/cart/payment:
     post:
+      security:
+          - bearerAuth: []
       tags:
         - User
       summary: Initiates the payment process for the items in a user's cart.
@@ -117,13 +105,6 @@ paths:
                   cardCvc:
                     type: string
                     example: '007'
-      parameters:
-        - name: userId
-          in: path
-          description: The ID of the user whose cart we want to access.
-          required: true
-          schema:
-            type: string
       responses:
         '200': 
           description: Successful operation. Items in the cart are paid and an order created.
@@ -163,6 +144,12 @@ paths:
           '403':
             description: Username already exists. Please try again with a new username.
 components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: userHandler.tradeToken
   schemas:
     UserCart:
         type: object
@@ -220,10 +207,6 @@ components:
           type: string
           example: Jose123
           description: The username used to refer to the user. Must be unique and contain only alfanumeric characters. No accented characters
-        password:
-          type: string
-          example: $ThisIsAPassword
-          description: The password the user intends to use for authentication
         address:
           type: string
           example: Campo Grande 016, 1749-016 Lisboa
