@@ -15,7 +15,7 @@ Docker Compose
 To install this application simply clone this repository in your desired location. To clone the latest release use the following command, filling in your credentials as required:
 
 ```
-git clone https://github.com/Davod3/BrewStand-CloudComputing-14.git --branch phase3
+git clone https://github.com/Davod3/BrewStand-CloudComputing-14.git --branch phase4
 ```
 
 Afterwards, download the Brewery Operations and Market Analysis Dataset (https://www.kaggle.com/datasets/ankurnapa/brewery-operations-and-market-analysis-dataset) and rename it to dataset.csv.
