@@ -15,20 +15,6 @@ kind: ConfigMap
 metadata:
   name: oauth2-proxy-config
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: oauth-proxy
-  name: oauth-proxy
-spec:
-  type: ClusterIP
-  selector:
-    app: oauth-proxy
-  ports:
-  - name: http-oauthproxy
-    port: 4180
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -60,6 +46,20 @@ spec:
           subPath: oauth2-proxy.cfg
         args:
           - --config=/etc/oauth2-proxy.cfg
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: oauth-proxy
+  name: oauth-proxy
+spec:
+  type: ClusterIP
+  selector:
+    app: oauth-proxy
+  ports:
+  - name: http-oauthproxy
+    port: 4180
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
