@@ -25,7 +25,7 @@ paths:
       summary: Adds an item to the user's cart.
       description: Adds an item with id provided in the request body to the cart belonging to the  user with user_id 
       security:
-        - ApiKeyAuth: []
+        - bearerAuth: []
       operationId: user.addToCart
       requestBody:
         description: Item ID and respective volume to be added to the cart
@@ -62,7 +62,7 @@ paths:
       summary: Gets the items in the user's cart.
       description: Gets the contents of the cart belonging to the user with the given userId
       security:
-        - ApiKeyAuth: []
+        - bearerAuth: []
       operationId: user.getCart
       parameters:
         - name: userId
@@ -87,7 +87,7 @@ paths:
       summary: Deletes items from the user's cart.
       description: Deletes all items or a specific one if the id is specified.
       security:
-        - ApiKeyAuth: []
+        - bearerAuth: []
       operationId: user.removeFromCart
       parameters:
         - name: userId
@@ -115,7 +115,7 @@ paths:
       summary: Initiates the payment process for the items in a user's cart.
       description: Initiates the payment process for the items in a user's cart. If the payment succeeds the cart is cleared and an invoice containing tracking information for the order is returned.
       security:
-        - ApiKeyAuth: []
+        - bearerAuth: []
       operationId: user.checkoutCart
       requestBody:
         description: Card details to complete the payment
@@ -242,7 +242,7 @@ paths:
       summary: Add a review to a specific beer batch.
       description: Add a review to a specific beer batch.
       security:
-        - ApiKeyAuth: []
+        - bearerAuth: []
       operationId: item.updateReview
       parameters:
         - name: itemId
@@ -278,7 +278,7 @@ paths:
       summary: Gets the details related to a specific order.
       description: Gets details such as cost, status and delivary address for a given order.
       security:
-        - ApiKeyAuth: []
+        - bearerAuth: []
       operationId: order.getOrder
       parameters:
         - name: orderId
@@ -303,7 +303,7 @@ paths:
       summary: Gets all orders related to a user.
       description: Gets all orders related to a user.
       security:
-        - ApiKeyAuth: []
+        - bearerAuth: []
       operationId: order.getOrders
       parameters:
         - name: userId
@@ -331,7 +331,7 @@ paths:
       summary: Gets the details of a specific invoice.
       description: Gets the details of a specific invoice.
       security:
-        - ApiKeyAuth: []
+        - bearerAuth: []
       operationId: billing.getInvoice
       parameters:
         - name: invoiceId
@@ -356,7 +356,7 @@ paths:
       summary: Gets all invoices related to a user.
       description: Gets all invoices related to a user.
       security:
-        - ApiKeyAuth: []
+        - bearerAuth: []
       operationId: billing.getInvoices
       parameters:
         - name: userId
@@ -537,9 +537,9 @@ components:
           example: Campo Grande 016, 1749-016 Lisboa
           description: The address to where orders will be sent.
   securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: X-API-KEY
-      x-apikeyInfoFunc: app.apikey_auth
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: tokenHandler.tradeToken
     
