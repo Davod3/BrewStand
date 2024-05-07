@@ -1,4 +1,13 @@
 apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret-password
+type: Opaque
+data:
+  POSTGRES_PASSWORD: VmVyeVNlY3VyZVllc1llczEyMw==
+
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-secret
@@ -7,7 +16,6 @@ metadata:
 data:
   POSTGRES_DB: inventory_db
   POSTGRES_USER: db_access_inventory
-  POSTGRES_PASSWORD: VerySecureYesYes123
   PGDATA: /var/lib/postgresql/data/pgdata
 ---
 apiVersion: v1
@@ -157,7 +165,10 @@ spec:
             - name: INVENTORY_DB_USER
               value: "db_access_inventory"
             - name: INVENTORY_DB_PASSWORD
-              value: "VerySecureYesYes123"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-password
+                  key: POSTGRES_PASSWORD
             - name: INVENTORY_DB_HOST
               value: "postgres"
             - name: INVENTORY_DB_PORT
