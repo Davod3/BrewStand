@@ -97,6 +97,14 @@ gcloud storage buckets add-iam-policy-binding gs://brewstand-datset --member "se
 gcloud iam service-accounts add-iam-policy-binding brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:cloud-computing-project-416422.svc.id.goog[default/brewstand-sa]"
 ```
 
+gcloud iam service-accounts add-iam-policy-binding \
+    --role roles/iam.workloadIdentityUser \
+    --member "serviceAccount:cloud-computing-project-416422.svc.id.goog[default/brewstand-sa]" \
+    brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com
+
+gcloud secrets add-iam-policy-binding SECRET_NAME \
+    --member=serviceAccount:brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com \
+    --role=roles/secretmanager.secretAccessor
 
 To create a cluster on the GKE, you can execute the following commands:
 
