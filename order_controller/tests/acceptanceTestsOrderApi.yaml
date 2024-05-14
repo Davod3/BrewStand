@@ -1,0 +1,20 @@
+---
+- config:
+    - testset: "Order Controller Acceptance Tests"
+    - timeout: 100  # Increase timeout from the default 10 seconds
+- test: 
+    - name: "Get order by ID"
+    - url: "/api/order/660b4bb9a115c1c9a2eb48d0/"
+    - method: "GET"
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9"}
+- test: 
+    - name: "Get inexistent order by ID"
+    - url: "/api/order/non-existent/"
+    - method: "GET"
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9"}
+- test: 
+    - name: "Get order with invalid user token"
+    - url: "/api/order/660b4bb9a115c1c9a2eb48d0/"
+    - method: "GET"
+    - headers: {Authorization: "Bearer invalid-token"}
+
