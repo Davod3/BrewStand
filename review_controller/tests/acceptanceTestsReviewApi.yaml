@@ -1,0 +1,43 @@
+- config:
+    - testset: "BrewStand_ReviewAPI Tests"
+    - timeout: 100
+
+- test:
+    - name: "Add a review to a specific beer batch - Success"
+    - url: "/review-api/items/10/review"
+    - method: "PUT"
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
+    - body: '{"score": 7.8}'
+    - expected_status: [200]
+
+- test:
+    - name: "Add a review to a specific beer batch - Invalid score"
+    - url: "/review-api/items/10/review"
+    - method: "PUT"
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
+    - body: '{"score": 11}'
+    - expected_status: [400]
+
+- test:
+    - name: "Add a review to a non-existing beer batch"
+    - url: "/review-api/items/999/review"
+    - method: "PUT"
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
+    - body: '{"score": 7.8}'
+    - expected_status: [404]
+
+- test:
+    - name: "Add a review without authentication"
+    - url: "/review-api/items/10/review"
+    - method: "PUT"
+    - headers: {Content-Type: "application/json"}
+    - body: '{"score": 7.8}'
+    - expected_status: [403]
+
+- test:
+    - name: "Add a review with invalid request body"
+    - url: "/review-api/items/10/review"
+    - method: "PUT"
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
+    - body: '{"invalid_key": 7.8}'
+    - expected_status: [400]
