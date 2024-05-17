@@ -1,0 +1,32 @@
+- config:
+    - testset: "BrewStand_PaymentAPI Tests"
+    - timeout: 100
+
+- test:
+    - name: "Get details of a specific invoice"
+    - url: "/payment-api/billing/"
+    - method: "GET"
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9"}
+    - expected_status: [200]
+    - expected_body_contains: ["invoiceID", "price", "orderID", "customerID", "fiscalAddress", "details"]
+
+- test:
+    - name: "Get details of a non-existing invoice"
+    - url: "/payment-api/billing/"
+    - method: "GET"
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9"}
+    - expected_status: [404]
+
+- test:
+    - name: "Get all invoices related to a user"
+    - url: "/payment-api/billing"
+    - method: "GET"
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9"}
+    - expected_status: [200]
+    - expected_body_contains: ["invoiceID", "price", "orderID", "customerID", "fiscalAddress", "details"]
+
+- test:
+    - name: "Get invoices without authentication"
+    - url: "/payment-api/billing"
+    - method: "GET"
+    - expected_status: [403]
