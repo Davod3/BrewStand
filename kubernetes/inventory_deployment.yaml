@@ -1,20 +1,21 @@
-
 apiVersion: v1
-kind: ConfigMap
+kind: PersistentVolumeClaim
 metadata:
-  name: postgres-secret
+  name: postgres-volume-claim
   labels:
     app: postgres
-data:
-  POSTGRES_DB: inventory_db
-  POSTGRES_USER: db_access_inventory
-  PGDATA: /var/lib/postgresql/data/pgdata
+spec:
+  storageClassName: standard-rwo
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
-  namespace: default
 spec:
   replicas: 1
   selector:
@@ -25,39 +26,22 @@ spec:
       labels:
         app: postgres
     spec:
-      serviceAccountName: brewstand-sa  # Moved this line here
       containers:
         - name: postgres
           image: 'postgres:latest'
           imagePullPolicy: IfNotPresent
-          resources:
-            requests:
-              cpu: 100m
-          stdin: true
-          stdinOnce: true
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          tty: true
           ports:
             - containerPort: 5432
           envFrom:
-            - configMapRef:
+            - secretRef:
                 name: postgres-secret
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgresdata
-            - mountPath: "/var/secrets"
-              name: mysecret
       volumes:
         - name: postgresdata
           persistentVolumeClaim:
             claimName: postgres-volume-claim
-        - name: mysecret
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: "inventory-db-secret"
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -142,15 +126,6 @@ spec:
       annotations:
         gke-gcsfuse/volumes: "true"
     spec:
-      initContainers:
-        - name: copy-secrets
-          image: busybox
-          command: ['sh', '-c', 'cp /mnt/secrets/* /etc/secrets/ && echo "Secrets copied!"']
-          volumeMounts:
-            - name: mysecret
-              mountPath: "/mnt/secrets"
-            - name: secret-env
-              mountPath: "/etc/secrets"
       containers:
         - name: inventory-repository
           image: 'europe-southwest1-docker.pkg.dev/cloud-computing-project-416422/brewstand-repo/inventory_repository:latest'
@@ -166,26 +141,36 @@ spec:
             - containerPort: 50062
           env:
             - name: INVENTORY_DB_NAME
-              value: "inventory_db"
+              valueFrom:
+                secretKeyRef:
+                  name: inventory-db-credentials
+                  key: INVENTORY_DB_NAME
             - name: INVENTORY_DB_USER
-              value: "db_access_inventory"
+              valueFrom:
+                secretKeyRef:
+                  name: inventory-db-credentials
+                  key: INVENTORY_DB_USER
             - name: INVENTORY_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: inventory-db-secret
-                  key: inventory-db-password
+                  name: inventory-db-credentials
+                  key: INVENTORY_DB_PASSWORD
             - name: INVENTORY_DB_HOST
-              value: "postgres"
+              valueFrom:
+                secretKeyRef:
+                  name: inventory-db-credentials
+                  key: INVENTORY_DB_HOST
             - name: INVENTORY_DB_PORT
-              value: "5432"
+              valueFrom:
+                secretKeyRef:
+                  name: inventory-db-credentials
+                  key: INVENTORY_DB_PORT
             - name: DATASET_URL
               value: "/data/dataset.csv"
           volumeMounts:
             - name: brewstand-dataset
               mountPath: /data
               readOnly: true
-            - mountPath: "/var/secrets"
-              name: secret-env
           livenessProbe:
             tcpSocket:
               port: 50062
@@ -206,15 +191,6 @@ spec:
           persistentVolumeClaim:
             claimName: brewstand-dataset-pvc
             readOnly: true
-        - name: mysecret
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: "inventory-db-secret"
-        - name: secret-env
-          emptyDir: {}
-          
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
