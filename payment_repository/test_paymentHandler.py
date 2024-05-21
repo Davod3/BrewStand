@@ -94,4 +94,5 @@ class TestPaymentHandler(unittest.TestCase):
         self.assertEqual(result, [])
 
 if __name__ == '__main__':
-    unittest.main(testRunner=xmlrunner.XMLTestRunner(output='test-reports'))
+    with open('./test-reports/payment_paymentHandler.xml', 'wb') as output:
+        unittest.main(testRunner=xmlrunner.XMLTestRunner(output=output))
