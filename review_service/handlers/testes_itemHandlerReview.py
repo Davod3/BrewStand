@@ -32,4 +32,5 @@ class TestValidateBatch(unittest.TestCase):
         self.assertEqual(updateScore(batch_id, 8), 8)
 
 if __name__ == '__main__':
-    unittest.main(testRunner=xmlrunner.XMLTestRunner(output='test-reports'))
+    with open('./test-reports/reviewService_itemHandlerReview_tests.xml', 'wb') as output:
+        unittest.main(testRunner=xmlrunner.XMLTestRunner(output=output))

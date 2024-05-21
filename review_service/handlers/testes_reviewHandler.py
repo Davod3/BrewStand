@@ -5,13 +5,13 @@ import sys
 
 sys.modules['handlers'] = MagicMock()
 sys.modules['handlers.itemHandlerReview'] = MagicMock()
-sys.modules['itemHandlerReview'] = MagicMock()
+sys.modules['ItemHandlerReview'] = MagicMock()
 
 from reviewHandler import review
 
 class TestReviewHandler(unittest.TestCase):
 
-    @patch('reviewHandler.itemHandlerReview')
+    @patch('reviewHandler.ItemHandlerReview')
     def test_review_valid_score_item_exists(self, mock_itemHandlerReview):
 
         batch_id = 123
@@ -23,7 +23,7 @@ class TestReviewHandler(unittest.TestCase):
 
         self.assertEqual(review(batch_id, 8), 7.5)
 
-    @patch('reviewHandler.itemHandlerReview')
+    @patch('reviewHandler.ItemHandlerReview')
     def test_review_invalid_score_item(self, mock_itemHandlerReview):
 
         batch_id = 123
@@ -33,7 +33,7 @@ class TestReviewHandler(unittest.TestCase):
 
         self.assertEqual(review(batch_id, 11),1)
 
-    @patch('reviewHandler.itemHandlerReview')
+    @patch('reviewHandler.ItemHandlerReview')
     def test_review_valid_score_item_not_exists(self, mock_itemHandlerReview):
 
         
@@ -43,4 +43,5 @@ class TestReviewHandler(unittest.TestCase):
         self.assertEqual(review(12345, 7),2)
 
 if __name__ == '__main__':
-    unittest.main(testRunner=xmlrunner.XMLTestRunner(output='test-reports'))
+    with open('./test-reports/reviewService_reviewHandler_tests.xml', 'wb') as output:
+        unittest.main(testRunner=xmlrunner.XMLTestRunner(output=output))
