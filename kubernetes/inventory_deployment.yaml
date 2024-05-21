@@ -32,9 +32,24 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432
-          envFrom:
-            - secretRef:
-                name: postgres-secret
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgresdata
@@ -143,28 +158,22 @@ spec:
             - name: INVENTORY_DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: inventory-db-credentials
-                  key: INVENTORY_DB_NAME
+                  name: postgres-secret
+                  key: POSTGRES_DB
             - name: INVENTORY_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: inventory-db-credentials
-                  key: INVENTORY_DB_USER
+                  name: postgres-secret
+                  key: POSTGRES_USER
             - name: INVENTORY_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: inventory-db-credentials
-                  key: INVENTORY_DB_PASSWORD
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
             - name: INVENTORY_DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: inventory-db-credentials
-                  key: INVENTORY_DB_HOST
+              value: "postgres"
             - name: INVENTORY_DB_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: inventory-db-credentials
-                  key: INVENTORY_DB_PORT
+              value: "5432"
             - name: DATASET_URL
               value: "/data/dataset.csv"
           volumeMounts:
