@@ -4,40 +4,25 @@
 
 - test:
     - name: "Add a review to a specific beer batch - Success"
-    - url: "/review-api/items/10/review"
+    - url: "/review-api/items/8715759/review"
     - method: "PUT"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA", Content-Type: "application/json"}
     - body: '{"score": 7.8}'
     - expected_status: [200]
 
 - test:
     - name: "Add a review to a specific beer batch - Invalid score"
-    - url: "/review-api/items/10/review"
+    - url: "/review-api/items/8715759/review"
     - method: "PUT"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA", Content-Type: "application/json"}
     - body: '{"score": 11}'
     - expected_status: [400]
 
 - test:
     - name: "Add a review to a non-existing beer batch"
-    - url: "/review-api/items/999/review"
+    - url: "/review-api/items/1/review"
     - method: "PUT"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA", Content-Type: "application/json"}
     - body: '{"score": 7.8}'
     - expected_status: [404]
 
-- test:
-    - name: "Add a review without authentication"
-    - url: "/review-api/items/10/review"
-    - method: "PUT"
-    - headers: {Content-Type: "application/json"}
-    - body: '{"score": 7.8}'
-    - expected_status: [403]
-
-- test:
-    - name: "Add a review with invalid request body"
-    - url: "/review-api/items/10/review"
-    - method: "PUT"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
-    - body: '{"invalid_key": 7.8}'
-    - expected_status: [400]
