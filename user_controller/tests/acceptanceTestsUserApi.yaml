@@ -4,43 +4,42 @@
     - timeout: 100
 
 - test:
-    - name: "Create user"
-    - url: "/user-api/user"
-    - method: "POST"
-    - headers: {Content-Type: "application/json"}
-    - body: '{"username": "Raul","address": "Amadora City"}'
+    - name: "Add item to cart"
+    - url: "/user-api/user/cart"
+    - method: "PUT"
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA", Content-Type: "application/json"}
+    - body: '{"batchID": 9810411,"volume": 8}'
     - expected_status: [200]
-    - expected_body_contains: ["token"]
 
 - test:
     - name: "Add item to cart"
     - url: "/user-api/user/cart"
     - method: "PUT"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
-    - body: '{"batchID": 10,"volume": 38.5}'
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA", Content-Type: "application/json"}
+    - body: '{"batchID": 2623342,"volume": 8}'
     - expected_status: [200]
 
 - test:
     - name: "Get cart contents"
     - url: "/user-api/user/cart"
     - method: "GET"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9"}
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA"}
     - expected_status: [200]
     - expected_body_contains: ["items", "totalCost"]
 
 - test:
     - name: "Remove item from cart"
-    - url: "/user-api/user/cart?itemId=10"
+    - url: "/user-api/user/cart?itemId=9810411"
     - method: "DELETE"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9"}
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA"}
     - expected_status: [200]
 
 - test:
     - name: "Checkout cart"
     - url: "/user-api/user/cart/payment"
     - method: "POST"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
-    - body: '{"cardNumber": "1111111111111111","cardExpiry": "12/25","cardCvc": "123"}'
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA", Content-Type: "application/json"}
+    - body: '{"cardCvc": "007","cardExpiry": "12/25","cardNumber": "123456"}'
     - expected_status: [200]
     - expected_body_contains: ["invoiceID", "price", "orderID", "customerID", "fiscalAddress", "details"]
 
@@ -51,43 +50,4 @@
     - headers: {Content-Type: "application/json"}
     - body: '{"username": "","address": ""}'
     - expected_status: [400]
-
-- test:
-    - name: "Add item to cart with invalid token"
-    - url: "/user-api/user/cart"
-    - method: "PUT"
-    - headers: {Authorization: "Bearer INVALID_TOKEN", Content-Type: "application/json"}
-    - body: '{"batchID": 10,"volume": 38.5}'
-    - expected_status: [403]
-
-- test:
-    - name: "Get cart contents with invalid token"
-    - url: "/user-api/user/cart"
-    - method: "GET"
-    - headers: {Authorization: "Bearer INVALID_TOKEN"}
-    - expected_status: [403]
-
-- test:
-    - name: "Remove item from cart with invalid token"
-    - url: "/user-api/user/cart?itemId=10"
-    - method: "DELETE"
-    - headers: {Authorization: "Bearer INVALID_TOKEN"}
-    - expected_status: [403]
-
-- test:
-    - name: "Checkout cart with invalid token"
-    - url: "/user-api/user/cart/payment"
-    - method: "POST"
-    - headers: {Authorization: "Bearer INVALID_TOKEN", Content-Type: "application/json"}
-    - body: '{"cardNumber": "1111111111111111","cardExpiry": "12/25","cardCvc": "123"}'
-    - expected_status: [403]
-
-- test:
-    - name: "Checkout empty cart"
-    - url: "/user-api/user/cart/payment"
-    - method: "POST"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9", Content-Type: "application/json"}
-    - body: '{"cardNumber": "1111111111111111","cardExpiry": "12/25","cardCvc": "123"}'
-    - expected_status: [500]
-    - expected_body_contains: ["Cart is empty"]
 

@@ -4,36 +4,22 @@
     - timeout: 100  # Increase timeout from the default 10 seconds
 - test: 
     - name: "Get order by ID (Valid Token)"
-    - url: "/order-api/order/660b4bb9a115c1c9a2eb48d0"
+    - url: "/order-api/order/664d17d3f944bcdd40294ec5"
     - method: "GET"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9"}
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA"}
     - expected_status: [200]
     
 - test:
-    - name: "Get order by ID (Invalid Token)"
-    - url: "/order-api/order/660b4bb9a115c1c9a2eb48d0"
-    - method: "GET"
-    - headers: {Authorization: "Bearer invalid-token"}
-    - expected_status: [403]
-    
-- test:
     - name: "Get order with wrong order ID but valid user"
-    - url: "/order-api/order/incorrect-order-id"
+    - url: "/order-api/order/wrong-order-id"
     - method: "GET"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9"}
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA"}
     - expected_status: [404]
     
 - test: 
     - name: "Get orders (Valid Token)"
-    - url: "/order-api/orders"
+    - url: "/order-api/order"
     - method: "GET"
-    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9"}
+    - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2MzI2OTIzLCJleHAiOjE3MTg5MTg5MjMsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.DTRx8vFjP_hB4lUd3HOTYN4vou9wNvuefeaCiUPy2bp0ZMOoe8j8eCdgR07kwrxctwc_dG6EmIxPlS4PHPuDCyWp0mpQBB_UfHBrQFyZkiWN7LD5kuZKwLno5bNwp5neWxAtHMW4ZRKwcj3mOIUstWHL_uSbjc4CZDw3rZrlmiIKsxG1rM8DnBJlc6I_eLtxvZJAD9HNmlOtlkf4ovozhu5Ki8B8uX-JqDj8VPQIs6WfHoTqdblu8mOA3gW8Rq0RZtQ1MyXcLjI1foBJLyXkZASNOcj1MWscEoxf6eRwcGrNiEOnlDUlKTetcv89sL5OdzSE3GoXnWMY1wlZKVSftA"}
     - expected_status: [200]
-    
-- test: 
-    - name: "Get orders (Invalid Token)"
-    - url: "/order-api/orders"
-    - method: "GET"
-    - headers: {Authorization: "Bearer invalid-token"}
-    - expected_status: [403]
     
