@@ -209,14 +209,9 @@ spec:
               cpu: "50m"
           ports:
             - containerPort: 50061
-          env:
-            - name: MONGO_USER
-              value: "db_access"
-            - name: MONGO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret-password
-                  key: MONGO_PASSWORD
+          envFrom:
+            - secretRef:
+                name: user-secret
           livenessProbe:
             tcpSocket:
               port: 50061

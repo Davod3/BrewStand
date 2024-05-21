@@ -209,14 +209,9 @@ spec:
               cpu: "50m"
           ports:
             - containerPort: 50065
-          env:
-            - name: MONGO_USER
-              value: "payment"
-            - name: MONGO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret-password
-                  key: MONGO_PASSWORD
+          envFrom:
+            - secretRef:
+                name: payment-secret
           livenessProbe:
             tcpSocket:
               port: 50065
