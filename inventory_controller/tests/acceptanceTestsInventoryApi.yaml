@@ -1,0 +1,36 @@
+- config:
+    - testset: "BrewStand_InventoryAPI Tests"
+    - timeout: 100
+
+- test:
+    - name: "Get details of a specific beer batch"
+    - url: "/inventory-api/items/8715759"
+    - method: "GET"
+    - expected_status: [200]
+    - expected_body_contains: ["batchID", "beerStyle", "brewLocation", "userScore", "expertScore", "phLevel", "alchoolContent", "availableVolume", "brewDate", "cost"]
+
+- test:
+    - name: "Get details of a non-existing beer batch"
+    - url: "/inventory-api/items/1"
+    - method: "GET"
+    - expected_status: [404]
+
+- test:
+    - name: "Get a list with all the beer batches"
+    - url: "/inventory-api/items"
+    - method: "GET"
+    - expected_status: [200]
+    - expected_body_contains: ["batchID", "beerStyle", "brewLocation", "userScore", "expertScore", "phLevel", "alchoolContent", "availableVolume", "brewDate", "cost"]
+
+- test:
+    - name: "Get comparison between two beer batches"
+    - url: "/inventory-api/items?item1=8715759&item2=6167789"
+    - method: "GET"
+    - expected_status: [200]
+    - expected_body_contains: ["batchID", "beerStyle", "brewLocation", "userScore", "expertScore", "phLevel", "alchoolContent", "availableVolume", "brewDate", "cost"]
+
+- test:
+    - name: "Get comparison between two non-existing beer batches"
+    - url: "/inventory-api/items?item1=1&item2=2"
+    - method: "GET"
+    - expected_status: [404]
