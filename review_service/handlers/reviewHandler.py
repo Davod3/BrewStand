@@ -1,6 +1,6 @@
 import os
 import grpc
-import handlers.itemHandlerReview as itemHandlerReview
+import handlers.itemHandlerReview as ItemHandlerReview
 
 
 def review(batch_id,score):
@@ -11,15 +11,15 @@ def review(batch_id,score):
 
         # O score é válido. Contacta o Item Repository
 
-        if(itemHandlerReview.validateBatch(batch_id)):
+        if(ItemHandlerReview.validateBatch(batch_id)):
 
             # Batch exists. Calculate and update score
 
-            oldScore = itemHandlerReview.getBatchScore(batch_id)
-            numero_pessoas= itemHandlerReview.getNvotos(batch_id)
+            oldScore = ItemHandlerReview.getBatchScore(batch_id)
+            numero_pessoas= ItemHandlerReview.getNvotos(batch_id)
             newscore = ((oldScore * numero_pessoas) + score) / (numero_pessoas + 1)
 
-            result = itemHandlerReview.updateScore(batch_id, newscore)
+            result = ItemHandlerReview.updateScore(batch_id, newscore)
 
             return result
 

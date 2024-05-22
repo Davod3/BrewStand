@@ -28,7 +28,7 @@ class TestInvoiceHandler(unittest.TestCase):
         sys.modules['payment_repository_pb2_grpc'].PaymentRepositoryServiceStub().GetUserInvoices().invoices = mock_response
         
         result = getUserInvoices(789).invoices
-        self.assertEqual(len(result), 1)  # Assuming only one invoice is returned
+        self.assertEqual(len(result), 1) 
         self.assertEqual(result[0].invoice_id, "123")
         self.assertEqual(result[0].price, 100.0)
         self.assertEqual(result[0].order_id, "456")

@@ -125,4 +125,5 @@ class TestAddToCart(unittest.TestCase):
         self.assertEqual(mock_user.cart, [CartItem(batch_id=123, volume=5)])
 
 if __name__ == '__main__':
-    unittest.main(testRunner=xmlrunner.XMLTestRunner(output='test-reports'))
+    with open('./test-reports/user_repository_tests.xml', 'wb') as output:
+        unittest.main(testRunner=xmlrunner.XMLTestRunner(output=output))
