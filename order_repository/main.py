@@ -149,7 +149,8 @@ if __name__ == "__main__":
 
     __USER = os.getenv('MONGO_USER')
     __PASSWORD =  os.getenv('MONGO_PASSWORD')
-    url = f"mongodb+srv://{__USER}:{__PASSWORD}@orders.rfyzofq.mongodb.net/?retryWrites=true&w=majority&appName=Orders"
+    __DB = os.getenv('MONGO_DB')
+    url = f"mongodb+srv://{__USER}:{__PASSWORD}@orders.rfyzofq.mongodb.net/{__DB}?retryWrites=true&w=majority&appName=Orders"
     connect(host=url)
 
     serve()
