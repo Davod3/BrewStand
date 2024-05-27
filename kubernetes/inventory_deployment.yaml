@@ -132,7 +132,7 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
+      maxSurge: 2
       maxUnavailable: 0
   template:
     metadata:
@@ -240,7 +240,7 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
+      maxSurge: 2
       maxUnavailable: 0
   template:
     metadata:
@@ -319,7 +319,7 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
+      maxSurge: 2
       maxUnavailable: 0
   template:
     metadata:
