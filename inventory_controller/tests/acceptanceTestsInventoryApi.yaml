@@ -7,8 +7,18 @@
     - url: "/inventory-api/items/8715759"
     - method: "GET"
     - expected_status: [200]
-    - expected_body_contains: ["batchID", "beerStyle", "brewLocation", "userScore", "expertScore", "phLevel", "alchoolContent", "availableVolume", "brewDate", "cost"]
-
+    - validators:
+        - compare: {jsonpath_mini: "batchID", comparator: "type", expected: "int"}
+        - compare: {jsonpath_mini: "beerStyle", comparator: "type", expected: "string"}
+        - compare: {jsonpath_mini: "brewLocation", comparator: "type", expected: "string"}
+        - compare: {jsonpath_mini: "userScore", comparator: "type", expected: "float"}
+        - compare: {jsonpath_mini: "expertScore", comparator: "type", expected: "float"}
+        - compare: {jsonpath_mini: "phLevel", comparator: "type", expected: "float"}
+        - compare: {jsonpath_mini: "alchoolContent", comparator: "type", expected: "float"}
+        - compare: {jsonpath_mini: "availableVolume", comparator: "type", expected: "float"}
+        - compare: {jsonpath_mini: "brewDate", comparator: "type", expected: "string"}
+        - compare: {jsonpath_mini: "cost", comparator: "type", expected: "float"}
+        
 - test:
     - name: "Get details of a non-existing beer batch"
     - url: "/inventory-api/items/1"
