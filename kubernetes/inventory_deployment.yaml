@@ -68,7 +68,7 @@ spec:
    kind: Deployment
    name: postgres
  minReplicas: 1
- maxReplicas: 5
+ maxReplicas: 8
  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1
@@ -203,7 +203,7 @@ spec:
    kind: Deployment
    name: inventory-repository
  minReplicas: 2
- maxReplicas: 4
+ maxReplicas: 8
  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1
@@ -274,7 +274,7 @@ spec:
    kind: Deployment
    name: inventory-service
  minReplicas: 2
- maxReplicas: 4
+ maxReplicas: 8
  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1
@@ -346,7 +346,7 @@ spec:
    kind: Deployment
    name: inventory-controller
  minReplicas: 2
- maxReplicas: 4
+ maxReplicas: 8
  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1

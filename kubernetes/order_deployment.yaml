@@ -67,7 +67,7 @@ spec:
    kind: Deployment
    name: order-controller
  minReplicas: 2
- maxReplicas: 4
+ maxReplicas: 8
  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1
@@ -142,7 +142,7 @@ spec:
    kind: Deployment
    name: order-service
  minReplicas: 2
- maxReplicas: 4
+ maxReplicas: 8
  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1
@@ -211,7 +211,7 @@ spec:
    kind: Deployment
    name: order-repository
  minReplicas: 2
- maxReplicas: 4
+ maxReplicas: 8
  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1
