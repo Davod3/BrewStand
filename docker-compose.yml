@@ -47,6 +47,7 @@ services:
     environment:
       - MONGO_USER=db_access
       - MONGO_PASSWORD=${USER_DB_PASSWORD}
+      - MONGO_DB=db_staging
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.30
@@ -199,6 +200,7 @@ services:
     environment:
       - MONGO_USER=db_access
       - MONGO_PASSWORD=${ORDER_DB_PASSWORD}
+      - MONGO_DB=db_staging
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.34
@@ -248,6 +250,7 @@ services:
     environment:
       - MONGO_USER=payment
       - MONGO_PASSWORD=${PAYMENT_ORDER_SECRET}
+      - MONGO_DB=db_staging
     networks:
       brewstand-net:
         ipv4_address: 172.100.10.35 
