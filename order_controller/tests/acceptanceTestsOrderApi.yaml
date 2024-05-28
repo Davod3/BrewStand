@@ -8,6 +8,16 @@
     - method: "GET"
     - headers: {Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2OTI3NTExLCJleHAiOjE3MTk1MTk1MTEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.pj0r5ZceTxFcP5xeaFGUc1MqjFt4crCnJ0wA5Ab3iAVWtGBNbPMAa76JnqoJY9RwpJkEEtSVep9oyUVapydhKwoQt3Hd00LTcjq7InZh0PLdnXdGYQW9m0lrNh2Lvc-o-ZqOlhNhbvaRV3Wyf3bKRNieqD3kQJyg-WJBoOmPlSpryVf0CFONim8AmrfmoaPJHQ8MUJAym_Cv3O4-vq39cAIUtH01_cDhojfDZ9RYOiZKJpzNv2yx0TZGOZMBh9h37B63m-hIKVq692mHfr9BUhKmtLgtZwjHeJfEkgbTDoHwi9LmzWy9XnhZ-yzMB9QUX96GfEhZS4wZcYIXi614QQ"}
     - expected_status: [200]
+    - validators:
+        - compare: {jsonpath_mini: "id", comparator: "eq", expected: "66563d83529b7c55e9eca984"}
+        - compare: {jsonpath_mini: "userId", comparator: "eq", expected: "66563c17c8c6b41269cab65e"}
+        - compare: {jsonpath_mini: "status", comparator: "eq", expected: "delivered"}
+        - compare: {jsonpath_mini: "complete", comparator: "eq", expected: true}
+        - compare: {jsonpath_mini: "destinationAddress", comparator: "eq", expected: "Campo Grande 016, 1749-016 Lisboa"}
+        - compare: {jsonpath_mini: "items", comparator: "count_eq", expected: 1} # At least one item
+        - compare: {jsonpath_mini: "items.0.itemID", comparator: "gt", expected: 0}
+        - compare: {jsonpath_mini: "items.0.volume", comparator: "gt", expected: 0.0}
+        - compare: {jsonpath_mini: "shipDate", comparator: "type", expected: "string"} # Ensuring shipDate is a string
     
 - test:
     - name: "Get order with wrong order ID but valid user"
