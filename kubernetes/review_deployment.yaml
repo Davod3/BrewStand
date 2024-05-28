@@ -24,11 +24,11 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: "500Mi"
-              cpu: "1"
+              memory: "100Mi"
+              cpu: "50m"
             limits:
-              memory: "500Mi"
-              cpu: "1"
+              memory: "100Mi"
+              cpu: "50m"
           ports:
             - containerPort: 3003
           env:
@@ -96,11 +96,11 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: "500Mi"
-              cpu: "1"
+              memory: "100Mi"
+              cpu: "50m"
             limits:
-              memory: "500Mi"
-              cpu: "1"
+              memory: "100Mi"
+              cpu: "50m"
           ports:
             - containerPort: 50053
           env:
