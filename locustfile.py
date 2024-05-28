@@ -36,10 +36,10 @@ class BrewstandUser(HttpUser):
     def buy_item(self):
         
         #Add item to cart
-        response = self.client.put('user-api/user/cart', data=json.dumps({"batchID": 6441292,"volume": 0.1}), name='buy_test')
+        response = self.client.put('user-api/user/cart', data=json.dumps({"batchID": 6441292,"volume": 0.1}))
         
         #Checkout
-        response = self.client.post('user-api/user/cart/payment', data=json.dumps({"cardCvc": "007","cardExpiry": "05/24","cardNumber": "123456"}), name='buy_test')
+        response = self.client.post('user-api/user/cart/payment', data=json.dumps({"cardCvc": "007","cardExpiry": "05/24","cardNumber": "123456"}))
 
 
     def on_start(self):
