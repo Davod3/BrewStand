@@ -147,11 +147,11 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: "100Mi"
-              cpu: "50m"
+              memory: "500Mi"
+              cpu: "1"
             limits:
-              memory: "100Mi"
-              cpu: "50m"
+              memory: "500Mi"
+              cpu: "1"
           ports:
             - containerPort: 50062
           env:
@@ -245,11 +245,11 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: "100Mi"
-              cpu: "50m"
+              memory: "500Mi"
+              cpu: "1"
             limits:
-              memory: "100Mi"
-              cpu: "50m"
+              memory: "500Mi"
+              cpu: "1"
           ports:
             - containerPort: 50052
           env:
@@ -316,11 +316,11 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: "100Mi"
-              cpu: "50m"
+              memory: "500Mi"
+              cpu: "1"
             limits:
-              memory: "100Mi"
-              cpu: "50m"
+              memory: "500Mi"
+              cpu: "1"
           ports:
             - containerPort: 3001
           env:
