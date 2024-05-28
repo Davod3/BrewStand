@@ -32,15 +32,6 @@ class BrewstandUser(HttpUser):
     def add_review(self):
         response = self.client.put('review-api/items/6441292/review', data=json.dumps({"score": 7.8}))
 
-    @task
-    def buy_item(self):
-        
-        #Add item to cart
-        response = self.client.put('user-api/user/cart', data=json.dumps({"batchID": 6441292,"volume": 0.1}))
-        
-        #Checkout
-        response = self.client.post('user-api/user/cart/payment', data=json.dumps({"cardCvc": "007","cardExpiry": "05/24","cardNumber": "123456"}))
-
 
     def on_start(self):
         self.client.headers = {'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFhOHdVMXJIM2tPOFg4TFdnNWhhZCJ9.eyJpc3MiOiJodHRwczovL2Rldi1nY3I3ajMzb2UzbGttMmY0LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJCeHl1MHpSYUhMczVYTUZ0Nnh1U1ZYUloxYnI1UzlIdkBjbGllbnRzIiwiYXVkIjoiaHR0cDovL2JyZXdzdGFuZC1hcGkvIiwiaWF0IjoxNzE2OTI3NTExLCJleHAiOjE3MTk1MTk1MTEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkJ4eXUwelJhSExzNVhNRnQ2eHVTVlhSWjFicjVTOUh2In0.pj0r5ZceTxFcP5xeaFGUc1MqjFt4crCnJ0wA5Ab3iAVWtGBNbPMAa76JnqoJY9RwpJkEEtSVep9oyUVapydhKwoQt3Hd00LTcjq7InZh0PLdnXdGYQW9m0lrNh2Lvc-o-ZqOlhNhbvaRV3Wyf3bKRNieqD3kQJyg-WJBoOmPlSpryVf0CFONim8AmrfmoaPJHQ8MUJAym_Cv3O4-vq39cAIUtH01_cDhojfDZ9RYOiZKJpzNv2yx0TZGOZMBh9h37B63m-hIKVq692mHfr9BUhKmtLgtZwjHeJfEkgbTDoHwi9LmzWy9XnhZ-yzMB9QUX96GfEhZS4wZcYIXi614QQ',
