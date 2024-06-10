@@ -19,9 +19,11 @@ from order_repository_pb2 import (
 from models.order import OrderRepoMongo, ItemRepoMongo
 from mongoengine import *
 
+#Não necessita de test
 def run_updateOrderStatus(order_id):
     updateOrderStatus(order_id)
 
+#Não necessita de test
 def updateOrderStatus(order_id):
     time.sleep(100)
 
@@ -33,6 +35,7 @@ def updateOrderStatus(order_id):
             order.save()
     except DoesNotExist:
         pass
+#---------------------------
 
 def insertOrder(request, context):
 
