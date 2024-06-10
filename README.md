@@ -136,6 +136,9 @@ kubectl create serviceaccount brewstand-sa
 kubectl annotate serviceaccount brewstand-sa --namespace default iam.gke.io/gcp-service-account=brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com
 ```
 ```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/cloud/deploy.yaml
+```
+```
 kubectl create secret generic postgres-secret \
   --from-literal=POSTGRES_DB=<inventory_db_name> \
   --from-literal=POSTGRES_USER=<inventory_db_username> \
@@ -186,6 +189,9 @@ kubectl create serviceaccount brewstand-sa
 kubectl annotate serviceaccount brewstand-sa --namespace default iam.gke.io/gcp-service-account=brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com
 ```
 ```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/cloud/deploy.yaml
+```
+```
 kubectl create secret generic postgres-secret \
   --from-literal=POSTGRES_DB=<inventory_db_name> \
   --from-literal=POSTGRES_USER=<inventory_db_username> \
@@ -219,6 +225,12 @@ kubectl create secret generic oauth2-proxy-secret \
 previously installed. Use the following guide as a basis:
 
 https://medium.com/@maheshbiradar8887/jenkins-pipeline-with-argo-cd-and-kubernetes-84e9f943cf13
+
+If at any point you need to run some command as the jenkins user:
+
+```
+sudo -u jenkins /bin/bash
+```
 
 ### Management
 
