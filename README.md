@@ -88,7 +88,23 @@ To access the Jenkins Web UI go to: http://34.0.221.12:8080
 
 To access the ArgoCD Web UI go to: http://34.175.18.64:80
 
+All the following commands must be ran in an environment with both Google Cloud Console and Kubectl installed. We recommend Google Cloud Shell.
+
 ### Service Accounts
+
+To be able to access all the required resources from Google Cloud, the following commands should be used to create and configure all required service accounts:
+
+```
+gcloud iam service-accounts create brewstand-dataset-sa --project=cloud-computing-project-416422
+```
+
+```
+gcloud storage buckets add-iam-policy-binding gs://brewstand-datset --member "serviceAccount:brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com" --role "roles/storage.objectViewer"
+```
+
+```
+gcloud iam service-accounts add-iam-policy-binding brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:cloud-computing-project-416422.svc.id.goog[default/brewstand-sa]"
+```
 
 ### Kubernetes Clusters
 
@@ -111,65 +127,128 @@ gcloud container clusters get-credentials brewstand-staging --region=europe-sout
 
 https://argo-cd.readthedocs.io/en/stable/getting_started/
 
-4 - Create the production cluster with the following command:
-
-```
-gcloud beta container --project "cloud-computing-project-416422" clusters create "brewstand-prod" --no-enable-basic-auth --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "30" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes "3" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/cloud-computing-project-416422/global/networks/default" --subnetwork "projects/cloud-computing-project-416422/regions/europe-southwest1/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "110" --security-posture=standard --workload-vulnerability-scanning=disabled --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver,GcsFuseCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --binauthz-evaluation-mode=DISABLED --enable-managed-prometheus --workload-pool "cloud-computing-project-416422.svc.id.goog" --enable-shielded-nodes --node-locations "europe-southwest1-a" --zone=europe-southwest1-a
-```
-
 4 - Configure the staging cluster with the following commands:
 
 ```
 kubectl create serviceaccount brewstand-sa
 ```
-
 ```
 kubectl annotate serviceaccount brewstand-sa --namespace default iam.gke.io/gcp-service-account=brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com
 ```
+```
+kubectl create secret generic postgres-secret \
+  --from-literal=POSTGRES_DB=<inventory_db_name> \
+  --from-literal=POSTGRES_USER=<inventory_db_username> \
+  --from-literal=POSTGRES_PASSWORD=<inventory_db_password>
+```
+```
+kubectl create secret generic order-secret \
+  --from-literal=MONGO_DB=<order_db_name> \
+  --from-literal=MONGO_USER=<order_db_username> \
+  --from-literal=MONGO_PASSWORD=<order_db_password>
+```
+```
+kubectl create secret generic payment-secret \
+  --from-literal=MONGO_DB=<payment_db_name> \
+  --from-literal=MONGO_USER=<payment_db_username> \
+  --from-literal=MONGO_PASSWORD=<payment_db_password>
+```
+```
+kubectl create secret generic user-secret \
+  --from-literal=MONGO_DB=<user_db_name> \
+  --from-literal=MONGO_USER=<user_db_username> \
+  --from-literal=MONGO_PASSWORD=<user_db_password>
+```
+```
+kubectl create secret generic oauth2-proxy-secret \
+  --from-literal=OAUTH2_PROXY_COOKIE_SECRET=<coookie_secret> \
+  --from-literal=OAUTH2_PROXY_CLIENT_SECRET=<client_secret>
+```
 
-
-All the following commands should be executed on the Google Cloud Console.
-
-Before deploying the application to GKE, a service account must be created in the IAM Service. To do so, execute the following commands once:
+5 - Create the production cluster with the following command:
 
 ```
-gcloud iam service-accounts create brewstand-dataset-sa --project=cloud-computing-project-416422
+gcloud beta container --project "cloud-computing-project-416422" clusters create "brewstand-prod" --no-enable-basic-auth --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "30" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes "3" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/cloud-computing-project-416422/global/networks/default" --subnetwork "projects/cloud-computing-project-416422/regions/europe-southwest1/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "110" --security-posture=standard --workload-vulnerability-scanning=disabled --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver,GcsFuseCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --binauthz-evaluation-mode=DISABLED --enable-managed-prometheus --workload-pool "cloud-computing-project-416422.svc.id.goog" --enable-shielded-nodes --node-locations "europe-southwest1-a" --zone=europe-southwest1-a
 ```
 
-```
-gcloud storage buckets add-iam-policy-binding gs://brewstand-datset --member "serviceAccount:brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com" --role "roles/storage.objectViewer"
-```
-
-```
-gcloud iam service-accounts add-iam-policy-binding brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:cloud-computing-project-416422.svc.id.goog[default/brewstand-sa]"
-```
-
-To create a cluster on the GKE, you can execute the following commands:
-
-```
-gcloud beta container --project "cloud-computing-project-416422" clusters create "brewstand-prod" --no-enable-basic-auth --release-channel "regular" --machine-type "e2-medium" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "30" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes "3" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/cloud-computing-project-416422/global/networks/default" --subnetwork "projects/cloud-computing-project-416422/regions/europe-southwest1/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "110" --security-posture=standard --workload-vulnerability-scanning=disabled --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver,GcsFuseCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --binauthz-evaluation-mode=DISABLED --enable-managed-prometheus --workload-pool "cloud-computing-project-416422.svc.id.goog" --enable-shielded-nodes --node-locations "europe-southwest1-a" --zone=europe-southwest1-a 
-```
+6 - Switch context to the production cluster:
 
 ```
 gcloud container clusters get-credentials brewstand-prod --region=europe-southwest1-a
 ```
 
-```
-kubectl config current-context
-```
+7 - Configure the production cluster with the following commands:
 
 ```
 kubectl create serviceaccount brewstand-sa
 ```
-
 ```
 kubectl annotate serviceaccount brewstand-sa --namespace default iam.gke.io/gcp-service-account=brewstand-dataset-sa@cloud-computing-project-416422.iam.gserviceaccount.com
 ```
+```
+kubectl create secret generic postgres-secret \
+  --from-literal=POSTGRES_DB=<inventory_db_name> \
+  --from-literal=POSTGRES_USER=<inventory_db_username> \
+  --from-literal=POSTGRES_PASSWORD=<inventory_db_password>
+```
+```
+kubectl create secret generic order-secret \
+  --from-literal=MONGO_DB=<order_db_name> \
+  --from-literal=MONGO_USER=<order_db_username> \
+  --from-literal=MONGO_PASSWORD=<order_db_password>
+```
+```
+kubectl create secret generic payment-secret \
+  --from-literal=MONGO_DB=<payment_db_name> \
+  --from-literal=MONGO_USER=<payment_db_username> \
+  --from-literal=MONGO_PASSWORD=<payment_db_password>
+```
+```
+kubectl create secret generic user-secret \
+  --from-literal=MONGO_DB=<user_db_name> \
+  --from-literal=MONGO_USER=<user_db_username> \
+  --from-literal=MONGO_PASSWORD=<user_db_password>
+```
+```
+kubectl create secret generic oauth2-proxy-secret \
+  --from-literal=OAUTH2_PROXY_COOKIE_SECRET=<coookie_secret> \
+  --from-literal=OAUTH2_PROXY_CLIENT_SECRET=<client_secret>
+```
 
-After the cluster is created, you can deploy the services with the following command:
+8 - Setup a Jenkins instance to create a pipeline using the provided jenkinsfile. The jenkinsfile may need to be updated to include the correct IP addresses and credentials for the ArgoCD instance
+previously installed. Use the following guide as a basis:
+
+https://medium.com/@maheshbiradar8887/jenkins-pipeline-with-argo-cd-and-kubernetes-84e9f943cf13
+
+### Management
+
+Once created, the clusters can be resized with the following commands:
 
 ```
-./deploy.sh
+./start_clusters.sh
 ```
+
+```
+./stop_clusters.sh
+```
+
+### Load Testing
+
+To test how the application reacts to changing loads, Locust can be used. In the repository there is a file called locustfile.py that includes base test cases for load testing. This file can be updated as 
+necessary.
+
+To run load tests using locust, simply install it following the official guides (https://docs.locust.io/en/stable/installation.html) and swith to the project's root directory. Afterwards run the following command:
+
+```
+locust
+```
+
+
+
+
+
+
+
+
 
 
