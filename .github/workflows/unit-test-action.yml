@@ -1,0 +1,28 @@
+name: Unit Tests
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+  build:
+  
+    runs-on: ubuntu-latest
+    
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - name: Build Payment Repository Test Suite
+      run: docker build -t payment-repository-test:latest -f payment_repository/Dockerfile.test .
+
+    - name: Run Payment Repository Test Suite
+      run: docker run -v ./test_results:/service/test-reports payment-repository-test:latest
+      
+    - name: JUnit Report Action
+      uses: mikepenz/action-junit-report@v4
+      with:
+        report_paths: '**/test_results/*_tests.xml'
+            
