@@ -84,7 +84,7 @@ pipeline {
             
             steps {
                 
-                sh 'argocd app sync brewstand-staging'
+                sh 'argocd app sync brewstand-staging --prune'
                 
             }
             
@@ -119,7 +119,7 @@ pipeline {
             
             steps {
                 
-                sh 'argocd app sync brewstand-main'
+                sh 'argocd app sync brewstand-main --prune'
                 
             }
             
