@@ -1,0 +1,1 @@
+kubectl port-forward services/prometheus-svc 9090:9090
