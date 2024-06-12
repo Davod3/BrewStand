@@ -50,7 +50,7 @@ spec:
               path: /
               port: 3002
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
 ---
 apiVersion: autoscaling/v1
@@ -129,7 +129,7 @@ spec:
             tcpSocket:
               port: 50051
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
 ---
 apiVersion: autoscaling/v1
@@ -198,7 +198,7 @@ spec:
             tcpSocket:
               port: 50061
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
 ---
 apiVersion: autoscaling/v1

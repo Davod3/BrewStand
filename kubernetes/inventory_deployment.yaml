@@ -184,7 +184,7 @@ spec:
             tcpSocket:
               port: 50062
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
       serviceAccountName: brewstand-sa
       volumes:
@@ -261,7 +261,7 @@ spec:
             tcpSocket:
               port: 50052
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
 ---
 apiVersion: autoscaling/v1
@@ -333,7 +333,7 @@ spec:
               path: /
               port: 3001
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
 ---
 apiVersion: autoscaling/v1
