@@ -96,7 +96,7 @@ pipeline {
                 
                 sleep time: 300000, unit: 'MILLISECONDS'
                 
-                sh 'argocd app wait brewstand-staging --health --timeout 500'
+                sh 'argocd app wait brewstand-staging --health --timeout 180'
                 
             }
             
@@ -131,7 +131,7 @@ pipeline {
                 
                 sleep time: 300000, unit: 'MILLISECONDS'
                 
-                sh 'argocd app wait brewstand-main --health --timeout 500'
+                sh 'argocd app wait brewstand-main --health --timeout 180'
                 
             }
         }
