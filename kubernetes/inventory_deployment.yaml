@@ -79,7 +79,7 @@ metadata:
 spec:
  scaleTargetRef:
    apiVersion: apps/v1
-   kind: Deployment
+   kind: StatefulSet
    name: postgres
  minReplicas: 2
  maxReplicas: 4
