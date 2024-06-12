@@ -12,11 +12,25 @@ spec:
     requests:
       storage: 5Gi
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+  selector:
+    app: postgres
+---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
 spec:
+  serviceName: postgres
   replicas: 1
   selector:
     matchLabels:
@@ -67,22 +81,9 @@ spec:
    apiVersion: apps/v1
    kind: Deployment
    name: postgres
- minReplicas: 1
- maxReplicas: 8
- targetCPUUtilizationPercentage: 50
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-  labels:
-    app: postgres
-spec:
-  type: ClusterIP
-  ports:
-    - port: 5432
-  selector:
-    app: postgres
+ minReplicas: 2
+ maxReplicas: 4
+ targetCPUUtilizationPercentage: 80
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -184,7 +185,7 @@ spec:
             tcpSocket:
               port: 50062
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
       serviceAccountName: brewstand-sa
       volumes:
@@ -204,7 +205,7 @@ spec:
    name: inventory-repository
  minReplicas: 2
  maxReplicas: 8
- targetCPUUtilizationPercentage: 50
+ targetCPUUtilizationPercentage: 80
 ---
 apiVersion: v1
 kind: Service
@@ -261,7 +262,7 @@ spec:
             tcpSocket:
               port: 50052
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
 ---
 apiVersion: autoscaling/v1
@@ -275,7 +276,7 @@ spec:
    name: inventory-service
  minReplicas: 2
  maxReplicas: 8
- targetCPUUtilizationPercentage: 50
+ targetCPUUtilizationPercentage: 80
 ---
 apiVersion: v1
 kind: Service
@@ -333,7 +334,7 @@ spec:
               path: /
               port: 3001
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
 ---
 apiVersion: autoscaling/v1
@@ -347,7 +348,7 @@ spec:
    name: inventory-controller
  minReplicas: 2
  maxReplicas: 8
- targetCPUUtilizationPercentage: 50
+ targetCPUUtilizationPercentage: 80
 ---
 apiVersion: v1
 kind: Service

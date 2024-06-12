@@ -54,7 +54,7 @@ spec:
               path: /
               port: 3005
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
 ---
 apiVersion: autoscaling/v1
@@ -68,7 +68,7 @@ spec:
    name: payment-controller
  minReplicas: 2
  maxReplicas: 8
- targetCPUUtilizationPercentage: 50
+ targetCPUUtilizationPercentage: 80
 ---
 apiVersion: v1
 kind: Service
@@ -129,7 +129,7 @@ spec:
             tcpSocket:
               port: 50055
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
 ---
 apiVersion: autoscaling/v1
@@ -143,7 +143,7 @@ spec:
    name: payment-service
  minReplicas: 2
  maxReplicas: 8
- targetCPUUtilizationPercentage: 50
+ targetCPUUtilizationPercentage: 80
 ---
 apiVersion: v1
 kind: Service
@@ -198,7 +198,7 @@ spec:
             tcpSocket:
               port: 50065
             periodSeconds: 15
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             failureThreshold: 5
 ---
 apiVersion: autoscaling/v1
@@ -212,7 +212,7 @@ spec:
    name: payment-repository
  minReplicas: 2
  maxReplicas: 8
- targetCPUUtilizationPercentage: 50
+ targetCPUUtilizationPercentage: 80
 ---
 apiVersion: v1
 kind: Service
