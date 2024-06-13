@@ -28,7 +28,7 @@ spec:
   volumeName: brewstand-fileserver
   resources:
     requests:
-      storage: 1Ti
+      storage: 50G
 ---
 apiVersion: v1
 kind: Service
