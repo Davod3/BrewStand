@@ -5,6 +5,31 @@ import random
 
 def __connect():
     print("Connecting to DB...")
+
+    # Check if DB exists, otherwise create it
+    conn = psycopg2.connect(
+        dbname='postgres',
+        user=os.getenv('INVENTORY_DB_USER'),
+        password=os.getenv('INVENTORY_DB_PASSWORD'),
+        host=os.getenv('INVENTORY_DB_HOST'),
+        port=os.getenv('INVENTORY_DB_PORT')
+    )
+
+    cursor = conn.cursor()
+
+    CHECK_DB = "select * from pg_catalog.pg_database WHERE datname = 'inventory_db';"
+    cursor.execute(CHECK_DB)
+    exists = cursor.fetchone()
+
+    if not exists:
+        print('Creating DB...')
+        cursor.execute('CREATE DATABASE inventory_db;')
+        conn.commit()
+        print('DB created!')
+    
+    conn.close()
+
+    #Connect to correct DB
     conn = psycopg2.connect(
         dbname=os.getenv('INVENTORY_DB_NAME'),
         user=os.getenv('INVENTORY_DB_USER'),
