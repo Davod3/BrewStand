@@ -96,7 +96,7 @@ def getBatchScoreService(request, context):
             return GetBatchScoreServiceResponse(response_code = 0,
                                                 score = repo_response.score)
     
-        else:
+        else:   
 
             #Fail
             return GetBatchScoreServiceResponse(response_code = 1)
@@ -236,7 +236,7 @@ def validateOrderService(request, context):
 
                 #Volume exceeds available, invalid order
                 return ValidateOrderServiceResponse(response_code = 1)
-            
+                
             else:
 
                 #Volume is available, confirm it
