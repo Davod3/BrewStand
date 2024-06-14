@@ -37,6 +37,18 @@ jobs:
     - name: Build User Service Test Suite
       run: docker build -t user-service-test:latest -f user_service/Dockerfile.test .
 
+    - name: Build Inventory Service Test Suite
+      run: docker build -t inventory-service-test:latest -f inventory_service/Dockerfile.test .
+    
+    - name: Build Inventory Repository Test Suite
+      run: docker build -t inventory-repository-test:latest -f inventory_repository/Dockerfile.test .
+
+    - name: Build Order Service Test Suite
+      run: docker build -t order-service-test:latest -f order_service/Dockerfile.test .
+
+    - name: Build Order Repository Test Suite
+      run: docker build -t order-repository-test:latest -f order_repository/Dockerfile.test .
+    
     # Run Tests
 
     - name: Run Payment Repository Test Suite
@@ -53,7 +65,21 @@ jobs:
 
     - name: Run User Service Test Suite
       run: docker run -v ./test_results:/service/test-reports user-service-test:latest
-      
+
+    - name: Run Inventory Service Test Suite
+      run: docker run -v ./test_results:/service/test-reports inventory-service-test:latest
+
+    - name: Run Inventory Repository Test Suite
+      run: docker run -v ./test_results:/service/test-reports inventory-repository-test:latest
+
+    - name: Run Order Service Test Suite
+      run: docker run -v ./test_results:/service/test-reports order-service-test:latest
+    
+    - name: Run Order Repository Test Suite
+      run: docker run -v ./test_results:/service/test-reports order-repository-test:latest
+
+    # Save Test Results
+
     - name: Save JUnit Reports
       uses: mikepenz/action-junit-report@v4
       with:
