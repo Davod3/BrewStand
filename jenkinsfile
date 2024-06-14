@@ -20,18 +20,30 @@ pipeline {
                 sh 'docker build -t review-service-test:latest -f review_service/Dockerfile.test .'
                 sh 'docker build -t user-repository-test:latest -f user_repository/Dockerfile.test .'
                 sh 'docker build -t user-service-test:latest -f user_service/Dockerfile.test .'
+                sh 'docker build -t inventory-service-test:latest -f inventory_service/Dockerfile.test .'
+                sh 'docker build -t inventory-repository-test:latest -f inventory_repository/Dockerfile.test .'
+                sh 'docker build -t order-repository-test:latest -f order_repository/Dockerfile.test .'
+                sh 'docker build -t order-service-test:latest -f order_service/Dockerfile.test .'
 
                 sh 'docker run -v ./test_results:/service/test-reports payment-repository-test:latest'
                 sh 'docker run -v ./test_results:/service/test-reports payment-service-test:latest'
                 sh 'docker run -v ./test_results:/service/test-reports review-service-test:latest'
                 sh 'docker run -v ./test_results:/service/test-reports user-repository-test:latest'
                 sh 'docker run -v ./test_results:/service/test-reports user-service-test:latest'
+                sh 'docker run -v ./test_results:/service/test-reports inventory-service-test:latest'
+                sh 'docker run -v ./test_results:/service/test-reports inventory-repository-test:latest'
+                sh 'docker run -v ./test_results:/service/test-reports order-service-test:latest'
+                sh 'docker run -v ./test_results:/service/test-reports order-repository-test:latest'
                 
                 junit 'test_results/payment_repository_tests.xml'
                 junit 'test_results/payment_service_tests.xml'
                 junit 'test_results/review_service_tests.xml'
                 junit 'test_results/user_repository_tests.xml'
                 junit 'test_results/user_service_tests.xml'
+                junit 'test_results/inventory_service_tests.xml'
+                junit 'test_results/inventory_repository_tests.xml'
+                junit 'test_results/order_service_tests.xml'
+                junit 'test_results/order_repository_tests.xml'
                   
             }
         }
