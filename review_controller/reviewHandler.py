@@ -38,13 +38,13 @@ def updateReview(itemId, body=None):  # noqa: E501
         response = client.ReviewItem(request)
 
         if(response.response_code == 0):
-            return '', 200
+            return 'Updated review score!', 200
         elif(response.response_code == 1):
-            return '', 400
+            return 'Invalid score. Must be between 0 and 10.', 400
         elif(response.response_code == 2):
-            return '', 404
+            return 'Item not found!', 404
         else:
-            return '', 500
+            return 'Service is unavailable. Try again later.', 500
 
     else:
         return 'Invalid request body', 400

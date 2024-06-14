@@ -63,7 +63,7 @@ def getBatch(itemId):
     else:
 
         #Not found
-        return '', 404
+        return 'Item not found!', 404
 
 @duration_get_batches.time()
 @failures_get_batches.count_exceptions()
@@ -106,4 +106,4 @@ def getBatches(item1=None, item2=None):
             return batches, 200
 
         else:
-            return '', 500
+            return 'Error fetching inventory!', 500

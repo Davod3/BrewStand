@@ -59,13 +59,13 @@ def addToCart(token_info=None):
         response = client.AddItemCart(request)
 
         if(response.response_code==0):
-            return '',200
+            return 'Item successfully added to cart!',200
         elif(response.response_code==1):
-            return '',404
+            return 'User not found!',404
         elif(response.response_code==2 or response.response_code==3):
-            return '', 400
+            return 'Invalid batch id or not enough volume available.', 400
         else:
-            return '', 500
+            return 'Service is unavailable. Try again later.', 500
 
     else:
         return 'Invalid request body', 400
@@ -91,9 +91,9 @@ def getCart(token_info=None):
         cart_content = {'items' : cart_content, 'totalCost' : float(response.total_price)}
         return cart_content, 200
     elif(response.response_code == 1):
-        return '', 404
+        return 'User not found.', 404
     else:
-        return '', 500
+        return 'Service is unavailable. Try again later.', 500
 
 @duration_remove_cart.time()
 @failures_remove_cart.count_exceptions()
@@ -110,11 +110,11 @@ def removeFromCart(itemId=0, token_info=None):
     response = client.DeleteItemCart(request)
 
     if(response.response_code == 0 or response.response_code == 2):
-        return '', 200
+        return 'Item successfully deleted!', 200
     elif(response.response_code == 1):
-        return '', 404
+        return 'User not found.', 404
     else:
-        return '', 500
+        return 'Service is unavailable. Try again later.', 500
 
 @duration_checkout_cart.time()
 @failures_checkout_cart.count_exceptions()
@@ -174,11 +174,11 @@ def createUser():
         if(response.response_code == 0):
             return {'token' : response.user_id}, 200
         elif(response.response_code == 1):
-            return '', 403
+            return 'Username already exists!', 403
         elif(response.response_code == 2):
-            return '', 400
+            return 'Invalid username! Must only contain alphanumeric characters.', 400
         else:
-            return '', 500
+            return 'Service is unavailable. Try again later.', 500
 
     else:
         return 'Invalid request body', 400
