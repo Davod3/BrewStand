@@ -21,7 +21,7 @@ git clone https://github.com/Davod3/BrewStand-CloudComputing-14.git --branch pha
 Afterwards, download the Brewery Operations and Market Analysis Dataset (https://www.kaggle.com/datasets/ankurnapa/brewery-operations-and-market-analysis-dataset) and rename it to dataset.csv.
 
 Once you're done with that, simply create a folder called dataset in the root directory of the cloned repository and move the .csv file there, 
-such that its path will be /dataset/datset.csv
+such that its path will be /dataset/datset.csv .
 
 Alternatively, you can create the /dataset folder and download the dataset into there from google cloud storage with the following command:
 
