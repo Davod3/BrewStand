@@ -18,7 +18,7 @@ To install this application simply clone this repository in your desired locatio
 git clone https://github.com/Davod3/BrewStand-CloudComputing-14.git --branch phase8
 ```
 
-Afterwards, download the Brewery Operations and Market Analysis Dataset (https://www.kaggle.com/datasets/ankurnapa/brewery-operations-and-market-analysis-dataset) and rename it to dataset.csv.
+Afterwards, download the Brewery Operations and Market Analysis Dataset (https://www.kaggle.com/datasets/ankurnapa/brewery-operations-and-market-analysis-dataset) and rename it to dataset.csv
 
 Once you're done with that, simply create a folder called dataset in the root directory of the cloned repository and move the .csv file there, 
 such that its path will be /dataset/datset.csv
